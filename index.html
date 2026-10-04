@@ -773,6 +773,121 @@ header{
   object-fit:cover;
 }
 
+
+/* =========================================================
+   DELIVERY / PICKUP
+========================================================= */
+
+.delivery-choice{
+  padding:15px;
+  margin-top:18px;
+
+  border-radius:20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.62),
+      rgba(255,255,255,.32)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.72);
+
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.05);
+}
+
+.delivery-title{
+  font-size:14px;
+  font-weight:800;
+}
+
+.delivery-option{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  margin-top:10px;
+
+  padding:12px;
+
+  border-radius:15px;
+
+  background:rgba(255,255,255,.48);
+
+  border:
+    1px solid rgba(255,255,255,.65);
+
+  cursor:pointer;
+
+  transition:.2s ease;
+}
+
+.delivery-option:active{
+  transform:scale(.98);
+}
+
+.delivery-option input{
+  width:18px;
+  height:18px;
+  accent-color:#111;
+}
+
+.pickup-location-box{
+  display:none;
+
+  margin-top:10px;
+
+  padding:12px 14px;
+
+  border-radius:15px;
+
+  background:rgba(255,255,255,.58);
+
+  border:1px solid rgba(255,255,255,.7);
+
+  color:#444;
+
+  font-size:13px;
+
+  line-height:1.45;
+}
+
+.pickup-location-box.visible{
+  display:block;
+}
+
+.whatsapp-button{
+  width:100%;
+
+  border:0;
+
+  margin-top:10px;
+
+  padding:15px;
+
+  border-radius:18px;
+
+  background:#25D366;
+
+  color:white;
+
+  font-weight:800;
+
+  box-shadow:
+    0 8px 22px rgba(37,211,102,.22);
+
+  transition:.2s ease;
+}
+
+.whatsapp-button:active{
+  transform:scale(.97);
+}
+
 .buy-button{
   width:100%;
 
@@ -1208,7 +1323,7 @@ textarea.form-control{
 
 
 /* =========================================================
-   BOTTOM NAVIGATION — LIQUID GLASS
+   BOTTOM NAVIGATION
 ========================================================= */
 
 .bottom-nav{
@@ -1314,11 +1429,6 @@ textarea.form-control{
   transform:scale(.88);
 }
 
-
-/* =========================================================
-   CENTER CART
-========================================================= */
-
 .nav-cart{
   width:61px;
   height:61px;
@@ -1356,11 +1466,6 @@ textarea.form-control{
 .nav-cart:active{
   transform:translateY(-15px) scale(.88);
 }
-
-
-/* =========================================================
-   CART BADGE
-========================================================= */
 
 .cart-badge{
   position:absolute;
@@ -1473,13 +1578,7 @@ textarea.form-control{
 
 </head>
 
-
 <body>
-
-
-<!-- =======================================================
-     HEADER
-======================================================== -->
 
 <header>
 
@@ -1507,7 +1606,6 @@ textarea.form-control{
 
   </div>
 
-
   <div class="search-wrap">
 
     <input
@@ -1523,17 +1621,9 @@ textarea.form-control{
 </header>
 
 
-<!-- =======================================================
-     HOME / DASHBOARD
-======================================================== -->
-
-<main
-  id="homePage"
-  class="page active"
->
+<main id="homePage" class="page active">
 
   <div id="dashboardHome"></div>
-
 
   <div class="dashboard-section-title">
 
@@ -1547,12 +1637,10 @@ textarea.form-control{
 
   </div>
 
-
   <div
     id="categories"
     class="categories"
   ></div>
-
 
   <div
     id="productsGrid"
@@ -1568,14 +1656,7 @@ textarea.form-control{
 </main>
 
 
-<!-- =======================================================
-     PRODUCT PAGE
-======================================================== -->
-
-<main
-  id="productPage"
-  class="page"
->
+<main id="productPage" class="page">
 
   <button
     class="back-button"
@@ -1584,22 +1665,12 @@ textarea.form-control{
     ← Retour
   </button>
 
-
-  <div
-    id="productDetail"
-  ></div>
+  <div id="productDetail"></div>
 
 </main>
 
 
-<!-- =======================================================
-     CART PAGE
-======================================================== -->
-
-<main
-  id="cartPage"
-  class="page"
->
+<main id="cartPage" class="page">
 
   <div class="dashboard-section-title">
 
@@ -1613,20 +1684,12 @@ textarea.form-control{
 
   </div>
 
-
   <div id="cartContent"></div>
 
 </main>
 
 
-<!-- =======================================================
-     SELL PAGE
-======================================================== -->
-
-<main
-  id="sellPage"
-  class="page"
->
+<main id="sellPage" class="page">
 
   <div class="dashboard-section-title">
 
@@ -1636,20 +1699,12 @@ textarea.form-control{
 
   </div>
 
-
   <div id="sellerContent"></div>
 
 </main>
 
 
-<!-- =======================================================
-     ACCOUNT PAGE
-======================================================== -->
-
-<main
-  id="accountPage"
-  class="page"
->
+<main id="accountPage" class="page">
 
   <div class="dashboard-section-title">
 
@@ -1659,20 +1714,12 @@ textarea.form-control{
 
   </div>
 
-
   <div id="accountContent"></div>
 
 </main>
 
 
-<!-- =======================================================
-     ADMIN PAGE
-======================================================== -->
-
-<main
-  id="adminPage"
-  class="page"
->
+<main id="adminPage" class="page">
 
   <div class="dashboard-section-title">
 
@@ -1682,15 +1729,10 @@ textarea.form-control{
 
   </div>
 
-
   <div id="adminContent"></div>
 
 </main>
 
-
-<!-- =======================================================
-     ZOOM
-======================================================== -->
 
 <div
   id="zoomModal"
@@ -1714,10 +1756,6 @@ textarea.form-control{
 </div>
 
 
-<!-- =======================================================
-     BOTTOM NAV
-======================================================== -->
-
 <nav class="bottom-nav">
 
   <button
@@ -1725,48 +1763,26 @@ textarea.form-control{
     class="nav-btn active"
     onclick="showPage('homePage')"
   >
-
-    <span>
-      ⌂
-    </span>
-
-    <span>
-      Accueil
-    </span>
-
+    <span>⌂</span>
+    <span>Accueil</span>
   </button>
-
 
   <button
     id="navShop"
     class="nav-btn"
     onclick="showPage('homePage')"
   >
-
-    <span>
-      🛍️
-    </span>
-
-    <span>
-      Boutique
-    </span>
-
+    <span>🛍️</span>
+    <span>Boutique</span>
   </button>
-
 
   <button
     id="navCart"
     class="nav-btn nav-cart"
     onclick="openCart()"
   >
-
-    <span>
-      🛒
-    </span>
-
-    <span>
-      Panier
-    </span>
+    <span>🛒</span>
+    <span>Panier</span>
 
     <span
       id="cartBadge"
@@ -1775,41 +1791,24 @@ textarea.form-control{
     >
       0
     </span>
-
   </button>
-
 
   <button
     id="navSell"
     class="nav-btn"
     onclick="showSellPage()"
   >
-
-    <span>
-      ＋
-    </span>
-
-    <span>
-      Vendre
-    </span>
-
+    <span>＋</span>
+    <span>Vendre</span>
   </button>
-
 
   <button
     id="navAccount"
     class="nav-btn"
     onclick="showPage('accountPage')"
   >
-
-    <span>
-      ●
-    </span>
-
-    <span>
-      Profil
-    </span>
-
+    <span>●</span>
+    <span>Profil</span>
   </button>
 
 </nav>
@@ -1839,16 +1838,13 @@ const supabaseClient =
 ========================================================= */
 
 let currentUser = null;
-
 let currentProfile = null;
-
 let currentProducts = [];
-
 let selectedCategory = "Tous";
-
 let selectedProduct = null;
-
 let currentProductImages = [];
+
+let selectedDeliveryChoice = "delivery";
 
 let cart =
   JSON.parse(
@@ -1859,17 +1855,11 @@ let cart =
 const categoriesList = [
 
   "Tous",
-
   "T-shirts",
-
   "Ensembles/Jogging",
-
   "Pantalons",
-
   "Vestes",
-
   "Chaussures",
-
   "Accessoires"
 
 ];
@@ -1909,7 +1899,6 @@ function getAvatarUrl(profile){
     profile &&
     profile.avatar_url
   ){
-
     return profile.avatar_url;
   }
 
@@ -1972,7 +1961,6 @@ function showPage(pageId){
 
   }
 
-
   document
     .querySelectorAll(".nav-btn")
     .forEach(btn => {
@@ -1980,7 +1968,6 @@ function showPage(pageId){
       btn.classList.remove("active");
 
     });
-
 
   if(
     pageId === "homePage" ||
@@ -1993,7 +1980,6 @@ function showPage(pageId){
 
   }
 
-
   if(pageId === "cartPage"){
 
     document
@@ -2001,7 +1987,6 @@ function showPage(pageId){
       ?.classList.add("active");
 
   }
-
 
   if(pageId === "sellPage"){
 
@@ -2011,7 +1996,6 @@ function showPage(pageId){
 
   }
 
-
   if(pageId === "accountPage"){
 
     document
@@ -2019,7 +2003,6 @@ function showPage(pageId){
       ?.classList.add("active");
 
   }
-
 
   window.scrollTo({
     top:0,
@@ -2041,9 +2024,6 @@ function renderDashboard(){
   if(!container){
     return;
   }
-
-
-  /* VISITEUR */
 
   if(!currentUser){
 
@@ -2080,7 +2060,6 @@ function renderDashboard(){
           </button>
 
         </div>
-
 
         <div class="dashboard-role">
           Mode visiteur
@@ -2166,11 +2145,9 @@ function renderDashboard(){
 
   let role = "Client";
 
-
   if(profile.role === "seller"){
     role = "Vendeur";
   }
-
 
   if(profile.role === "creator_admin"){
     role = "Administrateur";
@@ -2339,8 +2316,6 @@ function renderDashboard(){
         </div>
 
 
-        <!-- PROFIL EN HAUT À DROITE -->
-
         <button
           class="dashboard-profile-button"
           onclick="showPage('accountPage')"
@@ -2388,7 +2363,6 @@ function renderCategories(){
   if(!container){
     return;
   }
-
 
   container.innerHTML =
     categoriesList.map(category => `
@@ -2440,7 +2414,6 @@ async function loadProducts(){
     `;
 
   }
-
 
   const {
     data,
@@ -2735,6 +2708,8 @@ function openProduct(productId){
   }
 
 
+  selectedDeliveryChoice = "delivery";
+
   renderProductDetail();
 
   showPage("productPage");
@@ -2847,7 +2822,7 @@ function renderProductDetail(){
 
           <div>
 
-            <strong>
+            <strong id="productSellerName">
               ${escapeHtml(
                 product.seller_name ||
                 "Vendeur Zackary sh🛍️p"
@@ -2872,6 +2847,72 @@ function renderProductDetail(){
         </div>
 
 
+        <!-- MODE DE RÉCEPTION -->
+
+        <div class="delivery-choice">
+
+          <div class="delivery-title">
+            🚚 Mode de réception
+          </div>
+
+
+          <label class="delivery-option">
+
+            <input
+              type="radio"
+              name="deliveryChoice"
+              value="delivery"
+              checked
+              onchange="changeDeliveryChoice('delivery')"
+            >
+
+            <span>
+              🚚 Livraison
+            </span>
+
+          </label>
+
+
+          <label class="delivery-option">
+
+            <input
+              type="radio"
+              name="deliveryChoice"
+              value="pickup"
+              onchange="changeDeliveryChoice('pickup')"
+            >
+
+            <span>
+              📍 Retrait chez le vendeur
+            </span>
+
+          </label>
+
+
+          <div
+            id="pickupLocationBox"
+            class="pickup-location-box"
+          >
+
+            Chargement du lieu de réception...
+
+          </div>
+
+        </div>
+
+
+        <!-- WHATSAPP -->
+
+        <button
+          class="whatsapp-button"
+          onclick="contactSellerWhatsApp()"
+        >
+
+          💬 Contacter le vendeur sur WhatsApp
+
+        </button>
+
+
         <button
           class="buy-button"
           onclick="addToCart('${escapeHtml(product.id)}')"
@@ -2893,6 +2934,10 @@ function renderProductDetail(){
 }
 
 
+/* =========================================================
+   SELLER PRODUCT INFORMATION
+========================================================= */
+
 async function loadProductSeller(product){
 
   if(!product.seller_id){
@@ -2901,18 +2946,31 @@ async function loadProductSeller(product){
 
 
   const {
-    data
+    data,
+    error
   } =
     await supabaseClient
       .from("profiles")
       .select(
-        "username,avatar_url,phone,whatsapp"
+        "username,avatar_url,phone,whatsapp,pickup_location"
       )
       .eq(
         "id",
         product.seller_id
       )
       .maybeSingle();
+
+
+  if(error){
+
+    console.error(
+      "Erreur vendeur:",
+      error
+    );
+
+    return;
+
+  }
 
 
   if(!data){
@@ -2932,8 +2990,414 @@ async function loadProductSeller(product){
 
   }
 
+
+  const sellerName =
+    document.getElementById(
+      "productSellerName"
+    );
+
+  if(sellerName){
+
+    sellerName.textContent =
+      data.username ||
+      product.seller_name ||
+      "Vendeur";
+
+  }
+
+
+  updatePickupLocationDisplay(
+    data.pickup_location
+  );
+
 }
 
+
+/* =========================================================
+   DELIVERY CHOICE
+========================================================= */
+
+function changeDeliveryChoice(choice){
+
+  selectedDeliveryChoice =
+    choice;
+
+
+  const box =
+    document.getElementById(
+      "pickupLocationBox"
+    );
+
+
+  if(!box){
+    return;
+  }
+
+
+  if(choice === "delivery"){
+
+    box.classList.remove(
+      "visible"
+    );
+
+    return;
+
+  }
+
+
+  box.classList.add(
+    "visible"
+  );
+
+
+  box.innerHTML = `
+    Chargement du lieu de réception...
+  `;
+
+
+  loadPickupLocation();
+
+}
+
+
+async function loadPickupLocation(){
+
+  if(
+    !selectedProduct ||
+    !selectedProduct.seller_id
+  ){
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select(
+        "pickup_location"
+      )
+      .eq(
+        "id",
+        selectedProduct.seller_id
+      )
+      .maybeSingle();
+
+
+  const box =
+    document.getElementById(
+      "pickupLocationBox"
+    );
+
+
+  if(!box){
+    return;
+  }
+
+
+  if(error){
+
+    box.innerHTML = `
+      Impossible de récupérer le lieu de retrait.
+    `;
+
+    return;
+
+  }
+
+
+  updatePickupLocationDisplay(
+    data?.pickup_location
+  );
+
+}
+
+
+function updatePickupLocationDisplay(
+  location
+){
+
+  const box =
+    document.getElementById(
+      "pickupLocationBox"
+    );
+
+
+  if(!box){
+    return;
+  }
+
+
+  if(!location){
+
+    box.innerHTML = `
+
+      📍
+
+      <strong>
+        Lieu de réception non renseigné
+      </strong>
+
+      <div style="
+        margin-top:5px;
+        color:#777;
+      ">
+
+        Le vendeur doit renseigner son lieu
+        de retrait dans son profil.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  box.innerHTML = `
+
+    📍
+
+    <strong>
+      Lieu de réception
+    </strong>
+
+    <div style="
+      margin-top:5px;
+      color:#555;
+    ">
+
+      ${escapeHtml(location)}
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   WHATSAPP SELLER CONTACT
+========================================================= */
+
+async function contactSellerWhatsApp(){
+
+  if(!selectedProduct){
+
+    alert(
+      "Article introuvable."
+    );
+
+    return;
+
+  }
+
+
+  const choice =
+    document.querySelector(
+      'input[name="deliveryChoice"]:checked'
+    )?.value ||
+    selectedDeliveryChoice;
+
+
+  if(!choice){
+
+    alert(
+      "Choisis un mode de réception."
+    );
+
+    return;
+
+  }
+
+
+  if(!selectedProduct.seller_id){
+
+    alert(
+      "Ce vendeur n'est pas correctement configuré."
+    );
+
+    return;
+
+  }
+
+
+  const {
+    data:seller,
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select(
+        "username,phone,whatsapp,pickup_location"
+      )
+      .eq(
+        "id",
+        selectedProduct.seller_id
+      )
+      .maybeSingle();
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Impossible de récupérer les informations du vendeur."
+    );
+
+    return;
+
+  }
+
+
+  if(!seller){
+
+    alert(
+      "Vendeur introuvable."
+    );
+
+    return;
+
+  }
+
+
+  const whatsapp =
+    seller.whatsapp ||
+    seller.phone;
+
+
+  if(!whatsapp){
+
+    alert(
+      "Le vendeur n'a pas encore renseigné son numéro WhatsApp."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    choice === "pickup" &&
+    !seller.pickup_location
+  ){
+
+    alert(
+      "Le vendeur doit renseigner son lieu de réception/retrait avant de proposer cette option."
+    );
+
+    return;
+
+  }
+
+
+  let phone =
+    String(whatsapp)
+      .replace(/\D/g,"");
+
+
+  /*
+    Numéro camerounais :
+    6XXXXXXXX → 2376XXXXXXXX
+  */
+
+  if(
+    phone.length === 9 &&
+    phone.startsWith("6")
+  ){
+
+    phone =
+      "237" + phone;
+
+  }
+
+
+  /*
+    Si l'utilisateur a mis
+    002376XXXXXXXX
+  */
+
+  if(
+    phone.startsWith("00237")
+  ){
+
+    phone =
+      phone.substring(2);
+
+  }
+
+
+  const productName =
+    selectedProduct.name ||
+    "Article";
+
+
+  const price =
+    formatPrice(
+      selectedProduct.price
+    );
+
+
+  let message =
+`Bonjour ${seller.username || "vendeur"} 👋
+
+Je suis intéressé(e) par votre article sur Zackary sh🛍️p.
+
+🛍️ Article : ${productName}
+💰 Prix : ${price}
+`;
+
+
+  if(choice === "delivery"){
+
+    message += `
+
+🚚 Mode de réception : Livraison
+
+Je souhaite connaître les conditions et les frais de livraison.
+
+Merci.`;
+
+  }else{
+
+    message += `
+
+📍 Mode de réception : Retrait chez le vendeur
+
+📍 Lieu de réception :
+${seller.pickup_location}
+
+Je souhaite confirmer la disponibilité de l'article et les modalités de retrait.
+
+Merci.`;
+
+  }
+
+
+  const url =
+    "https://wa.me/" +
+    phone +
+    "?text=" +
+    encodeURIComponent(
+      message
+    );
+
+
+  window.open(
+    url,
+    "_blank"
+  );
+
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
 
 function changeMainProductImage(
   image,
@@ -2968,7 +3432,9 @@ function changeMainProductImage(
     );
 
 
-  element.classList.add("active");
+  element.classList.add(
+    "active"
+  );
 
 }
 
@@ -2999,7 +3465,9 @@ function openZoom(image){
     image;
 
 
-  modal.classList.add("active");
+  modal.classList.add(
+    "active"
+  );
 
 }
 
@@ -3486,9 +3954,7 @@ async function renderAccount(){
           alt="Photo de profil"
         >
 
-
         <br>
-
 
         <label class="profile-upload">
 
@@ -3545,18 +4011,93 @@ async function renderAccount(){
       <div class="form-group">
 
         <label>
-          Téléphone / WhatsApp
+          Téléphone
         </label>
 
         <input
           id="profilePhone"
           class="form-control"
+          type="tel"
           value="${escapeHtml(
             profile.phone || ""
           )}"
+          placeholder="Ex : 690000000"
         >
 
       </div>
+
+
+      <div class="form-group">
+
+        <label>
+          📱 Numéro WhatsApp
+        </label>
+
+        <input
+          id="profileWhatsapp"
+          class="form-control"
+          type="tel"
+          value="${escapeHtml(
+            profile.whatsapp || ""
+          )}"
+          placeholder="Ex : 690000000"
+        >
+
+        <small style="
+          display:block;
+          margin-top:6px;
+          color:#777;
+          line-height:1.4;
+        ">
+
+          Ce numéro sera utilisé par les clients
+          pour te contacter directement depuis tes articles.
+
+        </small>
+
+      </div>
+
+
+      ${
+        profile.role === "seller" ||
+        profile.role === "creator_admin"
+
+        ? `
+
+          <div class="form-group">
+
+            <label>
+              📍 Lieu de réception / retrait
+            </label>
+
+            <input
+              id="profilePickupLocation"
+              class="form-control"
+              value="${escapeHtml(
+                profile.pickup_location || ""
+              )}"
+              placeholder="Ex : Carrefour Bastos, Yaoundé"
+            >
+
+            <small style="
+              display:block;
+              margin-top:6px;
+              color:#777;
+              line-height:1.4;
+            ">
+
+              Indique ici le lieu où les clients
+              peuvent récupérer leurs commandes
+              s'ils choisissent le retrait au lieu
+              de la livraison.
+
+            </small>
+
+          </div>
+
+        `
+        : ""
+      }
 
 
       <button
@@ -4078,6 +4619,16 @@ async function saveProfile(){
       "profilePhone"
     )?.value.trim();
 
+  const whatsapp =
+    document.getElementById(
+      "profileWhatsapp"
+    )?.value.trim();
+
+  const pickupLocation =
+    document.getElementById(
+      "profilePickupLocation"
+    )?.value.trim() || null;
+
 
   const {
     error
@@ -4088,7 +4639,12 @@ async function saveProfile(){
 
         username,
 
-        phone
+        phone,
+
+        whatsapp,
+
+        pickup_location:
+          pickupLocation
 
       })
       .eq(
@@ -4114,7 +4670,12 @@ async function saveProfile(){
 
     username,
 
-    phone
+    phone,
+
+    whatsapp,
+
+    pickup_location:
+      pickupLocation
 
   };
 
@@ -4473,6 +5034,59 @@ async function renderSellerPage(){
       </div>
 
 
+      <div class="glass-card" style="
+        padding:14px;
+        margin-bottom:15px;
+        border-radius:19px;
+      ">
+
+        <strong>
+          📍 Ton lieu de retrait
+        </strong>
+
+        <p style="
+          color:#777;
+          font-size:13px;
+          line-height:1.45;
+          margin-bottom:10px;
+        ">
+
+          Le lieu enregistré dans ton profil sera
+          automatiquement communiqué aux clients
+          qui choisissent le retrait.
+
+        </p>
+
+        <div style="
+          font-weight:700;
+          font-size:13px;
+        ">
+
+          ${
+            currentProfile?.pickup_location
+            ? escapeHtml(
+                currentProfile.pickup_location
+              )
+            : "⚠️ Aucun lieu renseigné"
+          }
+
+        </div>
+
+        <button
+          class="secondary-button"
+          style="
+            margin-top:10px;
+          "
+          onclick="showPage('accountPage')"
+        >
+
+          Modifier mon lieu
+
+        </button>
+
+      </div>
+
+
       <button
         class="primary-button"
         onclick="publishProduct()"
@@ -4694,17 +5308,17 @@ async function publishProduct(){
     const {
       error
     } =
-      await supabaseClient
-        .storage
-        .from("product-images")
-        .upload(
-          path,
-          file,
-          {
-            upsert:false,
-            contentType:file.type
-          }
-        );
+    await supabaseClient
+      .storage
+      .from("product-images")
+      .upload(
+        path,
+        file,
+        {
+          upsert:false,
+          contentType:file.type
+        }
+      );
 
 
     if(error){
