@@ -1,790 +1,630 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Zackary sh🛍️p</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f5f5f5;
-      color: #171717;
-      padding-bottom: 75px;
-    }
-
-    button,
-    input,
-    textarea,
-    select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .container {
-      width: min(1100px, 94%);
-      margin: auto;
-    }
-
-    /* ================= HEADER ================= */
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: white;
-      border-bottom: 1px solid #ddd;
-      padding: 12px 0;
-    }
-
-    .header-inner {
-      width: min(1100px, 94%);
-      margin: auto;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo {
-      font-size: 21px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .search {
-      flex: 1;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 11px 14px;
-      outline: none;
-      background: #f7f7f7;
-    }
-
-    .account-btn {
-      border: none;
-      background: #111;
-      color: white;
-      border-radius: 11px;
-      padding: 10px 13px;
-      font-weight: 700;
-    }
-
-    /* ================= HERO ================= */
-
-    .hero {
-      margin: 18px auto;
-      width: min(1100px, 94%);
-      background: #111;
-      color: white;
-      border-radius: 20px;
-      padding: 30px 24px;
-    }
-
-    .hero h1 {
-      font-size: 30px;
-      margin-bottom: 8px;
-    }
-
-    .hero p {
-      color: #ddd;
-      line-height: 1.5;
-    }
-
-    /* ================= CATEGORIES ================= */
-
-    .categories {
-      width: min(1100px, 94%);
-      margin: 18px auto;
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-    }
-
-    .category-btn {
-      white-space: nowrap;
-      border: 1px solid #ddd;
-      background: white;
-      border-radius: 999px;
-      padding: 9px 15px;
-    }
-
-    .category-btn.active {
-      background: #111;
-      color: white;
-      border-color: #111;
-    }
-
-    /* ================= PRODUCTS ================= */
-
-    .section-title {
-      width: min(1100px, 94%);
-      margin: 25px auto 15px;
-      font-size: 22px;
-    }
-
-    .products-grid {
-      width: min(1100px, 94%);
-      margin: auto;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-
-    .product-card {
-      background: white;
-      border-radius: 15px;
-      overflow: hidden;
-      border: 1px solid #e5e5e5;
-      transition: .2s;
-    }
-
-    .product-card:hover {
-      transform: translateY(-2px);
-    }
-
-    .product-image {
-      width: 100%;
-      height: 230px;
-      object-fit: cover;
-      background: #eee;
-    }
-
-    .product-info {
-      padding: 12px;
-    }
-
-    .product-name {
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .product-price {
-      font-weight: 800;
-      font-size: 18px;
-    }
-
-    .product-category {
-      color: #777;
-      font-size: 13px;
-      margin-top: 5px;
-    }
-
-    /* ================= PAGES ================= */
-
-    .page {
-      display: none;
-      width: min(1100px, 94%);
-      margin: 20px auto;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    .back-btn {
-      border: none;
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 9px 13px;
-      margin-bottom: 15px;
-    }
-
-    /* ================= PRODUCT DETAIL ================= */
-
-    .product-detail {
-      background: white;
-      border-radius: 18px;
-      padding: 18px;
-    }
-
-    .detail-layout {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 25px;
-    }
-
-    .main-product-image {
-      width: 100%;
-      height: 500px;
-      object-fit: contain;
-      background: #f1f1f1;
-      border-radius: 15px;
-      cursor: zoom-in;
-    }
-
-    .thumbnails {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      margin-top: 10px;
-    }
-
-    .thumbnail {
-      width: 75px;
-      height: 75px;
-      object-fit: cover;
-      border-radius: 9px;
-      border: 2px solid transparent;
-      cursor: pointer;
-    }
-
-    .thumbnail.active {
-      border-color: #111;
-    }
-
-    .detail-title {
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
-    .detail-price {
-      font-size: 25px;
-      font-weight: 800;
-      margin-bottom: 18px;
-    }
-
-    .detail-description {
-      line-height: 1.6;
-      color: #444;
-      white-space: pre-wrap;
-    }
-
-    .sizes {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin: 15px 0;
-    }
-
-    .size {
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 7px 12px;
-    }
-
-    .seller-box {
-      margin-top: 20px;
-      padding: 15px;
-      background: #f7f7f7;
-      border-radius: 13px;
-    }
-
-    .seller-profile {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #ddd;
-    }
-
-    .verified {
-      color: #147ef5;
-      font-weight: 700;
-    }
-
-    .whatsapp-btn {
-      display: block;
-      width: 100%;
-      margin-top: 15px;
-      padding: 13px;
-      border: none;
-      border-radius: 11px;
-      background: #16a34a;
-      color: white;
-      font-weight: 800;
-    }
-
-    /* ================= FORMS ================= */
-
-    .card {
-      background: white;
-      border-radius: 17px;
-      padding: 20px;
-      margin-bottom: 18px;
-      border: 1px solid #e5e5e5;
-    }
-
-    .card h2,
-    .card h3 {
-      margin-bottom: 15px;
-    }
-
-    .form-group {
-      margin-bottom: 13px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 700;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      outline: none;
-      background: white;
-    }
-
-    textarea.form-control {
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    .primary-btn {
-      border: none;
-      border-radius: 11px;
-      background: #111;
-      color: white;
-      padding: 12px 17px;
-      font-weight: 800;
-    }
-
-    .danger-btn {
-      border: none;
-      border-radius: 9px;
-      background: #dc2626;
-      color: white;
-      padding: 9px 12px;
-      font-weight: 700;
-    }
-
-    .success-btn {
-      border: none;
-      border-radius: 9px;
-      background: #16a34a;
-      color: white;
-      padding: 9px 12px;
-      font-weight: 700;
-    }
-
-    .secondary-btn {
-      border: 1px solid #ccc;
-      background: white;
-      border-radius: 9px;
-      padding: 9px 12px;
-      font-weight: 700;
-    }
-
-    .payment-box {
-      background: #fff8e6;
-      border: 1px solid #f1d27a;
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 15px;
-      line-height: 1.6;
-    }
-
-    /* ================= AUTH ================= */
-
-    .auth-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 15px;
-    }
-
-    .auth-tab {
-      flex: 1;
-      border: 1px solid #ddd;
-      background: white;
-      border-radius: 10px;
-      padding: 10px;
-    }
-
-    .auth-tab.active {
-      background: #111;
-      color: white;
-    }
-
-    /* ================= PROFILE ================= */
-
-    .profile-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    .profile-big-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #ddd;
-    }
-
-    /* ================= ADMIN ================= */
-
-    .admin-badge {
-      display: inline-block;
-      background: #111;
-      color: white;
-      border-radius: 999px;
-      padding: 5px 9px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .seller-admin-card {
-      border: 1px solid #ddd;
-      border-radius: 13px;
-      padding: 15px;
-      margin-bottom: 12px;
-    }
-
-    .seller-admin-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .status-active {
-      color: #16a34a;
-      font-weight: 800;
-    }
-
-    .status-expired {
-      color: #dc2626;
-      font-weight: 800;
-    }
-
-    .admin-actions {
-      display: flex;
-      gap: 7px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    /* ================= SALES ================= */
-
-    .sales-summary {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .stat-card {
-      background: #f7f7f7;
-      border-radius: 13px;
-      padding: 15px;
-    }
-
-    .stat-label {
-      color: #777;
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    .stat-value {
-      font-size: 23px;
-      font-weight: 800;
-    }
-
-    .sale-item {
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 13px;
-      margin-bottom: 10px;
-    }
-
-    .sale-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .sale-name {
-      font-weight: 800;
-    }
-
-    .sale-amount {
-      font-weight: 800;
-    }
-
-    .sale-date {
-      color: #777;
-      font-size: 13px;
-      margin-top: 5px;
-    }
-
-    .seller-sales-admin {
-      border: 1px solid #ddd;
-      border-radius: 13px;
-      padding: 15px;
-      margin-bottom: 12px;
-    }
-
-    /* ================= MY PRODUCTS ================= */
-
-    .my-product {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-    }
-
-    .my-product img {
-      width: 70px;
-      height: 70px;
-      border-radius: 10px;
-      object-fit: cover;
-    }
-
-    .my-product-info {
-      flex: 1;
-    }
-
-    /* ================= PREVIEW ================= */
-
-    .preview-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .preview-grid img {
-      width: 100%;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-
-    /* ================= MODAL ================= */
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.88);
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal img {
-      max-width: 95%;
-      max-height: 90vh;
-      object-fit: contain;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: white;
-      border: none;
-      border-radius: 50%;
-      width: 42px;
-      height: 42px;
-      font-size: 22px;
-    }
-
-    /* ================= BOTTOM NAV ================= */
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 65px;
-      background: white;
-      border-top: 1px solid #ddd;
-      z-index: 200;
-      display: flex;
-      justify-content: center;
-    }
-
-    .bottom-nav-inner {
-      width: min(600px, 100%);
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .nav-btn {
-      border: none;
-      background: white;
-      font-weight: 700;
-    }
-
-    .nav-btn.active {
-      color: #111;
-      background: #f2f2f2;
-    }
-
-    /* ================= LOADING ================= */
-
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: #777;
-    }
-
-    .empty {
-      text-align: center;
-      background: white;
-      padding: 35px 15px;
-      border-radius: 15px;
-      color: #777;
-    }
-
-    /* ================= RESPONSIVE ================= */
-
-    @media(max-width: 800px) {
-      .products-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .detail-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .main-product-image {
-        height: 400px;
-      }
-    }
-
-    @media(max-width: 500px) {
-      .header-inner {
-        flex-wrap: wrap;
-      }
-
-      .logo {
-        font-size: 18px;
-      }
-
-      .search {
-        order: 3;
-        flex-basis: 100%;
-      }
-
-      .products-grid {
-        gap: 9px;
-      }
-
-      .product-image {
-        height: 180px;
-      }
-
-      .sales-summary {
-        grid-template-columns: 1fr;
-      }
-
-      .preview-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .main-product-image {
-        height: 330px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Zackary sh🛍️p</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f5f6f8;
+  color:#171717;
+  padding-bottom:80px;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* HEADER */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:#fff;
+  border-bottom:1px solid #ddd;
+  padding:12px 15px;
+}
+
+.header-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:800;
+}
+
+.account-btn{
+  border:0;
+  background:#111;
+  color:#fff;
+  border-radius:25px;
+  padding:9px 14px;
+  font-weight:700;
+}
+
+.search-box{
+  margin-top:10px;
+}
+
+.search-box input{
+  width:100%;
+  padding:12px 15px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  outline:none;
+}
+
+/* PAGES */
+
+.page{
+  display:none;
+  padding:18px 15px;
+}
+
+.page.active{
+  display:block;
+}
+
+.section-title{
+  font-size:22px;
+  margin-bottom:15px;
+}
+
+/* CATEGORIES */
+
+.categories{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:12px;
+  margin-bottom:15px;
+}
+
+.category-btn{
+  white-space:nowrap;
+  border:1px solid #ddd;
+  background:#fff;
+  padding:9px 14px;
+  border-radius:20px;
+}
+
+.category-btn.active{
+  background:#111;
+  color:#fff;
+  border-color:#111;
+}
+
+/* PRODUCTS */
+
+.products-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
+.product-card{
+  background:#fff;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+
+.product-card-image{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  background:#eee;
+}
+
+.product-info{
+  padding:10px;
+}
+
+.product-name{
+  font-weight:700;
+  font-size:15px;
+  margin-bottom:6px;
+}
+
+.product-price{
+  font-weight:800;
+  margin-bottom:5px;
+}
+
+.product-category{
+  color:#777;
+  font-size:12px;
+}
+
+/* BUTTONS */
+
+.primary-btn{
+  width:100%;
+  border:0;
+  background:#111;
+  color:#fff;
+  padding:12px;
+  border-radius:10px;
+  font-weight:700;
+  margin-top:10px;
+}
+
+.secondary-btn{
+  width:100%;
+  border:1px solid #ddd;
+  background:#fff;
+  color:#111;
+  padding:12px;
+  border-radius:10px;
+  font-weight:700;
+  margin-top:10px;
+}
+
+.danger-btn{
+  width:100%;
+  border:0;
+  background:#d92d20;
+  color:#fff;
+  padding:11px;
+  border-radius:10px;
+  font-weight:700;
+  margin-top:8px;
+}
+
+/* PRODUCT DETAIL */
+
+.back-btn{
+  border:0;
+  background:#fff;
+  padding:8px 0;
+  font-weight:700;
+  margin-bottom:12px;
+}
+
+.main-product-image{
+  width:100%;
+  max-height:420px;
+  object-fit:contain;
+  background:#eee;
+  border-radius:14px;
+}
+
+.thumbnails{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  margin-top:10px;
+}
+
+.thumbnail{
+  width:70px;
+  height:70px;
+  object-fit:cover;
+  border-radius:8px;
+  border:2px solid transparent;
+  cursor:pointer;
+}
+
+.thumbnail.active{
+  border-color:#111;
+}
+
+.product-detail-info{
+  background:#fff;
+  padding:15px;
+  border-radius:14px;
+  margin-top:15px;
+}
+
+.detail-price{
+  font-size:24px;
+  font-weight:900;
+  margin:8px 0;
+}
+
+.detail-description{
+  margin-top:15px;
+  line-height:1.5;
+  white-space:pre-wrap;
+}
+
+.seller-box{
+  margin-top:18px;
+  border-top:1px solid #eee;
+  padding-top:15px;
+}
+
+.seller-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.avatar{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#ddd;
+}
+
+.avatar.large{
+  width:90px;
+  height:90px;
+}
+
+.creator-badge,
+.verified-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#1877f2;
+  color:#fff;
+  border-radius:50%;
+  width:18px;
+  height:18px;
+  font-size:11px;
+  font-weight:900;
+}
+
+/* FORMS */
+
+.form-card{
+  background:#fff;
+  padding:16px;
+  border-radius:14px;
+  margin-bottom:15px;
+}
+
+.form-group{
+  margin-bottom:13px;
+}
+
+.form-group label{
+  display:block;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;
+  border:1px solid #ddd;
+  border-radius:10px;
+  padding:11px;
+  outline:none;
+  background:#fff;
+}
+
+.form-group textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  border-color:#111;
+}
+
+.checkbox-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* ACCOUNT */
+
+.account-profile{
+  background:#fff;
+  padding:18px;
+  border-radius:14px;
+  text-align:center;
+  margin-bottom:15px;
+}
+
+.profile-avatar-container{
+  position:relative;
+  display:inline-block;
+}
+
+.avatar-upload-label{
+  position:absolute;
+  right:-3px;
+  bottom:-3px;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  background:#111;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.account-name{
+  font-size:20px;
+  font-weight:800;
+  margin-top:10px;
+}
+
+.account-email{
+  color:#777;
+  margin-top:4px;
+}
+
+.role-badge{
+  display:inline-block;
+  margin-top:8px;
+  padding:5px 10px;
+  background:#eee;
+  border-radius:15px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.status-active{
+  color:#16803c;
+  font-weight:700;
+}
+
+.status-inactive{
+  color:#c5221f;
+  font-weight:700;
+}
+
+/* SELLER ARTICLES */
+
+.article-row{
+  background:#fff;
+  padding:10px;
+  border-radius:12px;
+  margin-bottom:10px;
+  display:flex;
+  gap:10px;
+}
+
+.article-row img{
+  width:80px;
+  height:80px;
+  object-fit:cover;
+  border-radius:9px;
+}
+
+.article-row-info{
+  flex:1;
+}
+
+/* SALES */
+
+.sale-row{
+  background:#fff;
+  border-radius:12px;
+  padding:13px;
+  margin-bottom:10px;
+}
+
+.sale-row strong{
+  display:block;
+  margin-bottom:5px;
+}
+
+.sales-total{
+  background:#111;
+  color:#fff;
+  border-radius:13px;
+  padding:18px;
+  margin-bottom:15px;
+}
+
+.sales-total-number{
+  font-size:25px;
+  font-weight:900;
+  margin-top:5px;
+}
+
+/* ADMIN */
+
+.admin-card{
+  background:#fff;
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:12px;
+}
+
+.admin-card-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.admin-actions{
+  margin-top:10px;
+}
+
+/* MODAL */
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:500;
+  background:rgba(0,0,0,.9);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal img{
+  max-width:100%;
+  max-height:90vh;
+  object-fit:contain;
+}
+
+.modal-close{
+  position:absolute;
+  top:20px;
+  right:20px;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:0;
+  background:#fff;
+  font-size:22px;
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:65px;
+  background:#fff;
+  border-top:1px solid #ddd;
+  z-index:200;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+}
+
+.nav-btn{
+  border:0;
+  background:none;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  font-size:11px;
+  color:#555;
+}
+
+.nav-btn.active{
+  color:#111;
+  font-weight:800;
+}
+
+/* EMPTY */
+
+.empty{
+  text-align:center;
+  padding:40px 15px;
+  color:#777;
+}
+
+/* LOADING */
+
+.loading{
+  text-align:center;
+  padding:30px;
+  color:#777;
+}
+
+/* DESKTOP */
+
+@media(min-width:700px){
+
+  .products-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+
+  main,
+  section.page{
+    max-width:1100px;
+    margin:auto;
+  }
+
+  .bottom-nav{
+    left:50%;
+    transform:translateX(-50%);
+    max-width:600px;
+    border:1px solid #ddd;
+    border-bottom:0;
+    border-radius:15px 15px 0 0;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <div class="header-inner">
+
+  <div class="header-top">
 
     <div class="logo">
       Zackary sh🛍️p
     </div>
 
-    <input
-      id="searchInput"
-      class="search"
-      type="search"
-      placeholder="Rechercher un article..."
-    >
-
     <button
       class="account-btn"
-      onclick="goTo('account')"
+      onclick="showPage('accountPage')"
     >
-      Compte
+      Mon compte
     </button>
 
   </div>
+
+  <div class="search-box">
+    <input
+      id="searchInput"
+      type="search"
+      placeholder="Rechercher un produit..."
+      oninput="renderProducts()"
+    >
+  </div>
+
 </header>
 
-<!-- ================= HOME ================= -->
+
+<!-- HOME -->
 
 <main id="homePage" class="page active">
 
-  <div class="hero">
-    <h1>Zackary sh🛍️p</h1>
-    <p>
-      Trouve tes vêtements, chaussures et accessoires auprès de nos vendeurs.
-    </p>
-  </div>
+  <h1 class="section-title">
+    Produits
+  </h1>
 
-  <div class="categories">
+  <div
+    id="categories"
+    class="categories"
+  ></div>
 
-    <button class="category-btn active" data-category="Tous">
-      Tous
-    </button>
-
-    <button class="category-btn" data-category="T-shirts">
-      T-shirts
-    </button>
-
-    <button class="category-btn" data-category="Ensembles/Jogging">
-      Ensembles/Jogging
-    </button>
-
-    <button class="category-btn" data-category="Pantalons">
-      Pantalons
-    </button>
-
-    <button class="category-btn" data-category="Vestes">
-      Vestes
-    </button>
-
-    <button class="category-btn" data-category="Chaussures">
-      Chaussures
-    </button>
-
-    <button class="category-btn" data-category="Accessoires">
-      Accessoires
-    </button>
-
-  </div>
-
-  <h2 class="section-title">
-    Articles disponibles
-  </h2>
-
-  <div id="productsGrid" class="products-grid">
+  <div
+    id="productsGrid"
+    class="products-grid"
+  >
     <div class="loading">
       Chargement...
     </div>
@@ -792,175 +632,59 @@
 
 </main>
 
-<!-- ================= PRODUCT DETAIL ================= -->
 
-<section id="productPage" class="page">
+<!-- PRODUCT PAGE -->
+
+<section
+  id="productPage"
+  class="page"
+>
 
   <button
     class="back-btn"
-    onclick="goTo('home')"
+    onclick="showPage('homePage')"
   >
     ← Retour
   </button>
 
-  <div id="productDetailContainer"></div>
+  <div id="productDetails"></div>
 
 </section>
 
-<!-- ================= SELL PAGE ================= -->
 
-<section id="sellPage" class="page">
+<!-- SELL PAGE -->
 
-  <button
-    class="back-btn"
-    onclick="goTo('home')"
-  >
-    ← Retour
-  </button>
+<section
+  id="sellPage"
+  class="page"
+>
 
-  <div id="sellAccessContainer"></div>
+  <h1 class="section-title">
+    Espace vendeur
+  </h1>
 
-</section>
-
-<!-- ================= ACCOUNT ================= -->
-
-<section id="accountPage" class="page">
-
-  <div id="accountContainer">
-
-    <div class="card">
-      <h2>Mon compte</h2>
-
-      <div class="auth-tabs">
-
-        <button
-          id="loginTab"
-          class="auth-tab active"
-          onclick="showAuth('login')"
-        >
-          Connexion
-        </button>
-
-        <button
-          id="registerTab"
-          class="auth-tab"
-          onclick="showAuth('register')"
-        >
-          Inscription
-        </button>
-
-      </div>
-
-      <!-- LOGIN -->
-
-      <form id="loginForm">
-
-        <div class="form-group">
-          <label>Email</label>
-          <input
-            id="loginEmail"
-            class="form-control"
-            type="email"
-            required
-          >
-        </div>
-
-        <div class="form-group">
-          <label>Mot de passe</label>
-          <input
-            id="loginPassword"
-            class="form-control"
-            type="password"
-            required
-          >
-        </div>
-
-        <button class="primary-btn">
-          Se connecter
-        </button>
-
-      </form>
-
-      <!-- REGISTER -->
-
-      <form id="registerForm" class="hidden">
-
-        <div class="form-group">
-          <label>Nom d'utilisateur</label>
-          <input
-            id="registerUsername"
-            class="form-control"
-            required
-          >
-        </div>
-
-        <div class="form-group">
-          <label>Email</label>
-          <input
-            id="registerEmail"
-            class="form-control"
-            type="email"
-            required
-          >
-        </div>
-
-        <div class="form-group">
-          <label>Mot de passe</label>
-          <input
-            id="registerPassword"
-            class="form-control"
-            type="password"
-            minlength="6"
-            required
-          >
-        </div>
-
-        <button class="primary-btn">
-          Créer mon compte
-        </button>
-
-      </form>
-
-      <p id="authMessage" style="margin-top:15px;"></p>
-
-    </div>
-
-    <!-- SELLER REGISTRATION -->
-
-    <div class="card">
-
-      <h2>Devenir vendeur</h2>
-
-      <div class="payment-box">
-
-        <strong>Tarif d'inscription : 1 050 XAF</strong>
-
-        <br><br>
-
-        Effectue le paiement via Orange Money :
-
-        <br>
-
-        <strong>+237 690 847 035</strong>
-
-        <br><br>
-
-        Après confirmation du paiement, l'administrateur active ton accès
-        vendeur pour <strong>30 jours</strong>.
-
-      </div>
-
-      <p>
-        Une fois activé, tu peux publier tes articles et gérer tes ventes.
-      </p>
-
-    </div>
-
-  </div>
+  <div id="sellContent"></div>
 
 </section>
 
-<!-- ================= ZOOM MODAL ================= -->
+
+<!-- ACCOUNT -->
+
+<section
+  id="accountPage"
+  class="page"
+>
+
+  <h1 class="section-title">
+    Mon compte
+  </h1>
+
+  <div id="accountContainer"></div>
+
+</section>
+
+
+<!-- ZOOM -->
 
 <div
   id="zoomModal"
@@ -979,432 +703,1371 @@
     id="zoomImage"
     src=""
     alt="Image"
+    onclick="event.stopPropagation()"
   >
 
 </div>
 
-<!-- ================= BOTTOM NAV ================= -->
+
+<!-- BOTTOM NAV -->
 
 <nav class="bottom-nav">
 
-  <div class="bottom-nav-inner">
+  <button
+    class="nav-btn active"
+    id="navHome"
+    onclick="showPage('homePage')"
+  >
+    🏠
+    <span>Accueil</span>
+  </button>
 
-    <button
-      id="navHome"
-      class="nav-btn active"
-      onclick="goTo('home')"
-    >
-      🏠<br>
-      Accueil
-    </button>
+  <button
+    class="nav-btn"
+    id="navSell"
+    onclick="showSellPage()"
+  >
+    🛍️
+    <span>Vendre</span>
+  </button>
 
-    <button
-      id="navSell"
-      class="nav-btn"
-      onclick="goTo('sell')"
-    >
-      ➕<br>
-      Vendre
-    </button>
-
-    <button
-      id="navAccount"
-      class="nav-btn"
-      onclick="goTo('account')"
-    >
-      👤<br>
-      Compte
-    </button>
-
-  </div>
+  <button
+    class="nav-btn"
+    id="navAccount"
+    onclick="showPage('accountPage')"
+  >
+    👤
+    <span>Compte</span>
+  </button>
 
 </nav>
 
+
 <script>
 
-  /* =========================================================
-     SUPABASE
-  ========================================================= */
+/* =========================================================
+   SUPABASE
+========================================================= */
 
-  const SUPABASE_URL =
-    "https://leoyfcpkjbvdhalyefcv.supabase.co";
+const SUPABASE_URL =
+  "https://leoyfcpkjbvdhalyefcv.supabase.co";
 
-  const SUPABASE_KEY =
-    "sb_publishable_ZVx9Vqel2vvEylmrQGRT-A_SeAk8K3-";
+const SUPABASE_KEY =
+  "sb_publishable_ZVx9Vqel2vvEylmrQGRT-A_SeAk8K3-";
 
-  const supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
-
-
-  /* =========================================================
-     VARIABLES
-  ========================================================= */
-
-  let currentUser = null;
-  let currentProfile = null;
-  let currentProducts = [];
-  let selectedCategory = "Tous";
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 
-  /* =========================================================
-     UTILS
-  ========================================================= */
+/* =========================================================
+   VARIABLES
+========================================================= */
 
-  function escapeHTML(value) {
+let currentUser = null;
+let currentProfile = null;
 
-    if (value === null || value === undefined) {
-      return "";
-    }
+let currentProducts = [];
 
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+let selectedCategory = "Tous";
+
+let selectedProduct = null;
+
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+const categories = [
+  "Tous",
+  "T-shirts",
+  "Ensembles/Jogging",
+  "Pantalons",
+  "Vestes",
+  "Chaussures",
+  "Accessoires"
+];
+
+
+function renderCategories(){
+
+  const container =
+    document.getElementById("categories");
+
+  if(!container) return;
+
+  container.innerHTML =
+    categories.map(category => `
+
+      <button
+        class="category-btn ${
+          selectedCategory === category
+            ? "active"
+            : ""
+        }"
+        onclick="selectCategory('${escapeHtml(category)}')"
+      >
+        ${escapeHtml(category)}
+      </button>
+
+    `).join("");
+}
+
+
+function selectCategory(category){
+
+  selectedCategory = category;
+
+  renderCategories();
+  renderProducts();
+}
+
+
+/* =========================================================
+   UTILS
+========================================================= */
+
+function escapeHtml(value){
+
+  if(value === null || value === undefined){
+    return "";
   }
 
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
 
-  function formatPrice(value) {
 
-    return Number(value || 0)
-      .toLocaleString("fr-FR")
-      .replace(/\s/g, " ") + " FCFA";
+function formatPrice(price){
 
+  return Number(price || 0)
+    .toLocaleString("fr-FR") + " XAF";
+}
+
+
+function getAvatarUrl(profile){
+
+  if(!profile?.avatar_url){
+    return "https://ui-avatars.com/api/?name=Utilisateur&background=eeeeee&color=111111";
   }
 
-
-  function formatDate(date) {
-
-    return new Date(date).toLocaleDateString(
-      "fr-FR",
-      {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric"
-      }
-    );
-
-  }
+  return profile.avatar_url;
+}
 
 
-  function getProductImages(product) {
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
-    let images = [];
+function showPage(pageId){
 
-    if (Array.isArray(product.image_urls)) {
-      images = product.image_urls;
-    }
-
-    else if (Array.isArray(product.images)) {
-      images = product.images;
-    }
-
-    else if (product.image_url) {
-      images = [product.image_url];
-    }
-
-    return images.filter(Boolean).slice(0, 4);
-
-  }
-
-
-  /* =========================================================
-     NAVIGATION
-  ========================================================= */
-
-  function goTo(page) {
-
-    document
-      .querySelectorAll(".page")
-      .forEach(p => p.classList.remove("active"));
-
-    document
-      .getElementById(page + "Page")
-      .classList.add("active");
-
-    document
-      .querySelectorAll(".nav-btn")
-      .forEach(btn => btn.classList.remove("active"));
-
-    if (page === "home") {
-      document.getElementById("navHome")
-        .classList.add("active");
-    }
-
-    if (page === "sell") {
-      document.getElementById("navSell")
-        .classList.add("active");
-
-      checkSellerAccess();
-    }
-
-    if (page === "account") {
-      document.getElementById("navAccount")
-        .classList.add("active");
-
-      checkUser();
-    }
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
+  document
+    .querySelectorAll(".page")
+    .forEach(page => {
+      page.classList.remove("active");
     });
 
+  const page =
+    document.getElementById(pageId);
+
+  if(page){
+    page.classList.add("active");
   }
 
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(btn => {
+      btn.classList.remove("active");
+    });
 
-  /* =========================================================
-     SELLER STATUS
-  ========================================================= */
-
-  function sellerIsActive(profile) {
-
-    if (!profile) {
-      return false;
-    }
-
-    if (profile.role === "creator_admin") {
-      return true;
-    }
-
-    if (profile.role !== "seller") {
-      return false;
-    }
-
-    if (profile.seller_active !== true) {
-      return false;
-    }
-
-    if (!profile.seller_expires_at) {
-      return false;
-    }
-
-    return new Date(profile.seller_expires_at).getTime()
-      > Date.now();
-
+  if(pageId === "homePage"){
+    document
+      .getElementById("navHome")
+      ?.classList.add("active");
   }
 
-
-  function sellerDaysRemaining(profile) {
-
-    if (!profile?.seller_expires_at) {
-      return 0;
-    }
-
-    const diff =
-      new Date(profile.seller_expires_at).getTime()
-      - Date.now();
-
-    if (diff <= 0) {
-      return 0;
-    }
-
-    return Math.ceil(
-      diff / (1000 * 60 * 60 * 24)
-    );
-
+  if(pageId === "sellPage"){
+    document
+      .getElementById("navSell")
+      ?.classList.add("active");
   }
 
+  if(pageId === "accountPage"){
+    document
+      .getElementById("navAccount")
+      ?.classList.add("active");
+  }
 
-  /* =========================================================
-     DISABLE EXPIRED SELLERS
-  ========================================================= */
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
 
-  async function disableExpiredSellers() {
 
-    try {
+async function showSellPage(){
 
+  showPage("sellPage");
+
+  await renderSellPage();
+
+}
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+async function checkUser(){
+
+  try{
+
+    const {
+      data:{
+        session
+      }
+    } =
+      await supabaseClient.auth.getSession();
+
+    currentUser =
+      session?.user || null;
+
+    if(!currentUser){
+
+      currentProfile = null;
+
+      renderLoggedOutAccount();
+
+      return;
+    }
+
+    /*
+      IMPORTANT :
+      On recharge TOUJOURS le profil depuis Supabase.
+      Cela permet de récupérer la photo enregistrée
+      même après une nouvelle connexion.
+    */
+
+    const {
+      data:profile,
+      error
+    } =
       await supabaseClient
-        .rpc("disable_expired_sellers");
+        .from("profiles")
+        .select("*")
+        .eq(
+          "id",
+          currentUser.id
+        )
+        .maybeSingle();
 
-    } catch (error) {
+    if(error){
 
-      console.log(
-        "Expiration automatique :",
+      console.error(
+        "Erreur récupération profil:",
         error
       );
 
     }
 
+    currentProfile =
+      profile || null;
+
+    renderLoggedInAccount();
+
+    await renderProducts();
+
+  }catch(error){
+
+    console.error(
+      "checkUser:",
+      error
+    );
+
   }
 
+}
 
-  /* =========================================================
-     PRODUCTS
-  ========================================================= */
 
-  async function loadProducts() {
+/* =========================================================
+   LOGIN / REGISTER
+========================================================= */
 
-    const grid =
-      document.getElementById("productsGrid");
+function renderLoggedOutAccount(){
 
-    grid.innerHTML =
-      `<div class="loading">Chargement...</div>`;
+  const container =
+    document.getElementById(
+      "accountContainer"
+    );
+
+  if(!container) return;
+
+  container.innerHTML = `
+
+    <div class="form-card">
+
+      <h2>
+        Connexion
+      </h2>
+
+      <div class="form-group">
+        <label>Email</label>
+
+        <input
+          id="loginEmail"
+          type="email"
+          placeholder="ton@email.com"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Mot de passe</label>
+
+        <input
+          id="loginPassword"
+          type="password"
+          placeholder="Mot de passe"
+        >
+      </div>
+
+      <button
+        class="primary-btn"
+        onclick="login()"
+      >
+        Se connecter
+      </button>
+
+    </div>
+
+
+    <div class="form-card">
+
+      <h2>
+        Créer un compte
+      </h2>
+
+      <div class="form-group">
+        <label>Nom / pseudo</label>
+
+        <input
+          id="registerUsername"
+          type="text"
+          placeholder="Ton pseudo"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+
+        <input
+          id="registerEmail"
+          type="email"
+          placeholder="ton@email.com"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Téléphone</label>
+
+        <input
+          id="registerPhone"
+          type="tel"
+          placeholder="237..."
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Mot de passe</label>
+
+        <input
+          id="registerPassword"
+          type="password"
+          placeholder="Minimum 6 caractères"
+        >
+      </div>
+
+      <button
+        class="primary-btn"
+        onclick="register()"
+      >
+        Créer mon compte
+      </button>
+
+    </div>
+
+  `;
+}
+
+
+async function register(){
+
+  const username =
+    document
+      .getElementById("registerUsername")
+      ?.value
+      .trim();
+
+  const email =
+    document
+      .getElementById("registerEmail")
+      ?.value
+      .trim();
+
+  const phone =
+    document
+      .getElementById("registerPhone")
+      ?.value
+      .trim();
+
+  const password =
+    document
+      .getElementById("registerPassword")
+      ?.value;
+
+  if(
+    !username ||
+    !email ||
+    !password
+  ){
+
+    alert(
+      "Remplis tous les champs obligatoires."
+    );
+
+    return;
+  }
+
+  if(password.length < 6){
+
+    alert(
+      "Le mot de passe doit contenir au moins 6 caractères."
+    );
+
+    return;
+  }
+
+  try{
 
     const {
       data,
       error
-    } = await supabaseClient
-      .from("products")
-      .select("*")
-      .order("created_at", {
-        ascending: false
+    } =
+      await supabaseClient.auth.signUp({
+
+        email,
+        password,
+
+        options:{
+          data:{
+            username,
+            phone
+          }
+        }
+
       });
 
-    if (error) {
-
-      console.error(error);
-
-      grid.innerHTML =
-        `<div class="empty">
-          Impossible de charger les articles.
-        </div>`;
-
-      return;
+    if(error){
+      throw error;
     }
 
-    currentProducts = data || [];
+    if(data.user){
 
-    await renderProducts();
+      /*
+        Création du profil.
+      */
+
+      const {
+        error:profileError
+      } =
+        await supabaseClient
+          .from("profiles")
+          .upsert({
+
+            id:data.user.id,
+
+            username,
+
+            email,
+
+            phone,
+
+            role:"client",
+
+            verified:false,
+
+            avatar_url:null,
+
+            seller_active:false,
+
+            seller_payment_status:null
+
+          });
+
+      if(profileError){
+
+        console.error(
+          profileError
+        );
+
+      }
+    }
+
+    alert(
+      "✅ Compte créé. Vérifie ton email si Supabase demande une confirmation."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      error.message ||
+      "Erreur lors de la création du compte."
+    );
 
   }
 
+}
 
-  async function renderProducts() {
 
-    const grid =
-      document.getElementById("productsGrid");
+async function login(){
 
-    let products =
-      [...currentProducts];
+  const email =
+    document
+      .getElementById("loginEmail")
+      ?.value
+      .trim();
 
-    const search =
-      document
-        .getElementById("searchInput")
-        .value
-        .trim()
-        .toLowerCase();
+  const password =
+    document
+      .getElementById("loginPassword")
+      ?.value;
 
-    if (selectedCategory !== "Tous") {
+  if(!email || !password){
 
-      products =
-        products.filter(
-          product =>
-            product.category === selectedCategory
-        );
+    alert(
+      "Entre ton email et ton mot de passe."
+    );
 
+    return;
+  }
+
+  try{
+
+    const {
+      error
+    } =
+      await supabaseClient.auth.signInWithPassword({
+
+        email,
+        password
+
+      });
+
+    if(error){
+      throw error;
     }
 
-    if (search) {
+    /*
+      checkUser récupère automatiquement
+      avatar_url depuis profiles.
+    */
 
-      products =
-        products.filter(product =>
-          String(product.name || "")
-            .toLowerCase()
-            .includes(search)
-        );
+    await checkUser();
 
-    }
+    alert(
+      "✅ Connexion réussie."
+    );
 
-    if (!products.length) {
+  }catch(error){
 
-      grid.innerHTML =
-        `<div class="empty">
-          Aucun article trouvé.
-        </div>`;
+    console.error(error);
 
-      return;
-    }
+    alert(
+      error.message ||
+      "Email ou mot de passe incorrect."
+    );
 
-    const sellerIds = [
-      ...new Set(
-        products
-          .map(p => p.user_id)
-          .filter(Boolean)
-      )
-    ];
+  }
 
-    let sellers = {};
+}
 
-    if (sellerIds.length) {
 
-      const {
-        data
-      } = await supabaseClient
-        .from("profiles")
-        .select(
-          "id,username,avatar_url,verified,role,seller_active,seller_expires_at"
-        )
-        .in("id", sellerIds);
+async function logout(){
 
-      (data || []).forEach(
-        seller => {
-          sellers[seller.id] = seller;
+  await supabaseClient.auth.signOut();
+
+  currentUser = null;
+  currentProfile = null;
+
+  renderLoggedOutAccount();
+
+  await renderProducts();
+
+  showPage("homePage");
+
+}
+
+
+/* =========================================================
+   ACCOUNT / PROFILE
+========================================================= */
+
+function renderLoggedInAccount(){
+
+  const container =
+    document.getElementById(
+      "accountContainer"
+    );
+
+  if(!container) return;
+
+  const profile =
+    currentProfile || {};
+
+  const avatar =
+    getAvatarUrl(profile);
+
+  let roleText = "Client";
+
+  if(profile.role === "seller"){
+    roleText = "Vendeur";
+  }
+
+  if(profile.role === "creator_admin"){
+    roleText = "Administrateur";
+  }
+
+  let sellerStatus = "";
+
+  if(profile.role === "seller"){
+
+    const active =
+      isSellerActive(profile);
+
+    sellerStatus = active
+      ? `<p class="status-active">● Vendeur actif</p>`
+      : `<p class="status-inactive">● Vendeur inactif</p>`;
+
+  }
+
+  container.innerHTML = `
+
+    <div class="account-profile">
+
+      <div class="profile-avatar-container">
+
+        <img
+          id="profileAvatar"
+          class="avatar large"
+          src="${escapeHtml(avatar)}"
+          alt="Photo de profil"
+          onerror="this.src='https://ui-avatars.com/api/?name=Utilisateur&background=eeeeee&color=111111'"
+        >
+
+        <label
+          class="avatar-upload-label"
+          for="avatarInput"
+          title="Changer la photo"
+        >
+          📷
+        </label>
+
+      </div>
+
+      <input
+        id="avatarInput"
+        type="file"
+        accept="image/*"
+        class="hidden"
+        onchange="uploadAvatar()"
+      >
+
+      <div class="account-name">
+
+        ${escapeHtml(
+          profile.username ||
+          "Utilisateur"
+        )}
+
+        ${
+          profile.role === "creator_admin"
+            ? `<span class="creator-badge">✓</span>`
+            : ""
         }
+
+      </div>
+
+      <div class="account-email">
+
+        ${escapeHtml(
+          profile.email ||
+          currentUser?.email ||
+          ""
+        )}
+
+      </div>
+
+      <div class="role-badge">
+        ${roleText}
+      </div>
+
+      ${sellerStatus}
+
+      <button
+        class="secondary-btn"
+        onclick="document.getElementById('avatarInput').click()"
+      >
+        📷 Changer ma photo de profil
+      </button>
+
+      <button
+        class="secondary-btn"
+        onclick="refreshProfile()"
+      >
+        🔄 Actualiser mon profil
+      </button>
+
+      ${
+        profile.role === "seller"
+          ? `
+            <button
+              class="secondary-btn"
+              onclick="showSellPage()"
+            >
+              🛍️ Mon espace vendeur
+            </button>
+          `
+          : ""
+      }
+
+      ${
+        profile.role === "creator_admin"
+          ? `
+            <button
+              class="secondary-btn"
+              onclick="renderAdminPanel()"
+            >
+              ⚙️ Administration
+            </button>
+          `
+          : ""
+      }
+
+      <button
+        class="danger-btn"
+        onclick="logout()"
+      >
+        Se déconnecter
+      </button>
+
+    </div>
+
+    ${
+      profile.role === "seller"
+        ? `
+          <div
+            id="sellerAccountSection"
+          ></div>
+        `
+        : ""
+    }
+
+  `;
+
+  if(profile.role === "seller"){
+
+    renderSellerAccountSection();
+
+  }
+
+}
+
+
+/* =========================================================
+   PHOTO DE PROFIL — VERSION CORRIGÉE
+========================================================= */
+
+async function uploadAvatar(){
+
+  if(!currentUser){
+
+    alert(
+      "Tu dois être connecté."
+    );
+
+    return;
+  }
+
+  const input =
+    document.getElementById(
+      "avatarInput"
+    );
+
+  if(
+    !input ||
+    !input.files ||
+    !input.files.length
+  ){
+
+    alert(
+      "Choisis d'abord une photo."
+    );
+
+    return;
+  }
+
+  const file =
+    input.files[0];
+
+  if(!file.type.startsWith("image/")){
+
+    alert(
+      "Le fichier doit être une image."
+    );
+
+    input.value = "";
+
+    return;
+  }
+
+  if(file.size > 5 * 1024 * 1024){
+
+    alert(
+      "La photo doit faire moins de 5 Mo."
+    );
+
+    input.value = "";
+
+    return;
+  }
+
+  try{
+
+    /*
+      On utilise toujours le même fichier
+      pour cet utilisateur.
+
+      Exemple :
+
+      avatars/
+        ID_UTILISATEUR/
+          avatar.jpg
+    */
+
+    const path =
+      `${currentUser.id}/avatar.jpg`;
+
+
+    /*
+      Upload avec remplacement.
+    */
+
+    const {
+      error:uploadError
+    } =
+      await supabaseClient.storage
+        .from("avatars")
+        .upload(
+
+          path,
+
+          file,
+
+          {
+            cacheControl:"3600",
+            upsert:true,
+            contentType:file.type
+          }
+
+        );
+
+
+    if(uploadError){
+
+      console.error(
+        "UPLOAD AVATAR ERROR:",
+        uploadError
+      );
+
+      throw new Error(
+        "Erreur lors de l'envoi de la photo : " +
+        uploadError.message
       );
 
     }
 
-    products =
+
+    /*
+      URL publique.
+    */
+
+    const {
+      data:publicData
+    } =
+      supabaseClient.storage
+        .from("avatars")
+        .getPublicUrl(path);
+
+
+    if(
+      !publicData ||
+      !publicData.publicUrl
+    ){
+
+      throw new Error(
+        "Impossible de récupérer l'URL de la photo."
+      );
+
+    }
+
+
+    /*
+      Anti-cache.
+      Le ?v= permet de forcer le navigateur
+      à afficher la nouvelle photo.
+    */
+
+    const avatarUrl =
+      publicData.publicUrl +
+      "?v=" +
+      Date.now();
+
+
+    /*
+      Sauvegarde dans profiles.
+    */
+
+    const {
+      error:profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .update({
+
+          avatar_url:avatarUrl
+
+        })
+        .eq(
+          "id",
+          currentUser.id
+        );
+
+
+    if(profileError){
+
+      console.error(
+        "PROFILE AVATAR ERROR:",
+        profileError
+      );
+
+      throw new Error(
+        "La photo a été envoyée mais la sauvegarde du profil a échoué : " +
+        profileError.message
+      );
+
+    }
+
+
+    /*
+      Mise à jour locale.
+    */
+
+    if(!currentProfile){
+      currentProfile = {};
+    }
+
+    currentProfile.avatar_url =
+      avatarUrl;
+
+
+    /*
+      Mise à jour immédiate de l'image.
+    */
+
+    const profileAvatar =
+      document.getElementById(
+        "profileAvatar"
+      );
+
+    if(profileAvatar){
+
+      profileAvatar.src =
+        avatarUrl;
+
+    }
+
+
+    /*
+      Recharge le profil depuis Supabase
+      pour confirmer la sauvegarde.
+    */
+
+    await refreshProfile(false);
+
+
+    input.value = "";
+
+
+    alert(
+      "✅ Photo de profil enregistrée avec succès."
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "uploadAvatar:",
+      error
+    );
+
+    alert(
+      error.message ||
+      "Impossible d'enregistrer la photo."
+    );
+
+    input.value = "";
+
+  }
+
+}
+
+
+/* =========================================================
+   REFRESH PROFILE
+========================================================= */
+
+async function refreshProfile(showAlert = true){
+
+  if(!currentUser){
+    return;
+  }
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq(
+          "id",
+          currentUser.id
+        )
+        .maybeSingle();
+
+    if(error){
+      throw error;
+    }
+
+    currentProfile =
+      data || null;
+
+    renderLoggedInAccount();
+
+    if(showAlert){
+
+      alert(
+        "✅ Profil actualisé."
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    if(showAlert){
+
+      alert(
+        "Impossible d'actualiser le profil."
+      );
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   SELLER STATUS
+========================================================= */
+
+function isSellerActive(profile){
+
+  if(!profile){
+    return false;
+  }
+
+  if(profile.role === "creator_admin"){
+    return true;
+  }
+
+  if(profile.role !== "seller"){
+    return false;
+  }
+
+  if(profile.seller_active !== true){
+    return false;
+  }
+
+  if(!profile.seller_expires_at){
+    return false;
+  }
+
+  return new Date(
+    profile.seller_expires_at
+  ) > new Date();
+
+}
+
+
+/* =========================================================
+   AUTOMATIC SELLER EXPIRATION
+========================================================= */
+
+async function disableExpiredSellers(){
+
+  try{
+
+    await supabaseClient
+      .rpc(
+        "disable_expired_sellers"
+      );
+
+  }catch(error){
+
+    console.warn(
+      "Expiration vendeurs:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+async function loadProducts(){
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("products")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+  if(error){
+
+    console.error(
+      error
+    );
+
+    return [];
+
+  }
+
+  return data || [];
+
+}
+
+
+async function renderProducts(){
+
+  const grid =
+    document.getElementById(
+      "productsGrid"
+    );
+
+  if(!grid) return;
+
+  grid.innerHTML = `
+    <div class="loading">
+      Chargement des produits...
+    </div>
+  `;
+
+  try{
+
+    await disableExpiredSellers();
+
+    const products =
+      await loadProducts();
+
+    /*
+      Récupération des profils des vendeurs.
+    */
+
+    const sellerIds =
+      [
+        ...new Set(
+          products
+            .map(product => product.user_id)
+            .filter(Boolean)
+        )
+      ];
+
+    let profiles = [];
+
+    if(sellerIds.length){
+
+      const {
+        data
+      } =
+        await supabaseClient
+          .from("profiles")
+          .select(
+            "id,username,role,verified,avatar_url,phone,seller_active,seller_expires_at"
+          )
+          .in(
+            "id",
+            sellerIds
+          );
+
+      profiles =
+        data || [];
+
+    }
+
+
+    const profileMap =
+      new Map(
+        profiles.map(
+          profile => [
+            profile.id,
+            profile
+          ]
+        )
+      );
+
+
+    /*
+      Seulement les vendeurs actifs.
+    */
+
+    const visibleProducts =
       products.filter(product => {
 
         const seller =
-          sellers[product.user_id];
+          profileMap.get(
+            product.user_id
+          );
 
-        if (!seller) {
-          return true;
+        if(!seller){
+          return false;
         }
 
-        if (
-          seller.role === "creator_admin"
-        ) {
-          return true;
-        }
-
-        return sellerIsActive(seller);
+        return isSellerActive(
+          seller
+        );
 
       });
 
-    if (!products.length) {
 
-      grid.innerHTML =
-        `<div class="empty">
-          Aucun article disponible.
-        </div>`;
+    currentProducts =
+      visibleProducts;
+
+
+    const search =
+      document
+        .getElementById("searchInput")
+        ?.value
+        ?.toLowerCase()
+        .trim() || "";
+
+
+    let filtered =
+      visibleProducts.filter(product => {
+
+        const matchesCategory =
+          selectedCategory === "Tous" ||
+          product.category ===
+            selectedCategory;
+
+        const matchesSearch =
+          !search ||
+          String(product.name || "")
+            .toLowerCase()
+            .includes(search) ||
+          String(product.description || "")
+            .toLowerCase()
+            .includes(search);
+
+        return (
+          matchesCategory &&
+          matchesSearch
+        );
+
+      });
+
+
+    if(!filtered.length){
+
+      grid.innerHTML = `
+        <div
+          class="empty"
+          style="grid-column:1/-1"
+        >
+          Aucun produit trouvé.
+        </div>
+      `;
 
       return;
+
     }
 
+
     grid.innerHTML =
-      products.map(product => {
+      filtered.map(product => {
 
         const images =
-          getProductImages(product);
+          Array.isArray(
+            product.image_urls
+          )
+            ? product.image_urls
+            : [];
 
         const image =
-          images[0] || "";
+          images[0] ||
+          "https://via.placeholder.com/600x600?text=Produit";
 
         return `
+
           <article
             class="product-card"
             onclick="openProduct('${product.id}')"
           >
 
             <img
-              class="product-image"
-              src="${escapeHTML(image)}"
-              alt="${escapeHTML(product.name)}"
-              onerror="this.style.display='none'"
+              class="product-card-image"
+              src="${escapeHtml(image)}"
+              alt="${escapeHtml(product.name)}"
+              loading="lazy"
             >
 
             <div class="product-info">
 
               <div class="product-name">
-                ${escapeHTML(product.name)}
+                ${escapeHtml(product.name)}
               </div>
 
               <div class="product-price">
@@ -1412,1587 +2075,980 @@
               </div>
 
               <div class="product-category">
-                ${escapeHTML(product.category || "")}
+                ${escapeHtml(product.category || "")}
               </div>
 
             </div>
 
           </article>
+
         `;
 
       }).join("");
 
+
+  }catch(error){
+
+    console.error(error);
+
+    grid.innerHTML = `
+      <div
+        class="empty"
+        style="grid-column:1/-1"
+      >
+        Impossible de charger les produits.
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   PRODUCT DETAIL
+========================================================= */
+
+async function openProduct(productId){
+
+  const product =
+    currentProducts.find(
+      item =>
+        String(item.id) ===
+        String(productId)
+    );
+
+  if(!product){
+
+    /*
+      Si le produit n'est pas dans
+      la liste locale, on le récupère.
+    */
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("products")
+        .select("*")
+        .eq(
+          "id",
+          productId
+        )
+        .single();
+
+    if(error){
+
+      alert(
+        "Produit introuvable."
+      );
+
+      return;
+
+    }
+
+    selectedProduct = data;
+
+  }else{
+
+    selectedProduct = product;
+
   }
 
 
-  /* =========================================================
-     PRODUCT DETAIL
-  ========================================================= */
+  showPage(
+    "productPage"
+  );
 
-  async function openProduct(productId) {
+  await renderProductDetail();
 
-    const product =
-      currentProducts.find(
-        p => String(p.id) === String(productId)
-      );
+}
 
-    if (!product) {
-      return;
-    }
 
-    const container =
-      document.getElementById(
-        "productDetailContainer"
-      );
+async function renderProductDetail(){
 
-    container.innerHTML =
-      `<div class="loading">Chargement...</div>`;
+  const container =
+    document.getElementById(
+      "productDetails"
+    );
 
-    goTo("product");
+  if(!container || !selectedProduct){
+    return;
+  }
 
-    const images =
-      getProductImages(product);
+  const product =
+    selectedProduct;
 
-    let seller = null;
+  const images =
+    Array.isArray(
+      product.image_urls
+    )
+      ? product.image_urls
+      : [];
 
-    if (product.user_id) {
+  const mainImage =
+    images[0] ||
+    "https://via.placeholder.com/800x800?text=Produit";
 
-      const {
-        data
-      } = await supabaseClient
+
+  /*
+    Profil vendeur.
+  */
+
+  let seller = null;
+
+  if(product.user_id){
+
+    const {
+      data
+    } =
+      await supabaseClient
         .from("profiles")
         .select(
-          "id,username,phone,avatar_url,verified,role,seller_active,seller_expires_at"
+          "id,username,email,phone,role,verified,avatar_url,seller_active,seller_expires_at"
         )
-        .eq("id", product.user_id)
+        .eq(
+          "id",
+          product.user_id
+        )
         .maybeSingle();
 
-      seller = data;
+    seller = data;
 
-    }
+  }
 
-    const mainImage =
-      images[0] || "";
 
-    const sizes =
-      product.sizes
-        ? String(product.sizes)
-            .split(",")
-            .map(s => s.trim())
-            .filter(Boolean)
-        : [];
+  const sellerName =
+    seller?.username ||
+    "Vendeur";
 
-    const sellerName =
-      seller?.username ||
-      "Vendeur";
 
-    const sellerPhone =
-      seller?.phone ||
-      "";
+  container.innerHTML = `
 
-    const whatsappText =
-      `Bonjour ${sellerName}, je suis intéressé(e) par votre article "${product.name}" à ${formatPrice(product.price)} sur Zackary sh🛍️p.`;
+    <img
+      id="mainProductImage"
+      class="main-product-image"
+      src="${escapeHtml(mainImage)}"
+      alt="${escapeHtml(product.name)}"
+      onclick="openZoom(this.src)"
+    >
 
-    const whatsappUrl =
-      sellerPhone
-        ? `https://wa.me/${sellerPhone.replace(/\D/g, "")}?text=${encodeURIComponent(whatsappText)}`
-        : "#";
 
-    container.innerHTML = `
+    <div class="thumbnails">
 
-      <div class="product-detail">
-
-        <div class="detail-layout">
-
-          <div>
+      ${
+        images.map(
+          (image,index) => `
 
             <img
-              id="mainProductImage"
-              class="main-product-image"
-              src="${escapeHTML(mainImage)}"
-              alt="${escapeHTML(product.name)}"
-              onclick="openZoom('${escapeHTML(mainImage)}')"
+              class="thumbnail ${
+                index === 0
+                  ? "active"
+                  : ""
+              }"
+              src="${escapeHtml(image)}"
+              onclick="changeMainProductImage(
+                '${escapeHtml(image)}',
+                this
+              )"
             >
 
-            <div class="thumbnails">
+          `
+        ).join("")
+      }
 
-              ${images.map((image, index) => `
+    </div>
 
-                <img
-                  class="thumbnail ${index === 0 ? "active" : ""}"
-                  src="${escapeHTML(image)}"
-                  onclick="changeMainImage('${escapeHTML(image)}', this)"
-                  alt="Photo ${index + 1}"
-                >
 
-              `).join("")}
+    <div class="product-detail-info">
 
+      <h1>
+        ${escapeHtml(product.name)}
+      </h1>
+
+      <div class="detail-price">
+        ${formatPrice(product.price)}
+      </div>
+
+      <p>
+        <strong>Catégorie :</strong>
+        ${escapeHtml(product.category || "—")}
+      </p>
+
+
+      ${
+        product.sizes
+          ? `
+            <p style="margin-top:8px">
+              <strong>Tailles :</strong>
+              ${escapeHtml(product.sizes)}
+            </p>
+          `
+          : ""
+      }
+
+
+      ${
+        product.delivery
+          ? `
+            <p style="margin-top:8px">
+              🚚 Livraison disponible
+            </p>
+          `
+          : ""
+      }
+
+
+      ${
+        product.description
+          ? `
+            <div class="detail-description">
+              ${escapeHtml(product.description)}
             </div>
+          `
+          : ""
+      }
 
-          </div>
+
+      <div class="seller-box">
+
+        <div class="seller-row">
+
+          <img
+            class="avatar"
+            src="${escapeHtml(
+              getAvatarUrl(seller)
+            )}"
+            alt="Vendeur"
+          >
 
           <div>
 
-            <h1 class="detail-title">
-              ${escapeHTML(product.name)}
-            </h1>
-
-            <div class="detail-price">
-              ${formatPrice(product.price)}
-            </div>
+            <strong>
+              ${escapeHtml(sellerName)}
+            </strong>
 
             ${
-              sizes.length
-                ? `
-                  <strong>Tailles disponibles</strong>
-
-                  <div class="sizes">
-
-                    ${sizes.map(size =>
-                      `<span class="size">${escapeHTML(size)}</span>`
-                    ).join("")}
-
-                  </div>
-                `
+              seller?.role === "creator_admin"
+                ? `<span class="creator-badge">✓</span>`
                 : ""
             }
 
-            <p class="detail-description">
-              ${escapeHTML(product.description || "Aucune description.")}
-            </p>
-
-            ${
-              product.delivery
-                ? `
-                  <div style="margin-top:15px;">
-                    🚚 Livraison disponible
-                  </div>
-                `
-                : ""
-            }
-
-            <div class="seller-box">
-
-              <div class="seller-profile">
-
-                <img
-                  class="avatar"
-                  src="${escapeHTML(
-                    seller?.avatar_url ||
-                    "https://via.placeholder.com/100"
-                  )}"
-                  alt="Profil"
-                >
-
-                <div>
-
-                  <strong>
-                    ${escapeHTML(sellerName)}
-                  </strong>
-
-                  ${
-                    seller?.verified
-                      ? `<div class="verified">✓ Vendeur vérifié</div>`
-                      : ""
-                  }
-
-                </div>
-
-              </div>
-
-              ${
-                sellerPhone
-                  ? `
-                    <a
-                      href="${whatsappUrl}"
-                      target="_blank"
-                      style="text-decoration:none;"
-                    >
-                      <button class="whatsapp-btn">
-                        Commander sur WhatsApp
-                      </button>
-                    </a>
-                  `
-                  : `
-                    <button
-                      class="secondary-btn"
-                      style="width:100%;margin-top:15px;"
-                      disabled
-                    >
-                      Contact vendeur indisponible
-                    </button>
-                  `
-              }
-
+            <div style="color:#777;font-size:13px">
+              Vendeur
             </div>
 
           </div>
 
         </div>
+
+
+        ${
+          seller?.phone
+            ? `
+              <button
+                class="primary-btn"
+                onclick="contactSeller(
+                  '${escapeHtml(seller.phone)}',
+                  '${escapeHtml(product.name)}'
+                )"
+              >
+                💬 Contacter sur WhatsApp
+              </button>
+            `
+            : `
+              <p style="margin-top:10px;color:#777">
+                Aucun numéro disponible.
+              </p>
+            `
+        }
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+function changeMainProductImage(
+  image,
+  element
+){
+
+  const main =
+    document.getElementById(
+      "mainProductImage"
+    );
+
+  if(main){
+    main.src = image;
+  }
+
+  document
+    .querySelectorAll(".thumbnail")
+    .forEach(
+      thumbnail =>
+        thumbnail.classList.remove(
+          "active"
+        )
+    );
+
+  element?.classList.add(
+    "active"
+  );
+
+}
+
+
+function openZoom(src){
+
+  const modal =
+    document.getElementById(
+      "zoomModal"
+    );
+
+  const image =
+    document.getElementById(
+      "zoomImage"
+    );
+
+  if(!modal || !image) return;
+
+  image.src = src;
+
+  modal.classList.remove(
+    "hidden"
+  );
+
+}
+
+
+function closeZoom(){
+
+  document
+    .getElementById(
+      "zoomModal"
+    )
+    ?.classList.add(
+      "hidden"
+    );
+
+}
+
+
+function contactSeller(
+  phone,
+  productName
+){
+
+  let clean =
+    String(phone)
+      .replace(/\D/g,"");
+
+  if(clean.startsWith("0")){
+    clean =
+      "237" +
+      clean.substring(1);
+  }
+
+  const message =
+    `Bonjour, je suis intéressé(e) par votre article "${productName}" sur Zackary sh🛍️p.`;
+
+  const url =
+    "https://wa.me/" +
+    clean +
+    "?text=" +
+    encodeURIComponent(message);
+
+  window.open(
+    url,
+    "_blank"
+  );
+
+}
+
+
+/* =========================================================
+   SELLER ACCOUNT
+========================================================= */
+
+async function renderSellerAccountSection(){
+
+  const container =
+    document.getElementById(
+      "sellerAccountSection"
+    );
+
+  if(!container) return;
+
+  const active =
+    isSellerActive(
+      currentProfile
+    );
+
+
+  let expiration = "";
+
+  if(currentProfile?.seller_expires_at){
+
+    expiration =
+      new Date(
+        currentProfile.seller_expires_at
+      ).toLocaleDateString(
+        "fr-FR"
+      );
+
+  }
+
+
+  const {
+    data:sales
+  } =
+    await supabaseClient
+      .from("sales")
+      .select("*")
+      .eq(
+        "seller_id",
+        currentUser.id
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+  const sellerSales =
+    sales || [];
+
+
+  const total =
+    sellerSales.reduce(
+      (
+        sum,
+        sale
+      ) =>
+        sum +
+        Number(
+          sale.amount || 0
+        ),
+      0
+    );
+
+
+  container.innerHTML = `
+
+    <div class="form-card">
+
+      <h2>
+        Statut vendeur
+      </h2>
+
+      <p style="margin-top:8px">
+
+        ${
+          active
+            ? `
+              <span class="status-active">
+                ● Actif
+              </span>
+            `
+            : `
+              <span class="status-inactive">
+                ● Inactif
+              </span>
+            `
+        }
+
+      </p>
+
+      ${
+        expiration
+          ? `
+            <p style="margin-top:6px">
+              Expiration :
+              <strong>${expiration}</strong>
+            </p>
+          `
+          : ""
+      }
+
+      ${
+        active
+          ? `
+            <button
+              class="primary-btn"
+              onclick="renderSellerProducts()"
+            >
+              📦 Mes articles
+            </button>
+
+            <button
+              class="secondary-btn"
+              onclick="renderSellerSales()"
+            >
+              📊 Mon récapitulatif de ventes
+            </button>
+          `
+          : `
+            <p style="margin-top:10px;color:#777">
+              Ton accès vendeur est actuellement inactif.
+            </p>
+          `
+      }
+
+    </div>
+
+    <div id="sellerDynamicContent"></div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   SELLER PAGE
+========================================================= */
+
+async function renderSellPage(){
+
+  const container =
+    document.getElementById(
+      "sellContent"
+    );
+
+  if(!container) return;
+
+  if(!currentUser){
+
+    container.innerHTML = `
+
+      <div class="form-card">
+
+        <h2>
+          Connecte-toi
+        </h2>
+
+        <p style="margin-top:8px">
+          Tu dois être connecté pour accéder à l'espace vendeur.
+        </p>
+
+        <button
+          class="primary-btn"
+          onclick="showPage('accountPage')"
+        >
+          Se connecter
+        </button>
 
       </div>
 
     `;
 
+    return;
   }
 
 
-  function changeMainImage(
-    image,
-    element
-  ) {
-
-    const main =
-      document.getElementById(
-        "mainProductImage"
-      );
-
-    main.src = image;
-
-    main.onclick =
-      () => openZoom(image);
-
-    document
-      .querySelectorAll(".thumbnail")
-      .forEach(
-        thumbnail =>
-          thumbnail.classList.remove("active")
-      );
-
-    element.classList.add("active");
-
-  }
-
-
-  /* =========================================================
-     ZOOM
-  ========================================================= */
-
-  function openZoom(image) {
-
-    document
-      .getElementById("zoomImage")
-      .src = image;
-
-    document
-      .getElementById("zoomModal")
-      .classList.remove("hidden");
-
-  }
-
-
-  function closeZoom() {
-
-    document
-      .getElementById("zoomModal")
-      .classList.add("hidden");
-
-  }
-
-
-  /* =========================================================
-     AUTH TABS
-  ========================================================= */
-
-  function showAuth(type) {
-
-    const login =
-      document.getElementById("loginForm");
-
-    const register =
-      document.getElementById("registerForm");
-
-    const loginTab =
-      document.getElementById("loginTab");
-
-    const registerTab =
-      document.getElementById("registerTab");
-
-    if (type === "login") {
-
-      login.classList.remove("hidden");
-      register.classList.add("hidden");
-
-      loginTab.classList.add("active");
-      registerTab.classList.remove("active");
-
-    } else {
-
-      login.classList.add("hidden");
-      register.classList.remove("hidden");
-
-      loginTab.classList.remove("active");
-      registerTab.classList.add("active");
-
-    }
-
-  }
-
-
-  /* =========================================================
-     REGISTER
-  ========================================================= */
-
-  document
-    .getElementById("registerForm")
-    .addEventListener(
-      "submit",
-      async event => {
-
-        event.preventDefault();
-
-        const username =
-          document
-            .getElementById("registerUsername")
-            .value
-            .trim();
-
-        const email =
-          document
-            .getElementById("registerEmail")
-            .value
-            .trim();
-
-        const password =
-          document
-            .getElementById("registerPassword")
-            .value;
-
-        const message =
-          document.getElementById(
-            "authMessage"
-          );
-
-        message.textContent =
-          "Création du compte...";
-
-        const {
-          data,
-          error
-        } = await supabaseClient.auth.signUp({
-          email,
-          password
-        });
-
-        if (error) {
-
-          message.textContent =
-            error.message;
-
-          return;
-        }
-
-        if (data.user) {
-
-          const {
-            error: profileError
-          } = await supabaseClient
-            .from("profiles")
-            .upsert({
-              id: data.user.id,
-              username,
-              email,
-              role: "client",
-              verified: false,
-              seller_active: false,
-              seller_payment_status: "unpaid"
-            });
-
-          if (profileError) {
-
-            console.error(profileError);
-
-            message.textContent =
-              "Compte créé mais profil non enregistré.";
-
-            return;
-          }
-
-        }
-
-        message.textContent =
-          "Compte créé avec succès. Vérifie ton email si nécessaire.";
-
-        showAuth("login");
-
-      }
-    );
-
-
-  /* =========================================================
-     LOGIN
-  ========================================================= */
-
-  document
-    .getElementById("loginForm")
-    .addEventListener(
-      "submit",
-      async event => {
-
-        event.preventDefault();
-
-        const email =
-          document
-            .getElementById("loginEmail")
-            .value
-            .trim();
-
-        const password =
-          document
-            .getElementById("loginPassword")
-            .value;
-
-        const message =
-          document.getElementById(
-            "authMessage"
-          );
-
-        message.textContent =
-          "Connexion...";
-
-        const {
-          error
-        } =
-          await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-          });
-
-        if (error) {
-
-          message.textContent =
-            error.message;
-
-          return;
-        }
-
-        message.textContent =
-          "Connexion réussie.";
-
-        await checkUser();
-
-      }
-    );
-
-
-  /* =========================================================
-     CHECK USER
-  ========================================================= */
-
-  async function checkUser() {
-
-    const {
-      data
-    } =
-      await supabaseClient.auth.getUser();
-
-    currentUser =
-      data?.user || null;
-
-    if (!currentUser) {
-
-      renderLoggedOutAccount();
-
-      return;
-    }
-
-    const {
-      data: profile,
-      error
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id", currentUser.id)
-        .maybeSingle();
-
-    if (error) {
-
-      console.error(error);
-
-      return;
-    }
-
-    currentProfile =
-      profile;
-
-    renderLoggedInAccount();
-
-  }
-
-
-  /* =========================================================
-     LOGGED OUT ACCOUNT
-  ========================================================= */
-
-  function renderLoggedOutAccount() {
-
-    document
-      .getElementById("accountContainer")
-      .innerHTML = `
-
-        <div class="card">
-
-          <h2>Mon compte</h2>
-
-          <div class="auth-tabs">
-
-            <button
-              id="loginTab"
-              class="auth-tab active"
-              onclick="showAuth('login')"
-            >
-              Connexion
-            </button>
-
-            <button
-              id="registerTab"
-              class="auth-tab"
-              onclick="showAuth('register')"
-            >
-              Inscription
-            </button>
-
-          </div>
-
-          <form id="loginForm">
-
-            <div class="form-group">
-              <label>Email</label>
-
-              <input
-                id="loginEmail"
-                class="form-control"
-                type="email"
-                required
-              >
-            </div>
-
-            <div class="form-group">
-
-              <label>Mot de passe</label>
-
-              <input
-                id="loginPassword"
-                class="form-control"
-                type="password"
-                required
-              >
-
-            </div>
-
-            <button class="primary-btn">
-              Se connecter
-            </button>
-
-          </form>
-
-          <form id="registerForm" class="hidden">
-
-            <div class="form-group">
-
-              <label>Nom d'utilisateur</label>
-
-              <input
-                id="registerUsername"
-                class="form-control"
-                required
-              >
-
-            </div>
-
-            <div class="form-group">
-
-              <label>Email</label>
-
-              <input
-                id="registerEmail"
-                class="form-control"
-                type="email"
-                required
-              >
-
-            </div>
-
-            <div class="form-group">
-
-              <label>Mot de passe</label>
-
-              <input
-                id="registerPassword"
-                class="form-control"
-                type="password"
-                minlength="6"
-                required
-              >
-
-            </div>
-
-            <button class="primary-btn">
-              Créer mon compte
-            </button>
-
-          </form>
-
-          <p
-            id="authMessage"
-            style="margin-top:15px;"
-          ></p>
-
-        </div>
-
-        <div class="card">
-
-          <h2>Devenir vendeur</h2>
-
-          <div class="payment-box">
-
-            <strong>
-              Inscription vendeur : 1 050 XAF
-            </strong>
-
-            <br><br>
-
-            Paiement Orange Money :
-
-            <br>
-
-            <strong>
-              +237 690 847 035
-            </strong>
-
-            <br><br>
-
-            Après confirmation du paiement,
-            ton compte vendeur sera activé
-            pendant 30 jours.
-
-          </div>
-
-        </div>
-
-      `;
-
-    attachAuthListeners();
-
-  }
-
-
-  function attachAuthListeners() {
-
-    const registerForm =
-      document.getElementById(
-        "registerForm"
-      );
-
-    if (registerForm) {
-
-      registerForm.addEventListener(
-        "submit",
-        async event => {
-
-          event.preventDefault();
-
-          const username =
-            document
-              .getElementById(
-                "registerUsername"
-              )
-              .value
-              .trim();
-
-          const email =
-            document
-              .getElementById(
-                "registerEmail"
-              )
-              .value
-              .trim();
-
-          const password =
-            document
-              .getElementById(
-                "registerPassword"
-              )
-              .value;
-
-          const message =
-            document.getElementById(
-              "authMessage"
-            );
-
-          message.textContent =
-            "Création du compte...";
-
-          const {
-            data,
-            error
-          } =
-            await supabaseClient.auth.signUp({
-              email,
-              password
-            });
-
-          if (error) {
-
-            message.textContent =
-              error.message;
-
-            return;
-          }
-
-          if (data.user) {
-
-            await supabaseClient
-              .from("profiles")
-              .upsert({
-                id: data.user.id,
-                username,
-                email,
-                role: "client",
-                verified: false,
-                seller_active: false,
-                seller_payment_status: "unpaid"
-              });
-
-          }
-
-          message.textContent =
-            "Compte créé avec succès.";
-
-          showAuth("login");
-
-        }
-      );
-
-    }
-
-    const loginForm =
-      document.getElementById(
-        "loginForm"
-      );
-
-    if (loginForm) {
-
-      loginForm.addEventListener(
-        "submit",
-        async event => {
-
-          event.preventDefault();
-
-          const email =
-            document
-              .getElementById(
-                "loginEmail"
-              )
-              .value
-              .trim();
-
-          const password =
-            document
-              .getElementById(
-                "loginPassword"
-              )
-              .value;
-
-          const message =
-            document.getElementById(
-              "authMessage"
-            );
-
-          message.textContent =
-            "Connexion...";
-
-          const {
-            error
-          } =
-            await supabaseClient.auth
-              .signInWithPassword({
-                email,
-                password
-              });
-
-          if (error) {
-
-            message.textContent =
-              error.message;
-
-            return;
-          }
-
-          await checkUser();
-
-        }
-      );
-
-    }
-
-  }
-
-
-  /* =========================================================
-     LOGGED IN ACCOUNT
-  ========================================================= */
-
-  async function renderLoggedInAccount() {
-
-    const isAdmin =
-      currentProfile?.role === "creator_admin";
-
-    const activeSeller =
-      sellerIsActive(currentProfile);
-
-    const days =
-      sellerDaysRemaining(currentProfile);
-
-    document
-      .getElementById("accountContainer")
-      .innerHTML = `
-
-        <div class="card">
-
-          <div class="profile-header">
-
-            <img
-              id="profileAvatar"
-              class="profile-big-avatar"
-              src="${
-                escapeHTML(
-                  currentProfile?.avatar_url ||
-                  "https://via.placeholder.com/150"
-                )
-              }"
-              alt="Profil"
-            >
-
-            <div>
-
-              <h2>
-                ${escapeHTML(
-                  currentProfile?.username ||
-                  "Utilisateur"
-                )}
-              </h2>
-
-              ${
-                isAdmin
-                  ? `<span class="admin-badge">
-                       👑 Créateur / Admin
-                     </span>`
-                  : ""
-              }
-
-              ${
-                activeSeller && !isAdmin
-                  ? `
-                    <div class="status-active">
-                      ✓ Vendeur actif
-                      — ${days} jour(s) restant(s)
-                    </div>
-                  `
-                  : ""
-              }
-
-            </div>
-
-          </div>
-
-          <div class="form-group">
-
-            <label>
-              Modifier ma photo de profil
-            </label>
-
-            <input
-              id="avatarInput"
-              class="form-control"
-              type="file"
-              accept="image/*"
-            >
-
-          </div>
+  if(
+    !currentProfile ||
+    currentProfile.role !== "seller"
+  ){
+
+    if(
+      currentProfile?.role ===
+      "creator_admin"
+    ){
+
+      container.innerHTML = `
+
+        <div class="form-card">
+
+          <h2>
+            Administration
+          </h2>
+
+          <p style="margin-top:8px">
+            Tu es administrateur créateur.
+          </p>
 
           <button
             class="primary-btn"
-            onclick="uploadAvatar()"
+            onclick="renderAdminPanel()"
           >
-            Enregistrer la photo
-          </button>
-
-          <button
-            class="secondary-btn"
-            style="margin-left:6px;"
-            onclick="logout()"
-          >
-            Se déconnecter
+            ⚙️ Ouvrir l'administration
           </button>
 
         </div>
 
-        ${
-          !isAdmin
-            ? `
-              <div class="card">
-
-                <h2>Mon espace vendeur</h2>
-
-                ${
-                  activeSeller
-                    ? `
-                      <div class="payment-box">
-
-                        <strong>
-                          ✓ Ton accès vendeur est actif
-                        </strong>
-
-                        <br><br>
-
-                        Il te reste
-                        <strong>${days} jour(s)</strong>.
-
-                      </div>
-
-                      <button
-                        class="primary-btn"
-                        onclick="goTo('sell')"
-                      >
-                        Publier un article
-                      </button>
-
-                      <button
-                        class="secondary-btn"
-                        onclick="loadMyProducts()"
-                        style="margin-left:6px;"
-                      >
-                        Mes articles
-                      </button>
-
-                      <button
-                        class="secondary-btn"
-                        onclick="loadSellerSales()"
-                        style="margin-top:8px;"
-                      >
-                        📊 Mon récapitulatif des ventes
-                      </button>
-
-                    `
-                    : `
-                      <div class="payment-box">
-
-                        <strong>
-                          Accès vendeur inactif
-                        </strong>
-
-                        <br><br>
-
-                        Inscription :
-                        <strong>1 050 XAF</strong>
-
-                        <br><br>
-
-                        Orange Money :
-                        <strong>+237 690 847 035</strong>
-
-                        <br><br>
-
-                        Après confirmation du paiement,
-                        l'administrateur active ton accès
-                        pendant 30 jours.
-
-                      </div>
-                    `
-                }
-
-              </div>
-
-              <div id="sellerContent"></div>
-            `
-            : ""
-        }
-
-        ${
-          isAdmin
-            ? `
-              <div id="adminPanel"></div>
-            `
-            : ""
-        }
-
       `;
 
-    if (isAdmin) {
-      loadCreatorAdmin();
+      return;
+
     }
+
+
+    container.innerHTML = `
+
+      <div class="form-card">
+
+        <h2>
+          Devenir vendeur
+        </h2>
+
+        <p style="margin-top:10px;line-height:1.5">
+          L'inscription vendeur coûte
+          <strong>1 050 XAF</strong>.
+        </p>
+
+        <p style="margin-top:8px;line-height:1.5">
+          Effectue le paiement par Orange Money au
+          <strong>+237 690 847 035</strong>,
+          puis contacte l'administration pour validation.
+        </p>
+
+        <p style="margin-top:8px">
+          Après validation, l'accès vendeur est activé pour la période prévue.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
 
   }
 
 
-  /* =========================================================
-     AVATAR
-  ========================================================= */
+  if(!isSellerActive(currentProfile)){
 
-  async function uploadAvatar() {
+    container.innerHTML = `
 
-    if (!currentUser) {
-      return;
-    }
+      <div class="form-card">
 
-    const input =
-      document.getElementById(
-        "avatarInput"
-      );
+        <h2>
+          Compte vendeur inactif
+        </h2>
 
-    if (!input?.files?.length) {
+        <p style="margin-top:10px;color:#c5221f">
+          Ton accès vendeur n'est plus actif.
+        </p>
 
-      alert(
-        "Choisis d'abord une image."
-      );
+      </div>
 
-      return;
-    }
+    `;
 
-    const file =
-      input.files[0];
+    return;
 
-    const extension =
-      file.name.split(".").pop();
+  }
 
-    const path =
-      `avatars/${currentUser.id}.${extension}`;
 
-    const {
-      error: uploadError
-    } =
-      await supabaseClient.storage
-        .from("product-images")
-        .upload(
-          path,
-          file,
-          {
-            upsert: true
+  container.innerHTML = `
+
+    <div class="form-card">
+
+      <h2>
+        Publier un article
+      </h2>
+
+      <div class="form-group">
+
+        <label>
+          Nom du produit
+        </label>
+
+        <input
+          id="productName"
+          type="text"
+          placeholder="Ex : T-shirt Nike"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Prix en XAF
+        </label>
+
+        <input
+          id="productPrice"
+          type="number"
+          min="0"
+          placeholder="15000"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Catégorie
+        </label>
+
+        <select id="productCategory">
+
+          ${
+            categories
+              .filter(
+                c => c !== "Tous"
+              )
+              .map(
+                c =>
+                  `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`
+              )
+              .join("")
           }
-        );
 
-    if (uploadError) {
+        </select>
 
-      alert(
-        uploadError.message
-      );
+      </div>
 
-      return;
-    }
 
-    const {
-      data
-    } =
-      supabaseClient.storage
-        .from("product-images")
-        .getPublicUrl(path);
+      <div class="form-group">
 
-    const avatarUrl =
-      data.publicUrl;
+        <label>
+          Tailles
+        </label>
 
-    const {
-      error
-    } =
-      await supabaseClient
-        .from("profiles")
-        .update({
-          avatar_url: avatarUrl
-        })
-        .eq(
-          "id",
-          currentUser.id
-        );
+        <input
+          id="productSizes"
+          type="text"
+          placeholder="S, M, L, XL"
+        >
 
-    if (error) {
+      </div>
 
-      alert(error.message);
 
-      return;
-    }
+      <div class="form-group">
 
-    currentProfile.avatar_url =
-      avatarUrl;
+        <label>
+          Description
+        </label>
 
-    await renderLoggedInAccount();
+        <textarea
+          id="productDescription"
+          placeholder="Décris ton article..."
+        ></textarea>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Photos — maximum 4
+        </label>
+
+        <input
+          id="productImages"
+          type="file"
+          accept="image/*"
+          multiple
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="checkbox-row">
+
+          <input
+            id="productDelivery"
+            type="checkbox"
+          >
+
+          Livraison disponible
+
+        </label>
+
+      </div>
+
+
+      <button
+        class="primary-btn"
+        onclick="publishProduct()"
+      >
+        Publier l'article
+      </button>
+
+    </div>
+
+
+    <div class="form-card">
+
+      <h2>
+        Mes articles
+      </h2>
+
+      <div id="myProducts">
+        Chargement...
+      </div>
+
+    </div>
+
+
+    <div class="form-card">
+
+      <h2>
+        Mes ventes
+      </h2>
+
+      <div id="mySales">
+        Chargement...
+      </div>
+
+    </div>
+
+  `;
+
+
+  await renderSellerProducts();
+
+  await renderSellerSales();
+
+}
+
+
+/* =========================================================
+   PUBLISH PRODUCT
+========================================================= */
+
+async function publishProduct(){
+
+  if(
+    !currentUser ||
+    !isSellerActive(currentProfile)
+  ){
 
     alert(
-      "Photo de profil mise à jour."
+      "Ton compte vendeur n'est pas actif."
     );
 
+    return;
   }
 
 
-  /* =========================================================
-     SELLER ACCESS
-  ========================================================= */
-
-  async function checkSellerAccess() {
-
-    if (!currentUser) {
-
-      document
-        .getElementById("sellAccessContainer")
-        .innerHTML = `
-
-          <div class="card">
-
-            <h2>Vendre sur Zackary sh🛍️p</h2>
-
-            <p>
-              Connecte-toi pour accéder à l'espace vendeur.
-            </p>
-
-            <br>
-
-            <button
-              class="primary-btn"
-              onclick="goTo('account')"
-            >
-              Se connecter
-            </button>
-
-          </div>
-
-        `;
-
-      return;
-    }
-
-    if (!currentProfile) {
-      await checkUser();
-    }
-
-    if (
-      !sellerIsActive(currentProfile)
-    ) {
-
-      document
-        .getElementById("sellAccessContainer")
-        .innerHTML = `
-
-          <div class="card">
-
-            <h2>Accès vendeur</h2>
-
-            <div class="payment-box">
-
-              <strong>
-                Ton accès vendeur n'est pas actif.
-              </strong>
-
-              <br><br>
-
-              Tarif :
-              <strong>1 050 XAF</strong>
-
-              <br><br>
-
-              Orange Money :
-              <strong>+237 690 847 035</strong>
-
-              <br><br>
-
-              Après confirmation,
-              l'administrateur peut activer ton compte
-              pour 30 jours.
-
-            </div>
-
-          </div>
-
-        `;
-
-      return;
-    }
-
-    renderSellForm();
-
-  }
-
-
-  /* =========================================================
-     SELL FORM
-  ========================================================= */
-
-  function renderSellForm() {
-
+  const name =
     document
-      .getElementById("sellAccessContainer")
-      .innerHTML = `
+      .getElementById("productName")
+      ?.value
+      .trim();
 
-        <div class="card">
-
-          <h2>
-            Publier un article
-          </h2>
-
-          <p style="color:#777;margin-bottom:15px;">
-            Il te reste
-            <strong>
-              ${sellerDaysRemaining(currentProfile)} jour(s)
-            </strong>
-            de crédit vendeur.
-          </p>
-
-          <form
-            id="publishForm"
-          >
-
-            <div class="form-group">
-
-              <label>
-                Nom de l'article
-              </label>
-
-              <input
-                id="productName"
-                class="form-control"
-                required
-              >
-
-            </div>
-
-            <div class="form-group">
-
-              <label>
-                Prix en FCFA
-              </label>
-
-              <input
-                id="productPrice"
-                class="form-control"
-                type="number"
-                min="0"
-                required
-              >
-
-            </div>
-
-            <div class="form-group">
-
-              <label>
-                Catégorie
-              </label>
-
-              <select
-                id="productCategory"
-                class="form-control"
-                required
-              >
-
-                <option value="">
-                  Choisir
-                </option>
-
-                <option>
-                  T-shirts
-                </option>
-
-                <option>
-                  Ensembles/Jogging
-                </option>
-
-                <option>
-                  Pantalons
-                </option>
-
-                <option>
-                  Vestes
-                </option>
-
-                <option>
-                  Chaussures
-                </option>
-
-                <option>
-                  Accessoires
-                </option>
-
-              </select>
-
-            </div>
-
-            <div class="form-group">
-
-              <label>
-                Tailles disponibles
-              </label>
-
-              <input
-                id="productSizes"
-                class="form-control"
-                placeholder="Ex : S, M, L, XL"
-              >
-
-            </div>
-
-            <div class="form-group">
-
-              <label>
-                Description
-              </label>
-
-              <textarea
-                id="productDescription"
-                class="form-control"
-              ></textarea>
-
-            </div>
-
-            <div class="form-group">
-
-              <label>
-                Photos
-              </label>
-
-              <input
-                id="productImages"
-                class="form-control"
-                type="file"
-                accept="image/*"
-                multiple
-              >
-
-              <small>
-                Maximum 4 photos.
-              </small>
-
-              <div
-                id="imagePreview"
-                class="preview-grid"
-              ></div>
-
-            </div>
-
-            <div class="form-group">
-
-              <label>
-                <input
-                  id="productDelivery"
-                  type="checkbox"
-                >
-
-                Livraison disponible
-              </label>
-
-            </div>
-
-            <button
-              class="primary-btn"
-              type="submit"
-            >
-              Publier l'article
-            </button>
-
-          </form>
-
-          <p
-            id="publishMessage"
-            style="margin-top:15px;"
-          ></p>
-
-        </div>
-
-      `;
-
-    attachPublishListeners();
-
-  }
-
-
-  function attachPublishListeners() {
-
-    const input =
-      document.getElementById(
-        "productImages"
-      );
-
-    input.addEventListener(
-      "change",
-      previewImages
+  const price =
+    Number(
+      document
+        .getElementById("productPrice")
+        ?.value
     );
 
+  const category =
     document
-      .getElementById("publishForm")
-      .addEventListener(
-        "submit",
-        publishProduct
-      );
+      .getElementById("productCategory")
+      ?.value;
 
+  const sizes =
+    document
+      .getElementById("productSizes")
+      ?.value
+      .trim();
+
+  const description =
+    document
+      .getElementById("productDescription")
+      ?.value
+      .trim();
+
+  const delivery =
+    document
+      .getElementById("productDelivery")
+      ?.checked || false;
+
+  const input =
+    document.getElementById(
+      "productImages"
+    );
+
+
+  if(!name || !price || !category){
+
+    alert(
+      "Remplis le nom, le prix et la catégorie."
+    );
+
+    return;
   }
 
 
-  function previewImages(event) {
+  const files =
+    Array.from(
+      input?.files || []
+    );
 
-    const files =
-      Array.from(event.target.files);
 
-    if (files.length > 4) {
+  if(files.length > 4){
 
-      alert(
-        "Maximum 4 photos."
-      );
+    alert(
+      "Maximum 4 photos."
+    );
 
-      event.target.value = "";
-
-      return;
-    }
-
-    const preview =
-      document.getElementById(
-        "imagePreview"
-      );
-
-    preview.innerHTML = "";
-
-    files.forEach(file => {
-
-      const reader =
-        new FileReader();
-
-      reader.onload =
-        e => {
-
-          const img =
-            document.createElement(
-              "img"
-            );
-
-          img.src =
-            e.target.result;
-
-          preview.appendChild(img);
-
-        };
-
-      reader.readAsDataURL(file);
-
-    });
-
+    return;
   }
 
 
-  /* =========================================================
-     PUBLISH PRODUCT
-  ========================================================= */
-
-  async function publishProduct(event) {
-
-    event.preventDefault();
-
-    if (!sellerIsActive(currentProfile)) {
-
-      alert(
-        "Ton accès vendeur est expiré."
-      );
-
-      return;
-    }
-
-    const name =
-      document
-        .getElementById("productName")
-        .value
-        .trim();
-
-    const price =
-      Number(
-        document
-          .getElementById("productPrice")
-          .value
-      );
-
-    const category =
-      document
-        .getElementById("productCategory")
-        .value;
-
-    const sizes =
-      document
-        .getElementById("productSizes")
-        .value
-        .trim();
-
-    const description =
-      document
-        .getElementById("productDescription")
-        .value
-        .trim();
-
-    const delivery =
-      document
-        .getElementById("productDelivery")
-        .checked;
-
-    const files =
-      Array.from(
-        document
-          .getElementById("productImages")
-          .files
-      );
-
-    if (!files.length) {
-
-      alert(
-        "Ajoute au moins une photo."
-      );
-
-      return;
-    }
-
-    if (files.length > 4) {
-
-      alert(
-        "Maximum 4 photos."
-      );
-
-      return;
-    }
-
-    const message =
-      document.getElementById(
-        "publishMessage"
-      );
-
-    message.textContent =
-      "Upload des photos...";
+  try{
 
     const imageUrls = [];
 
-    for (
+
+    for(
       let i = 0;
       i < files.length;
       i++
-    ) {
+    ){
 
       const file =
         files[i];
 
-      const extension =
-        file.name.split(".").pop();
+      if(!file.type.startsWith("image/")){
+
+        alert(
+          "Toutes les photos doivent être des images."
+        );
+
+        return;
+      }
+
 
       const path =
-        `products/${currentUser.id}/${Date.now()}_${i}.${extension}`;
+        `products/${currentUser.id}/${Date.now()}_${i}_${file.name}`;
+
 
       const {
-        error: uploadError
+        error
       } =
         await supabaseClient.storage
           .from("product-images")
           .upload(
             path,
-            file
+            file,
+            {
+              upsert:false,
+              cacheControl:"3600",
+              contentType:file.type
+            }
           );
 
-      if (uploadError) {
 
-        message.textContent =
-          uploadError.message;
-
-        return;
+      if(error){
+        throw error;
       }
+
 
       const {
         data
@@ -3001,14 +3057,17 @@
           .from("product-images")
           .getPublicUrl(path);
 
-      imageUrls.push(
-        data.publicUrl
-      );
+
+      if(data?.publicUrl){
+
+        imageUrls.push(
+          data.publicUrl
+        );
+
+      }
 
     }
 
-    message.textContent =
-      "Publication...";
 
     const {
       error
@@ -3016,1368 +3075,1398 @@
       await supabaseClient
         .from("products")
         .insert({
-          user_id: currentUser.id,
+
+          user_id:
+            currentUser.id,
+
           name,
+
           price,
+
           category,
+
           sizes,
+
           description,
+
           delivery,
-          image_urls: imageUrls
+
+          image_urls:imageUrls
+
         });
 
-    if (error) {
 
-      message.textContent =
-        error.message;
-
-      return;
+    if(error){
+      throw error;
     }
 
-    message.textContent =
-      "Article publié avec succès.";
+
+    alert(
+      "✅ Article publié."
+    );
+
 
     document
-      .getElementById("publishForm")
-      .reset();
+      .getElementById("productName")
+      .value = "";
 
     document
-      .getElementById("imagePreview")
-      .innerHTML = "";
+      .getElementById("productPrice")
+      .value = "";
 
-    await loadProducts();
+    document
+      .getElementById("productSizes")
+      .value = "";
+
+    document
+      .getElementById("productDescription")
+      .value = "";
+
+    document
+      .getElementById("productImages")
+      .value = "";
+
+
+    await renderSellerProducts();
+
+    await renderProducts();
+
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      error.message ||
+      "Erreur lors de la publication."
+    );
 
   }
 
+}
 
-  /* =========================================================
-     MY PRODUCTS
-  ========================================================= */
 
-  async function loadMyProducts() {
+/* =========================================================
+   SELLER PRODUCTS
+========================================================= */
 
-    if (!currentUser) {
-      return;
-    }
+async function renderSellerProducts(){
 
-    const container =
-      document.getElementById(
-        "sellerContent"
+  const container =
+    document.getElementById(
+      "myProducts"
+    ) ||
+    document.getElementById(
+      "sellerDynamicContent"
+    );
+
+  if(!container) return;
+
+
+  if(!currentUser){
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("products")
+      .select("*")
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
       );
 
-    if (!container) {
-      return;
-    }
 
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("products")
-        .select("*")
-        .eq(
-          "user_id",
-          currentUser.id
-        )
-        .order(
-          "created_at",
-          {
-            ascending: false
-          }
-        );
+  if(error){
 
-    if (error) {
+    console.error(error);
 
-      container.innerHTML =
-        `<div class="card">
-          ${escapeHTML(error.message)}
-        </div>`;
+    container.innerHTML =
+      "Impossible de charger les articles.";
 
-      return;
-    }
+    return;
+  }
+
+
+  const products =
+    data || [];
+
+
+  if(!products.length){
 
     container.innerHTML = `
-
-      <div class="card">
-
-        <h2>
-          Mes articles
-        </h2>
-
-        ${
-          !data?.length
-            ? `
-              <div class="empty">
-                Tu n'as encore publié aucun article.
-              </div>
-            `
-            : data.map(product => {
-
-                const image =
-                  getProductImages(product)[0] ||
-                  "https://via.placeholder.com/100";
-
-                return `
-
-                  <div class="my-product">
-
-                    <img
-                      src="${escapeHTML(image)}"
-                      alt=""
-                    >
-
-                    <div class="my-product-info">
-
-                      <strong>
-                        ${escapeHTML(product.name)}
-                      </strong>
-
-                      <br>
-
-                      ${formatPrice(product.price)}
-
-                    </div>
-
-                    <button
-                      class="danger-btn"
-                      onclick="deleteProduct('${product.id}')"
-                    >
-                      Supprimer
-                    </button>
-
-                  </div>
-
-                `;
-
-              }).join("")
-        }
-
+      <div class="empty">
+        Tu n'as encore publié aucun article.
       </div>
-
     `;
 
+    return;
   }
 
 
-  /* =========================================================
-     DELETE PRODUCT
-  ========================================================= */
+  container.innerHTML =
+    products.map(product => {
 
-  async function deleteProduct(productId) {
-
-    if (!confirm(
-      "Supprimer définitivement cet article ?"
-    )) {
-      return;
-    }
-
-    const {
-      error
-    } =
-      await supabaseClient
-        .from("products")
-        .delete()
-        .eq(
-          "id",
-          productId
+      const images =
+        Array.isArray(
+          product.image_urls
         )
-        .eq(
-          "user_id",
-          currentUser.id
-        );
+          ? product.image_urls
+          : [];
 
-    if (error) {
-
-      alert(error.message);
-
-      return;
-    }
-
-    await loadProducts();
-
-    await loadMyProducts();
-
-  }
+      const image =
+        images[0] ||
+        "https://via.placeholder.com/200x200?text=Produit";
 
 
-  /* =========================================================
-     SALES — SELLER
-  ========================================================= */
+      return `
 
-  async function loadSellerSales() {
+        <div class="article-row">
 
-    if (!currentUser) {
-      return;
-    }
+          <img
+            src="${escapeHtml(image)}"
+            alt="${escapeHtml(product.name)}"
+          >
 
-    const container =
-      document.getElementById(
-        "sellerContent"
-      );
+          <div class="article-row-info">
 
-    if (!container) {
-      return;
-    }
+            <strong>
+              ${escapeHtml(product.name)}
+            </strong>
 
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("sales")
-        .select("*")
-        .eq(
-          "seller_id",
-          currentUser.id
-        )
-        .order(
-          "created_at",
-          {
-            ascending: false
-          }
-        );
-
-    if (error) {
-
-      container.innerHTML =
-        `<div class="card">
-          ${escapeHTML(error.message)}
-        </div>`;
-
-      return;
-    }
-
-    const sales =
-      data || [];
-
-    const total =
-      sales.reduce(
-        (sum, sale) =>
-          sum + Number(sale.amount || 0),
-        0
-      );
-
-    container.innerHTML = `
-
-      <div class="card">
-
-        <h2>
-          📊 Mon récapitulatif des ventes
-        </h2>
-
-        <div class="sales-summary">
-
-          <div class="stat-card">
-
-            <div class="stat-label">
-              Nombre de ventes
+            <div>
+              ${formatPrice(product.price)}
             </div>
 
-            <div class="stat-value">
-              ${sales.length}
+            <div style="color:#777;font-size:12px">
+              ${escapeHtml(product.category || "")}
             </div>
 
-          </div>
-
-          <div class="stat-card">
-
-            <div class="stat-label">
-              Chiffre d'affaires
-            </div>
-
-            <div class="stat-value">
-              ${formatPrice(total)}
-            </div>
-
-          </div>
-
-          <div class="stat-card">
-
-            <div class="stat-label">
-              Vendeur
-            </div>
-
-            <div class="stat-value"
-                 style="font-size:18px;">
-              ${escapeHTML(
-                currentProfile.username
-              )}
-            </div>
+            <button
+              class="danger-btn"
+              onclick="deleteProduct('${product.id}')"
+            >
+              Supprimer
+            </button>
 
           </div>
 
         </div>
 
-        <button
-          class="success-btn"
-          onclick="showAddSaleForm()"
+      `;
+
+    }).join("");
+
+}
+
+
+async function deleteProduct(productId){
+
+  if(
+    !confirm(
+      "Supprimer définitivement cet article ?"
+    )
+  ){
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("products")
+      .delete()
+      .eq(
+        "id",
+        productId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      );
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Impossible de supprimer l'article."
+    );
+
+    return;
+  }
+
+
+  alert(
+    "Article supprimé."
+  );
+
+
+  await renderSellerProducts();
+
+  await renderProducts();
+
+}
+
+
+/* =========================================================
+   SALES
+========================================================= */
+
+async function renderSellerSales(){
+
+  const container =
+    document.getElementById(
+      "mySales"
+    );
+
+  if(!container || !currentUser){
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("sales")
+      .select("*")
+      .eq(
+        "seller_id",
+        currentUser.id
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+  if(error){
+
+    console.error(error);
+
+    container.innerHTML =
+      "Impossible de charger les ventes.";
+
+    return;
+  }
+
+
+  const sales =
+    data || [];
+
+
+  const total =
+    sales.reduce(
+      (
+        sum,
+        sale
+      ) =>
+        sum +
+        Number(
+          sale.amount || 0
+        ),
+      0
+    );
+
+
+  container.innerHTML = `
+
+    <div class="sales-total">
+
+      <div>
+        Chiffre d'affaires
+      </div>
+
+      <div class="sales-total-number">
+        ${formatPrice(total)}
+      </div>
+
+      <div style="margin-top:5px">
+        ${sales.length} vente(s)
+      </div>
+
+    </div>
+
+
+    <button
+      class="primary-btn"
+      onclick="showAddSaleForm()"
+    >
+      + Ajouter une vente
+    </button>
+
+
+    <div id="addSaleContainer"></div>
+
+
+    <div style="margin-top:15px">
+
+      ${
+        sales.length
+          ? sales.map(renderSaleHtml).join("")
+          : `
+            <div class="empty">
+              Aucune vente enregistrée.
+            </div>
+          `
+      }
+
+    </div>
+
+  `;
+
+}
+
+
+function renderSaleHtml(sale){
+
+  return `
+
+    <div class="sale-row">
+
+      <strong>
+        ${escapeHtml(
+          sale.product_name ||
+          "Vente"
+        )}
+      </strong>
+
+      <div>
+        Montant :
+        <strong>
+          ${formatPrice(sale.amount)}
+        </strong>
+      </div>
+
+      ${
+        sale.buyer_name
+          ? `
+            <div>
+              Client :
+              ${escapeHtml(sale.buyer_name)}
+            </div>
+          `
+          : ""
+      }
+
+      ${
+        sale.buyer_phone
+          ? `
+            <div>
+              Téléphone :
+              ${escapeHtml(sale.buyer_phone)}
+            </div>
+          `
+          : ""
+      }
+
+      ${
+        sale.note
+          ? `
+            <div>
+              Note :
+              ${escapeHtml(sale.note)}
+            </div>
+          `
+          : ""
+      }
+
+      <div style="font-size:12px;color:#777;margin-top:6px">
+        ${
+          sale.created_at
+            ? new Date(
+                sale.created_at
+              ).toLocaleString(
+                "fr-FR"
+              )
+            : ""
+        }
+      </div>
+
+      <button
+        class="danger-btn"
+        onclick="deleteSale('${sale.id}')"
+      >
+        Supprimer
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+function showAddSaleForm(){
+
+  const container =
+    document.getElementById(
+      "addSaleContainer"
+    );
+
+  if(!container) return;
+
+
+  container.innerHTML = `
+
+    <div class="form-card"
+         style="margin-top:12px">
+
+      <h3>
+        Nouvelle vente
+      </h3>
+
+      <div class="form-group">
+
+        <label>
+          Produit
+        </label>
+
+        <input
+          id="saleProductName"
+          type="text"
         >
-          + Enregistrer une vente
+
+      </div>
+
+      <div class="form-group">
+
+        <label>
+          Montant
+        </label>
+
+        <input
+          id="saleAmount"
+          type="number"
+          min="0"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label>
+          Nom du client
+        </label>
+
+        <input
+          id="saleBuyerName"
+          type="text"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label>
+          Téléphone du client
+        </label>
+
+        <input
+          id="saleBuyerPhone"
+          type="tel"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label>
+          Note
+        </label>
+
+        <textarea
+          id="saleNote"
+        ></textarea>
+
+      </div>
+
+      <button
+        class="primary-btn"
+        onclick="addSale()"
+      >
+        Enregistrer
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+async function addSale(){
+
+  if(!currentUser){
+    return;
+  }
+
+
+  const productName =
+    document
+      .getElementById(
+        "saleProductName"
+      )
+      ?.value
+      .trim();
+
+  const amount =
+    Number(
+      document
+        .getElementById(
+          "saleAmount"
+        )
+        ?.value
+    );
+
+  const buyerName =
+    document
+      .getElementById(
+        "saleBuyerName"
+      )
+      ?.value
+      .trim();
+
+  const buyerPhone =
+    document
+      .getElementById(
+        "saleBuyerPhone"
+      )
+      ?.value
+      .trim();
+
+  const note =
+    document
+      .getElementById(
+        "saleNote"
+      )
+      ?.value
+      .trim();
+
+
+  if(
+    !productName ||
+    !amount
+  ){
+
+    alert(
+      "Indique le produit et le montant."
+    );
+
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("sales")
+      .insert({
+
+        seller_id:
+          currentUser.id,
+
+        product_name:
+          productName,
+
+        amount,
+
+        buyer_name:
+          buyerName,
+
+        buyer_phone:
+          buyerPhone,
+
+        note
+
+      });
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Impossible d'enregistrer la vente."
+    );
+
+    return;
+  }
+
+
+  alert(
+    "✅ Vente enregistrée."
+  );
+
+
+  await renderSellerSales();
+
+}
+
+
+async function deleteSale(saleId){
+
+  if(
+    !confirm(
+      "Supprimer cette vente ?"
+    )
+  ){
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("sales")
+      .delete()
+      .eq(
+        "id",
+        saleId
+      )
+      .eq(
+        "seller_id",
+        currentUser.id
+      );
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Impossible de supprimer la vente."
+    );
+
+    return;
+  }
+
+
+  await renderSellerSales();
+
+}
+
+
+/* =========================================================
+   CREATOR / ADMIN
+========================================================= */
+
+async function renderAdminPanel(){
+
+  if(
+    !currentProfile ||
+    currentProfile.role !==
+      "creator_admin"
+  ){
+
+    alert(
+      "Accès administrateur refusé."
+    );
+
+    return;
+  }
+
+
+  const container =
+    document.getElementById(
+      "accountContainer"
+    );
+
+  if(!container) return;
+
+
+  container.innerHTML = `
+
+    <div class="form-card">
+
+      <h2>
+        ⚙️ Administration
+      </h2>
+
+      <button
+        class="secondary-btn"
+        onclick="renderLoggedInAccount()"
+      >
+        ← Retour au profil
+      </button>
+
+    </div>
+
+
+    <div id="adminContent">
+
+      Chargement...
+
+    </div>
+
+  `;
+
+
+  const adminContent =
+    document.getElementById(
+      "adminContent"
+    );
+
+
+  const {
+    data:sellers,
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq(
+        "role",
+        "seller"
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+  if(error){
+
+    console.error(error);
+
+    adminContent.innerHTML =
+      "Erreur de chargement.";
+
+    return;
+  }
+
+
+  const sellerList =
+    sellers || [];
+
+
+  adminContent.innerHTML = `
+
+    <div class="form-card">
+
+      <h2>
+        Vendeurs
+      </h2>
+
+      ${
+        sellerList.length
+          ? sellerList
+              .map(
+                renderAdminSeller
+              )
+              .join("")
+          : `
+            <div class="empty">
+              Aucun vendeur.
+            </div>
+          `
+      }
+
+    </div>
+
+
+    <div class="form-card">
+
+      <h2>
+        Récapitulatif global
+      </h2>
+
+      <div id="globalSales">
+        Chargement...
+      </div>
+
+    </div>
+
+  `;
+
+
+  await renderGlobalSales();
+
+}
+
+
+function renderAdminSeller(seller){
+
+  const active =
+    isSellerActive(
+      seller
+    );
+
+
+  const avatar =
+    getAvatarUrl(
+      seller
+    );
+
+
+  const expiration =
+    seller.seller_expires_at
+      ? new Date(
+          seller.seller_expires_at
+        ).toLocaleDateString(
+          "fr-FR"
+        )
+      : "—";
+
+
+  return `
+
+    <div
+      class="admin-card"
+      id="adminSeller_${seller.id}"
+    >
+
+      <div class="admin-card-header">
+
+        <img
+          class="avatar"
+          src="${escapeHtml(avatar)}"
+          alt="Profil"
+        >
+
+        <div>
+
+          <strong>
+            ${escapeHtml(
+              seller.username ||
+              "Vendeur"
+            )}
+          </strong>
+
+          ${
+            seller.verified
+              ? `<span class="verified-badge">✓</span>`
+              : ""
+          }
+
+          <div style="font-size:12px;color:#777">
+            ${escapeHtml(
+              seller.email ||
+              ""
+            )}
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div style="margin-top:10px">
+
+        Statut :
+        ${
+          active
+            ? `<span class="status-active">Actif</span>`
+            : `<span class="status-inactive">Inactif</span>`
+        }
+
+      </div>
+
+
+      <div style="margin-top:5px">
+
+        Expiration :
+        <strong>
+          ${expiration}
+        </strong>
+
+      </div>
+
+
+      <div class="admin-actions">
+
+        ${
+          active
+            ? `
+              <button
+                class="danger-btn"
+                onclick="adminDisableSeller('${seller.id}')"
+              >
+                Désactiver
+              </button>
+            `
+            : `
+              <button
+                class="primary-btn"
+                onclick="adminActivateSeller('${seller.id}')"
+              >
+                +30 jours
+              </button>
+            `
+        }
+
+
+        <button
+          class="secondary-btn"
+          onclick="adminViewSellerSales('${seller.id}')"
+        >
+          📊 Voir ses ventes
         </button>
 
       </div>
 
-      <div id="addSaleFormContainer"></div>
+    </div>
 
-      <div class="card">
+  `;
 
-        <h3>
-          Historique
-        </h3>
+}
 
-        ${
-          !sales.length
-            ? `
-              <div class="empty">
-                Aucune vente enregistrée.
-              </div>
-            `
-            : sales.map(sale => `
 
-                <div class="sale-item">
+async function adminActivateSeller(
+  sellerId
+){
 
-                  <div class="sale-top">
+  if(
+    !confirm(
+      "Accorder 30 jours à ce vendeur ?"
+    )
+  ){
+    return;
+  }
 
-                    <div>
 
-                      <div class="sale-name">
-                        ${escapeHTML(
-                          sale.product_name
-                        )}
-                      </div>
-
-                      ${
-                        sale.buyer_name
-                          ? `
-                            Acheteur :
-                            ${escapeHTML(
-                              sale.buyer_name
-                            )}
-                          `
-                          : ""
-                      }
-
-                    </div>
-
-                    <div class="sale-amount">
-                      ${formatPrice(sale.amount)}
-                    </div>
-
-                  </div>
-
-                  <div class="sale-date">
-                    ${formatDate(sale.created_at)}
-                  </div>
-
-                  ${
-                    sale.note
-                      ? `
-                        <div style="margin-top:7px;">
-                          ${escapeHTML(sale.note)}
-                        </div>
-                      `
-                      : ""
-                  }
-
-                  <button
-                    class="danger-btn"
-                    style="margin-top:8px;"
-                    onclick="deleteSale('${sale.id}')"
-                  >
-                    Supprimer
-                  </button>
-
-                </div>
-
-              `).join("")
+  const {
+    error
+  } =
+    await supabaseClient
+      .rpc(
+        "creator_activate_seller",
+        {
+          seller_uuid:
+            sellerId
         }
-
-      </div>
-
-    `;
-
-  }
-
-
-  function showAddSaleForm() {
-
-    const container =
-      document.getElementById(
-        "addSaleFormContainer"
       );
 
-    container.innerHTML = `
 
-      <div class="card">
+  if(error){
 
-        <h3>
-          Enregistrer une vente
-        </h3>
-
-        <form
-          id="addSaleForm"
-        >
-
-          <div class="form-group">
-
-            <label>
-              Article vendu
-            </label>
-
-            <input
-              id="saleProductName"
-              class="form-control"
-              required
-              placeholder="Ex : Ensemble Nike"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>
-              Montant de la vente
-            </label>
-
-            <input
-              id="saleAmount"
-              class="form-control"
-              type="number"
-              min="0"
-              required
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>
-              Nom de l'acheteur (facultatif)
-            </label>
-
-            <input
-              id="saleBuyerName"
-              class="form-control"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>
-              Téléphone acheteur (facultatif)
-            </label>
-
-            <input
-              id="saleBuyerPhone"
-              class="form-control"
-              type="tel"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>
-              Note (facultatif)
-            </label>
-
-            <textarea
-              id="saleNote"
-              class="form-control"
-            ></textarea>
-
-          </div>
-
-          <button
-            class="success-btn"
-            type="submit"
-          >
-            Enregistrer
-          </button>
-
-          <button
-            class="secondary-btn"
-            type="button"
-            onclick="document.getElementById('addSaleFormContainer').innerHTML=''"
-          >
-            Annuler
-          </button>
-
-        </form>
-
-      </div>
-
-    `;
-
-    document
-      .getElementById("addSaleForm")
-      .addEventListener(
-        "submit",
-        addSale
-      );
-
-  }
-
-
-  async function addSale(event) {
-
-    event.preventDefault();
-
-    const productName =
-      document
-        .getElementById("saleProductName")
-        .value
-        .trim();
-
-    const amount =
-      Number(
-        document
-          .getElementById("saleAmount")
-          .value
-      );
-
-    const buyerName =
-      document
-        .getElementById("saleBuyerName")
-        .value
-        .trim();
-
-    const buyerPhone =
-      document
-        .getElementById("saleBuyerPhone")
-        .value
-        .trim();
-
-    const note =
-      document
-        .getElementById("saleNote")
-        .value
-        .trim();
-
-    const {
-      error
-    } =
-      await supabaseClient
-        .from("sales")
-        .insert({
-          seller_id: currentUser.id,
-          product_name: productName,
-          amount,
-          buyer_name: buyerName || null,
-          buyer_phone: buyerPhone || null,
-          note: note || null
-        });
-
-    if (error) {
-
-      alert(error.message);
-
-      return;
-    }
-
-    await loadSellerSales();
-
-  }
-
-
-  async function deleteSale(saleId) {
-
-    if (!confirm(
-      "Supprimer cette vente du récapitulatif ?"
-    )) {
-      return;
-    }
-
-    const {
-      error
-    } =
-      await supabaseClient
-        .from("sales")
-        .delete()
-        .eq(
-          "id",
-          saleId
-        )
-        .eq(
-          "seller_id",
-          currentUser.id
-        );
-
-    if (error) {
-
-      alert(error.message);
-
-      return;
-    }
-
-    await loadSellerSales();
-
-  }
-
-
-  /* =========================================================
-     CREATOR ADMIN
-  ========================================================= */
-
-  async function loadCreatorAdmin() {
-
-    if (
-      currentProfile?.role !==
-      "creator_admin"
-    ) {
-      return;
-    }
-
-    const container =
-      document.getElementById(
-        "adminPanel"
-      );
-
-    container.innerHTML =
-      `<div class="card">
-        Chargement du panneau administrateur...
-      </div>`;
-
-    const {
-      data: sellers,
-      error
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq(
-          "role",
-          "seller"
-        )
-        .order(
-          "created_at",
-          {
-            ascending: false
-          }
-        );
-
-    if (error) {
-
-      container.innerHTML =
-        `<div class="card">
-          ${escapeHTML(error.message)}
-        </div>`;
-
-      return;
-    }
-
-    const {
-      data: sales
-    } =
-      await supabaseClient
-        .from("sales")
-        .select("*")
-        .order(
-          "created_at",
-          {
-            ascending: false
-          }
-        );
-
-    const allSales =
-      sales || [];
-
-    const totalRevenue =
-      allSales.reduce(
-        (sum, sale) =>
-          sum + Number(sale.amount || 0),
-        0
-      );
-
-    container.innerHTML = `
-
-      <div class="card">
-
-        <h2>
-          👑 Panneau Créateur
-        </h2>
-
-        <div class="payment-box">
-
-          <strong>
-            novis_fb
-          </strong>
-
-          <br>
-
-          Créateur / Administrateur vérifié
-
-          <br><br>
-
-          📍 Byemassi / Yaoundé
-
-          <br>
-
-          📞 +237 690 847 035
-
-        </div>
-
-      </div>
-
-      <div class="card">
-
-        <h2>
-          📊 Récapitulatif global des ventes
-        </h2>
-
-        <div class="sales-summary">
-
-          <div class="stat-card">
-
-            <div class="stat-label">
-              Nombre total de ventes
-            </div>
-
-            <div class="stat-value">
-              ${allSales.length}
-            </div>
-
-          </div>
-
-          <div class="stat-card">
-
-            <div class="stat-label">
-              Chiffre d'affaires global
-            </div>
-
-            <div class="stat-value">
-              ${formatPrice(totalRevenue)}
-            </div>
-
-          </div>
-
-          <div class="stat-card">
-
-            <div class="stat-label">
-              Vendeurs
-            </div>
-
-            <div class="stat-value">
-              ${sellers?.length || 0}
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="card">
-
-        <h2>
-          👥 Gestion des vendeurs
-        </h2>
-
-        ${
-          !sellers?.length
-            ? `
-              <div class="empty">
-                Aucun vendeur enregistré.
-              </div>
-            `
-            : sellers.map(
-                seller =>
-                  renderAdminSeller(
-                    seller,
-                    allSales
-                  )
-              ).join("")
-        }
-
-      </div>
-
-      <div class="card">
-
-        <h2>
-          🧾 Toutes les ventes
-        </h2>
-
-        ${
-          !allSales.length
-            ? `
-              <div class="empty">
-                Aucune vente enregistrée.
-              </div>
-            `
-            : allSales.map(sale => {
-
-                const seller =
-                  sellers.find(
-                    s =>
-                      s.id ===
-                      sale.seller_id
-                  );
-
-                return `
-
-                  <div class="sale-item">
-
-                    <div class="sale-top">
-
-                      <div>
-
-                        <div class="sale-name">
-                          ${escapeHTML(
-                            sale.product_name
-                          )}
-                        </div>
-
-                        <div>
-                          Vendeur :
-                          <strong>
-                            ${escapeHTML(
-                              seller?.username ||
-                              "Inconnu"
-                            )}
-                          </strong>
-                        </div>
-
-                      </div>
-
-                      <div class="sale-amount">
-                        ${formatPrice(sale.amount)}
-                      </div>
-
-                    </div>
-
-                    <div class="sale-date">
-                      ${formatDate(sale.created_at)}
-                    </div>
-
-                    ${
-                      sale.buyer_name
-                        ? `
-                          Acheteur :
-                          ${escapeHTML(
-                            sale.buyer_name
-                          )}
-                        `
-                        : ""
-                    }
-
-                    <br>
-
-                    <button
-                      class="danger-btn"
-                      style="margin-top:8px;"
-                      onclick="adminDeleteSale('${sale.id}')"
-                    >
-                      Supprimer
-                    </button>
-
-                  </div>
-
-                `;
-
-              }).join("")
-        }
-
-      </div>
-
-    `;
-
-  }
-
-
-  function renderAdminSeller(
-    seller,
-    allSales
-  ) {
-
-    const active =
-      sellerIsActive(seller);
-
-    const days =
-      sellerDaysRemaining(seller);
-
-    const sellerSales =
-      allSales.filter(
-        sale =>
-          sale.seller_id === seller.id
-      );
-
-    const revenue =
-      sellerSales.reduce(
-        (sum, sale) =>
-          sum + Number(sale.amount || 0),
-        0
-      );
-
-    return `
-
-      <div class="seller-admin-card">
-
-        <div class="seller-admin-header">
-
-          <div>
-
-            <strong>
-              ${escapeHTML(
-                seller.username ||
-                "Vendeur"
-              )}
-            </strong>
-
-            ${
-              seller.verified
-                ? `
-                  <span class="verified">
-                    ✓
-                  </span>
-                `
-                : ""
-            }
-
-            <br>
-
-            ${
-              active
-                ? `
-                  <span class="status-active">
-                    ● Actif — ${days} jour(s)
-                  </span>
-                `
-                : `
-                  <span class="status-expired">
-                    ● Inactif / expiré
-                  </span>
-                `
-            }
-
-          </div>
-
-          <div style="text-align:right;">
-
-            <strong>
-              ${sellerSales.length} vente(s)
-            </strong>
-
-            <br>
-
-            ${formatPrice(revenue)}
-
-          </div>
-
-        </div>
-
-        <div class="admin-actions">
-
-          <button
-            class="success-btn"
-            onclick="activateSeller('${seller.id}')"
-          >
-            +30 jours
-          </button>
-
-          <button
-            class="danger-btn"
-            onclick="disableSeller('${seller.id}')"
-          >
-            Désactiver
-          </button>
-
-          <button
-            class="secondary-btn"
-            onclick="showAdminSellerSales('${seller.id}')"
-          >
-            Voir les ventes
-          </button>
-
-        </div>
-
-        <div
-          id="adminSales-${seller.id}"
-          style="margin-top:10px;"
-        ></div>
-
-      </div>
-
-    `;
-
-  }
-
-
-  /* =========================================================
-     ACTIVATE SELLER +30 DAYS
-  ========================================================= */
-
-  async function activateSeller(
-    sellerId
-  ) {
-
-    const {
-      error
-    } =
-      await supabaseClient
-        .rpc(
-          "creator_activate_seller",
-          {
-            seller_uuid: sellerId
-          }
-        );
-
-    if (error) {
-
-      alert(error.message);
-
-      return;
-    }
+    console.error(error);
 
     alert(
-      "30 jours ajoutés au vendeur."
+      error.message ||
+      "Impossible d'activer le vendeur."
     );
 
-    await loadCreatorAdmin();
-
+    return;
   }
 
 
-  /* =========================================================
-     DISABLE SELLER
-  ========================================================= */
-
-  async function disableSeller(
-    sellerId
-  ) {
-
-    if (!confirm(
-      "Désactiver immédiatement ce vendeur ?"
-    )) {
-      return;
-    }
-
-    const {
-      error
-    } =
-      await supabaseClient
-        .rpc(
-          "creator_disable_seller",
-          {
-            seller_uuid: sellerId
-          }
-        );
-
-    if (error) {
-
-      alert(error.message);
-
-      return;
-    }
-
-    alert(
-      "Vendeur désactivé."
-    );
-
-    await loadCreatorAdmin();
-
-  }
-
-
-  /* =========================================================
-     ADMIN VIEW SELLER SALES
-  ========================================================= */
-
-  async function showAdminSellerSales(
-    sellerId
-  ) {
-
-    const container =
-      document.getElementById(
-        `adminSales-${sellerId}`
-      );
-
-    if (!container) {
-      return;
-    }
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("sales")
-        .select("*")
-        .eq(
-          "seller_id",
-          sellerId
-        )
-        .order(
-          "created_at",
-          {
-            ascending: false
-          }
-        );
-
-    if (error) {
-
-      container.innerHTML =
-        `<div style="color:red;">
-          ${escapeHTML(error.message)}
-        </div>`;
-
-      return;
-    }
-
-    const sales =
-      data || [];
-
-    const total =
-      sales.reduce(
-        (sum, sale) =>
-          sum + Number(sale.amount || 0),
-        0
-      );
-
-    container.innerHTML = `
-
-      <div
-        style="
-          background:#f7f7f7;
-          border-radius:10px;
-          padding:12px;
-        "
-      >
-
-        <strong>
-          ${sales.length} vente(s)
-        </strong>
-
-        <br>
-
-        Total :
-        <strong>
-          ${formatPrice(total)}
-        </strong>
-
-        <hr style="margin:10px 0;">
-
-        ${
-          !sales.length
-            ? "Aucune vente."
-            : sales.map(sale => `
-
-                <div
-                  style="
-                    padding:8px 0;
-                    border-bottom:1px solid #ddd;
-                  "
-                >
-
-                  <strong>
-                    ${escapeHTML(
-                      sale.product_name
-                    )}
-                  </strong>
-
-                  —
-                  ${formatPrice(sale.amount)}
-
-                  <br>
-
-                  <small>
-                    ${formatDate(sale.created_at)}
-                  </small>
-
-                </div>
-
-              `).join("")
-        }
-
-      </div>
-
-    `;
-
-  }
-
-
-  /* =========================================================
-     ADMIN DELETE SALE
-  ========================================================= */
-
-  async function adminDeleteSale(
-    saleId
-  ) {
-
-    if (!confirm(
-      "Supprimer cette vente ?"
-    )) {
-      return;
-    }
-
-    const {
-      error
-    } =
-      await supabaseClient
-        .from("sales")
-        .delete()
-        .eq(
-          "id",
-          saleId
-        );
-
-    if (error) {
-
-      alert(error.message);
-
-      return;
-    }
-
-    await loadCreatorAdmin();
-
-  }
-
-
-  /* =========================================================
-     LOGOUT
-  ========================================================= */
-
-  async function logout() {
-
-    await supabaseClient.auth.signOut();
-
-    currentUser = null;
-    currentProfile = null;
-
-    goTo("account");
-
-    renderLoggedOutAccount();
-
-  }
-
-
-  /* =========================================================
-     CATEGORY FILTER
-  ========================================================= */
-
-  document
-    .querySelectorAll(".category-btn")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        async () => {
-
-          document
-            .querySelectorAll(".category-btn")
-            .forEach(
-              btn =>
-                btn.classList.remove(
-                  "active"
-                )
-            );
-
-          button.classList.add(
-            "active"
-          );
-
-          selectedCategory =
-            button.dataset.category;
-
-          await renderProducts();
-
-        }
-      );
-
-    });
-
-
-  /* =========================================================
-     SEARCH
-  ========================================================= */
-
-  document
-    .getElementById("searchInput")
-    .addEventListener(
-      "input",
-      renderProducts
-    );
-
-
-  /* =========================================================
-     AUTH STATE
-  ========================================================= */
-
-  supabaseClient.auth.onAuthStateChange(
-    async (event, session) => {
-
-      currentUser =
-        session?.user || null;
-
-      if (currentUser) {
-        await checkUser();
-      } else {
-        currentProfile = null;
-      }
-
-    }
+  alert(
+    "✅ 30 jours accordés."
   );
 
 
-  /* =========================================================
-     AUTO EXPIRATION
-  ========================================================= */
+  await renderAdminPanel();
 
-  async function refreshSellerExpiration() {
+}
+
+
+async function adminDisableSeller(
+  sellerId
+){
+
+  if(
+    !confirm(
+      "Désactiver immédiatement ce vendeur ?"
+    )
+  ){
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .rpc(
+        "creator_disable_seller",
+        {
+          seller_uuid:
+            sellerId
+        }
+      );
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      error.message ||
+      "Impossible de désactiver le vendeur."
+    );
+
+    return;
+  }
+
+
+  alert(
+    "Vendeur désactivé."
+  );
+
+
+  await renderAdminPanel();
+
+}
+
+
+async function adminViewSellerSales(
+  sellerId
+){
+
+  const container =
+    document.getElementById(
+      `adminSeller_${sellerId}`
+    );
+
+  if(!container) return;
+
+
+  const {
+    data:sales,
+    error
+  } =
+    await supabaseClient
+      .from("sales")
+      .select("*")
+      .eq(
+        "seller_id",
+        sellerId
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Impossible de charger les ventes."
+    );
+
+    return;
+  }
+
+
+  const list =
+    sales || [];
+
+
+  const total =
+    list.reduce(
+      (
+        sum,
+        sale
+      ) =>
+        sum +
+        Number(
+          sale.amount || 0
+        ),
+      0
+    );
+
+
+  let box =
+    container.querySelector(
+      ".seller-sales-admin"
+    );
+
+
+  if(box){
+
+    box.remove();
+
+    return;
+
+  }
+
+
+  box =
+    document.createElement(
+      "div"
+    );
+
+  box.className =
+    "seller-sales-admin";
+
+
+  box.style.marginTop =
+    "12px";
+
+
+  box.innerHTML = `
+
+    <div
+      style="
+        background:#f5f5f5;
+        padding:12px;
+        border-radius:10px;
+      "
+    >
+
+      <strong>
+        Total :
+        ${formatPrice(total)}
+      </strong>
+
+      <div style="margin-top:8px">
+
+        ${
+          list.length
+            ? list
+                .map(
+                  sale =>
+                    `<div style="padding:8px 0;border-bottom:1px solid #ddd">
+                      ${escapeHtml(sale.product_name)}
+                      — ${formatPrice(sale.amount)}
+                    </div>`
+                )
+                .join("")
+            : "Aucune vente."
+        }
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  container.appendChild(
+    box
+  );
+
+}
+
+
+async function renderGlobalSales(){
+
+  const container =
+    document.getElementById(
+      "globalSales"
+    );
+
+  if(!container) return;
+
+
+  const {
+    data:sales,
+    error
+  } =
+    await supabaseClient
+      .from("sales")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+  if(error){
+
+    console.error(error);
+
+    container.innerHTML =
+      "Impossible de charger les ventes.";
+
+    return;
+  }
+
+
+  const list =
+    sales || [];
+
+
+  const total =
+    list.reduce(
+      (
+        sum,
+        sale
+      ) =>
+        sum +
+        Number(
+          sale.amount || 0
+        ),
+      0
+    );
+
+
+  container.innerHTML = `
+
+    <div class="sales-total">
+
+      <div>
+        Chiffre d'affaires global
+      </div>
+
+      <div class="sales-total-number">
+        ${formatPrice(total)}
+      </div>
+
+      <div style="margin-top:5px">
+        ${list.length} vente(s)
+      </div>
+
+    </div>
+
+
+    ${
+      list.length
+        ? list
+            .slice(0,50)
+            .map(
+              sale =>
+                `<div class="sale-row">
+                  <strong>
+                    ${escapeHtml(sale.product_name || "Vente")}
+                  </strong>
+                  <div>
+                    ${formatPrice(sale.amount)}
+                  </div>
+                  <div style="font-size:12px;color:#777">
+                    ${sale.created_at
+                      ? new Date(
+                          sale.created_at
+                        ).toLocaleString(
+                          "fr-FR"
+                        )
+                      : ""}
+                  </div>
+                </div>`
+            )
+            .join("")
+        : `
+          <div class="empty">
+            Aucune vente.
+          </div>
+        `
+    }
+
+  `;
+
+}
+
+
+/* =========================================================
+   SELLER ACCOUNT SECTION
+========================================================= */
+
+async function renderSellerProductsAndSales(){
+
+  await renderSellerProducts();
+
+  await renderSellerSales();
+
+}
+
+
+/* =========================================================
+   AUTH STATE LISTENER
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+  async (
+    event,
+    session
+  ) => {
+
+    currentUser =
+      session?.user || null;
+
+    /*
+      On attend un court instant pour laisser
+      Supabase terminer la session.
+    */
+
+    setTimeout(
+      async () => {
+
+        await checkUser();
+
+      },
+      100
+    );
+
+  }
+);
+
+
+/* =========================================================
+   INITIALISATION
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
+
+    renderCategories();
 
     await disableExpiredSellers();
 
-    if (
-      currentUser &&
-      currentProfile
-    ) {
+    await checkUser();
 
-      const {
-        data
-      } =
-        await supabaseClient
-          .from("profiles")
-          .select("*")
-          .eq(
-            "id",
-            currentUser.id
-          )
-          .maybeSingle();
-
-      if (data) {
-
-        currentProfile =
-          data;
-
-      }
-
-    }
+    await renderProducts();
 
   }
+);
 
 
-  /* =========================================================
-     INITIALIZATION
-  ========================================================= */
+/*
+  Vérification automatique périodique
+  des sessions et profils.
+*/
 
-  document.addEventListener(
-    "DOMContentLoaded",
-    async () => {
+setInterval(
+  async () => {
 
-      await disableExpiredSellers();
+    await checkUser();
 
-      await loadProducts();
+  },
+  60000
+);
 
-      await checkUser();
 
-      setInterval(
-        refreshSellerExpiration,
-        60 * 1000
-      );
+/*
+  Vérification périodique des vendeurs.
+*/
 
-    }
-  );
+setInterval(
+  async () => {
+
+    await disableExpiredSellers();
+
+    await renderProducts();
+
+  },
+  300000
+);
 
 </script>
 
