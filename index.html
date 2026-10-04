@@ -23,6 +23,7 @@
   --blue:#1877f2;
   --green:#16a34a;
   --red:#dc2626;
+  --orange:#f59e0b;
   --shadow:0 10px 30px rgba(0,0,0,.08);
   --radius:22px;
 }
@@ -124,6 +125,7 @@ header{
   position:relative;
   width:43px;
   height:43px;
+  background:transparent;
 }
 
 .profile-mini img{
@@ -239,6 +241,11 @@ header{
 .btn.red{
   background:#dc2626;
   color:white;
+}
+
+.btn.orange{
+  background:#f59e0b;
+  color:#111;
 }
 
 .btn.light{
@@ -658,6 +665,10 @@ header{
   font-size:25px;
 }
 
+.admin-panel .stat{
+  color:#111;
+}
+
 .admin-table{
   margin-top:18px;
   display:flex;
@@ -673,6 +684,59 @@ header{
   justify-content:space-between;
   align-items:center;
   gap:10px;
+}
+
+.seller-admin-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:16px;
+  margin-bottom:12px;
+}
+
+.seller-admin-top{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.seller-admin-avatar{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#eee;
+}
+
+.seller-admin-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:14px;
+}
+
+.seller-status{
+  display:inline-block;
+  margin-top:7px;
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.seller-status.unlimited{
+  background:#ede9fe;
+  color:#6d28d9;
+}
+
+.seller-status.active{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.seller-status.expired{
+  background:#fee2e2;
+  color:#b91c1c;
 }
 
 .bottom-nav{
@@ -871,6 +935,10 @@ header{
     grid-template-columns:1fr 1fr 1fr;
   }
 
+  .seller-admin-actions{
+    grid-template-columns:1fr;
+  }
+
   .bottom-nav{
     height:65px;
   }
@@ -893,7 +961,6 @@ header{
         🔎
       </button>
 
-      <!-- PP MINIATURE RESTAURÉE -->
       <button
         class="profile-mini"
         id="headerProfileBtn"
@@ -912,354 +979,270 @@ header{
   </div>
 </header>
 
-
 <main class="container">
 
-  <!-- ================= HOME ================= -->
-  <section id="homePage" class="page active">
+<section id="homePage" class="page active">
 
-    <div class="hero">
-      <h1>Le streetwear<br>de Yaoundé.</h1>
+  <div class="hero">
+    <h1>Le streetwear<br>de Yaoundé.</h1>
 
-      <p>
-        Découvre les marques indépendantes, les créateurs
-        et les vendeurs qui font bouger la mode locale.
+    <p>
+      Découvre les marques indépendantes, les créateurs
+      et les vendeurs qui font bouger la mode locale.
+    </p>
+
+    <div class="hero-actions">
+      <button class="btn white" onclick="showPage('shopPage')">
+        🛍️ Voir la boutique
+      </button>
+
+      <button class="btn" onclick="showPage('sellPage')">
+        + Vendre
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <h2>Nouveautés</h2>
+      <button class="btn light" onclick="showPage('shopPage')">
+        Tout voir
+      </button>
+    </div>
+
+    <div id="homeProducts" class="product-grid">
+      <div class="loading">Chargement...</div>
+    </div>
+  </div>
+
+</section>
+
+<section id="shopPage" class="page">
+
+  <div class="section">
+
+    <div class="section-title">
+      <div>
+        <h2>🛍️ Boutique</h2>
+        <p class="muted">Toutes les offres disponibles</p>
+      </div>
+    </div>
+
+    <div class="search-box">
+      🔎
+      <input
+        id="shopSearch"
+        type="search"
+        placeholder="Rechercher un article..."
+        oninput="renderShopProducts()"
+      >
+    </div>
+
+    <div class="categories" style="margin-top:12px">
+
+      <button class="category active" data-category="Tous" onclick="setCategory('Tous')">
+        Tous
+      </button>
+
+      <button class="category" data-category="T-shirts" onclick="setCategory('T-shirts')">
+        T-shirts
+      </button>
+
+      <button class="category" data-category="Ensembles/Jogging" onclick="setCategory('Ensembles/Jogging')">
+        Ensembles/Jogging
+      </button>
+
+      <button class="category" data-category="Pantalons" onclick="setCategory('Pantalons')">
+        Pantalons
+      </button>
+
+      <button class="category" data-category="Vestes" onclick="setCategory('Vestes')">
+        Vestes
+      </button>
+
+      <button class="category" data-category="Chaussures" onclick="setCategory('Chaussures')">
+        Chaussures
+      </button>
+
+      <button class="category" data-category="Accessoires" onclick="setCategory('Accessoires')">
+        Accessoires
+      </button>
+
+    </div>
+
+    <div id="shopProducts" class="product-grid" style="margin-top:18px"></div>
+
+  </div>
+
+</section>
+
+<section id="productPage" class="page">
+
+  <button
+    class="btn light"
+    style="margin-top:18px"
+    onclick="showPage('shopPage')"
+  >
+    ← Retour à la boutique
+  </button>
+
+  <div id="productDetail"></div>
+
+</section>
+
+<section id="cartPage" class="page">
+
+  <div class="section">
+
+    <div class="section-title">
+      <div>
+        <h2>🛒 Mon panier</h2>
+        <p class="muted">Tes articles sélectionnés</p>
+      </div>
+    </div>
+
+    <div id="cartItems"></div>
+
+    <div id="cartSummary" class="form-card hidden" style="margin-top:15px"></div>
+
+  </div>
+
+</section>
+
+<section id="sellPage" class="page">
+
+  <div class="section">
+
+    <div class="section-title">
+      <div>
+        <h2>Vendre</h2>
+        <p class="muted">Publie tes produits sur Zackary sh🛍️p</p>
+      </div>
+    </div>
+
+    <div id="sellerAccess"></div>
+
+    <div id="sellFormContainer" class="form-card hidden">
+
+      <h3>Publier un produit</h3>
+
+      <p class="muted" style="margin:5px 0 20px">
+        Tu peux ajouter jusqu'à 4 photos.
       </p>
 
-      <div class="hero-actions">
-        <button class="btn white" onclick="showPage('shopPage')">
-          🛍️ Voir la boutique
-        </button>
-
-        <button class="btn" onclick="showPage('sellPage')">
-          + Vendre
-        </button>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">
-        <h2>Nouveautés</h2>
-        <button class="btn light" onclick="showPage('shopPage')">
-          Tout voir
-        </button>
+      <div class="form-group">
+        <label>Nom du produit</label>
+        <input id="productName" placeholder="Ex : T-shirt oversize">
       </div>
 
-      <div id="homeProducts" class="product-grid">
-        <div class="loading">Chargement...</div>
-      </div>
-    </div>
+      <div class="form-row">
 
-  </section>
-
-
-  <!-- ================= BOUTIQUE ================= -->
-  <section id="shopPage" class="page">
-
-    <div class="section">
-
-      <div class="section-title">
-        <div>
-          <h2>🛍️ Boutique</h2>
-          <p class="muted">Toutes les offres disponibles</p>
+        <div class="form-group">
+          <label>Prix XAF</label>
+          <input id="productPrice" type="number" min="0" placeholder="15000">
         </div>
+
+        <div class="form-group">
+          <label>Catégorie</label>
+
+          <select id="productCategory">
+            <option>T-shirts</option>
+            <option>Ensembles/Jogging</option>
+            <option>Pantalons</option>
+            <option>Vestes</option>
+            <option>Chaussures</option>
+            <option>Accessoires</option>
+          </select>
+
+        </div>
+
       </div>
 
-      <div class="search-box">
-        🔎
+      <div class="form-group">
+        <label>Description</label>
+
+        <textarea
+          id="productDescription"
+          placeholder="Décris ton produit..."
+        ></textarea>
+
+      </div>
+
+      <div class="form-group">
+        <label>Photos</label>
+
         <input
-          id="shopSearch"
-          type="search"
-          placeholder="Rechercher un article..."
-          oninput="renderShopProducts()"
+          id="productImages"
+          type="file"
+          accept="image/*"
+          multiple
         >
+
+        <small class="muted">
+          Maximum 4 images.
+        </small>
       </div>
 
-      <div class="categories" style="margin-top:12px">
-
-        <button
-          class="category active"
-          data-category="Tous"
-          onclick="setCategory('Tous')"
-        >
-          Tous
-        </button>
-
-        <button
-          class="category"
-          data-category="T-shirts"
-          onclick="setCategory('T-shirts')"
-        >
-          T-shirts
-        </button>
-
-        <button
-          class="category"
-          data-category="Ensembles/Jogging"
-          onclick="setCategory('Ensembles/Jogging')"
-        >
-          Ensembles/Jogging
-        </button>
-
-        <button
-          class="category"
-          data-category="Pantalons"
-          onclick="setCategory('Pantalons')"
-        >
-          Pantalons
-        </button>
-
-        <button
-          class="category"
-          data-category="Vestes"
-          onclick="setCategory('Vestes')"
-        >
-          Vestes
-        </button>
-
-        <button
-          class="category"
-          data-category="Chaussures"
-          onclick="setCategory('Chaussures')"
-        >
-          Chaussures
-        </button>
-
-        <button
-          class="category"
-          data-category="Accessoires"
-          onclick="setCategory('Accessoires')"
-        >
-          Accessoires
-        </button>
-
-      </div>
-
-      <div
-        id="shopProducts"
-        class="product-grid"
-        style="margin-top:18px"
-      ></div>
+      <button class="btn" style="width:100%" onclick="publishProduct()">
+        Publier le produit
+      </button>
 
     </div>
 
-  </section>
+    <div id="myProductsContainer"></div>
 
+  </div>
 
-  <!-- ================= PRODUCT ================= -->
-  <section id="productPage" class="page">
+</section>
 
-    <button
-      class="btn light"
-      style="margin-top:18px"
-      onclick="showPage('shopPage')"
-    >
-      ← Retour à la boutique
-    </button>
+<section id="accountPage" class="page">
 
-    <div id="productDetail"></div>
+  <div class="section">
+    <div id="accountContent"></div>
+  </div>
 
-  </section>
+</section>
 
+<section id="ordersPage" class="page">
 
-  <!-- ================= CART ================= -->
-  <section id="cartPage" class="page">
+  <div class="section">
 
-    <div class="section">
-
-      <div class="section-title">
-        <div>
-          <h2>🛒 Mon panier</h2>
-          <p class="muted">Tes articles sélectionnés</p>
-        </div>
+    <div class="section-title">
+      <div>
+        <h2>📦 Commandes</h2>
+        <p class="muted">Suivi de tes commandes</p>
       </div>
-
-      <div id="cartItems"></div>
-
-      <div
-        id="cartSummary"
-        class="form-card hidden"
-        style="margin-top:15px"
-      ></div>
-
     </div>
 
-  </section>
+    <div id="ordersContent"></div>
 
+  </div>
 
-  <!-- ================= SELL ================= -->
-  <section id="sellPage" class="page">
+</section>
 
-    <div class="section">
+<section id="adminPage" class="page">
 
-      <div class="section-title">
-        <div>
-          <h2>Vendre</h2>
-          <p class="muted">Publie tes produits sur Zackary sh🛍️p</p>
-        </div>
-      </div>
+  <div class="section">
+    <div id="adminContent"></div>
+  </div>
 
-      <div id="sellerAccess"></div>
-
-      <div
-        id="sellFormContainer"
-        class="form-card hidden"
-      >
-
-        <h3>Publier un produit</h3>
-
-        <p class="muted" style="margin:5px 0 20px">
-          Tu peux ajouter jusqu'à 4 photos.
-        </p>
-
-        <div class="form-group">
-          <label>Nom du produit</label>
-          <input id="productName" placeholder="Ex : T-shirt oversize">
-        </div>
-
-        <div class="form-row">
-
-          <div class="form-group">
-            <label>Prix XAF</label>
-            <input
-              id="productPrice"
-              type="number"
-              min="0"
-              placeholder="15000"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Catégorie</label>
-
-            <select id="productCategory">
-              <option>T-shirts</option>
-              <option>Ensembles/Jogging</option>
-              <option>Pantalons</option>
-              <option>Vestes</option>
-              <option>Chaussures</option>
-              <option>Accessoires</option>
-            </select>
-
-          </div>
-
-        </div>
-
-        <div class="form-group">
-          <label>Description</label>
-
-          <textarea
-            id="productDescription"
-            placeholder="Décris ton produit..."
-          ></textarea>
-
-        </div>
-
-        <div class="form-group">
-          <label>Photos</label>
-
-          <input
-            id="productImages"
-            type="file"
-            accept="image/*"
-            multiple
-          >
-
-          <small class="muted">
-            Maximum 4 images.
-          </small>
-        </div>
-
-        <button
-          class="btn"
-          style="width:100%"
-          onclick="publishProduct()"
-        >
-          Publier le produit
-        </button>
-
-      </div>
-
-      <div id="myProductsContainer"></div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ================= ACCOUNT ================= -->
-  <section id="accountPage" class="page">
-
-    <div class="section">
-
-      <div id="accountContent"></div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ================= ORDERS ================= -->
-  <section id="ordersPage" class="page">
-
-    <div class="section">
-
-      <div class="section-title">
-        <div>
-          <h2>📦 Commandes</h2>
-          <p class="muted">Suivi de tes commandes</p>
-        </div>
-      </div>
-
-      <div id="ordersContent"></div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ================= ADMIN ================= -->
-  <section id="adminPage" class="page">
-
-    <div class="section">
-
-      <div id="adminContent"></div>
-
-    </div>
-
-  </section>
+</section>
 
 </main>
 
-
-<!-- ================= BOTTOM NAV ================= -->
-
 <nav class="bottom-nav">
 
-  <button
-    class="nav-btn active"
-    data-page="homePage"
-    onclick="showPage('homePage')"
-  >
+  <button class="nav-btn active" data-page="homePage" onclick="showPage('homePage')">
     <span class="nav-icon">⌂</span>
     Accueil
   </button>
 
-  <!-- BOUTIQUE RESTAURÉE -->
-  <button
-    class="nav-btn"
-    data-page="shopPage"
-    onclick="showPage('shopPage')"
-  >
+  <button class="nav-btn" data-page="shopPage" onclick="showPage('shopPage')">
     <span class="nav-icon">🛍️</span>
     Boutique
   </button>
 
-  <button
-    class="nav-btn"
-    data-page="cartPage"
-    onclick="showPage('cartPage')"
-  >
+  <button class="nav-btn" data-page="cartPage" onclick="showPage('cartPage')">
     <span class="nav-icon">
       🛒
       <span id="cartCount" class="cart-count">0</span>
@@ -1267,28 +1250,17 @@ header{
     Panier
   </button>
 
-  <button
-    class="nav-btn"
-    data-page="sellPage"
-    onclick="showPage('sellPage')"
-  >
+  <button class="nav-btn" data-page="sellPage" onclick="showPage('sellPage')">
     <span class="nav-icon">＋</span>
     Vendre
   </button>
 
-  <button
-    class="nav-btn"
-    data-page="accountPage"
-    onclick="showPage('accountPage')"
-  >
+  <button class="nav-btn" data-page="accountPage" onclick="showPage('accountPage')">
     <span class="nav-icon">👤</span>
     Profil
   </button>
 
 </nav>
-
-
-<!-- ================= CHECKOUT MODAL ================= -->
 
 <div id="checkoutModal" class="modal">
 
@@ -1297,50 +1269,27 @@ header{
     <div class="modal-header">
       <h2>Finaliser la commande</h2>
 
-      <button
-        class="close"
-        onclick="closeModal('checkoutModal')"
-      >
+      <button class="close" onclick="closeModal('checkoutModal')">
         ×
       </button>
     </div>
 
     <div class="form-group">
-
       <label>Numéro de téléphone</label>
 
-      <input
-        id="checkoutPhone"
-        placeholder="6XXXXXXXX"
-      >
-
+      <input id="checkoutPhone" placeholder="6XXXXXXXX">
     </div>
 
     <div class="form-group">
-
       <label>Mode de réception</label>
 
-      <select
-        id="deliveryMethod"
-        onchange="toggleDeliveryAddress()"
-      >
-
-        <option value="pickup">
-          📍 Retrait
-        </option>
-
-        <option value="delivery">
-          🛵 Livraison
-        </option>
-
+      <select id="deliveryMethod" onchange="toggleDeliveryAddress()">
+        <option value="pickup">📍 Retrait</option>
+        <option value="delivery">🛵 Livraison</option>
       </select>
-
     </div>
 
-    <div
-      id="deliveryAddressGroup"
-      class="form-group hidden"
-    >
+    <div id="deliveryAddressGroup" class="form-group hidden">
 
       <label>Adresse de livraison</label>
 
@@ -1364,20 +1313,13 @@ header{
 
     <div id="checkoutTotal"></div>
 
-    <button
-      class="btn"
-      style="width:100%;margin-top:15px"
-      onclick="submitOrder()"
-    >
+    <button class="btn" style="width:100%;margin-top:15px" onclick="submitOrder()">
       Confirmer la commande
     </button>
 
   </div>
 
 </div>
-
-
-<!-- ================= AUTH MODAL ================= -->
 
 <div id="authModal" class="modal">
 
@@ -1387,10 +1329,7 @@ header{
 
       <h2 id="authTitle">Connexion</h2>
 
-      <button
-        class="close"
-        onclick="closeModal('authModal')"
-      >
+      <button class="close" onclick="closeModal('authModal')">
         ×
       </button>
 
@@ -1398,19 +1337,11 @@ header{
 
     <div class="auth-tabs">
 
-      <button
-        id="loginTab"
-        class="auth-tab active"
-        onclick="switchAuth('login')"
-      >
+      <button id="loginTab" class="auth-tab active" onclick="switchAuth('login')">
         Connexion
       </button>
 
-      <button
-        id="signupTab"
-        class="auth-tab"
-        onclick="switchAuth('signup')"
-      >
+      <button id="signupTab" class="auth-tab" onclick="switchAuth('signup')">
         Inscription
       </button>
 
@@ -1446,10 +1377,7 @@ header{
 
         <label>Nom / pseudo</label>
 
-        <input
-          id="authUsername"
-          placeholder="Mon pseudo"
-        >
+        <input id="authUsername" placeholder="Mon pseudo">
 
       </div>
 
@@ -1457,21 +1385,13 @@ header{
 
         <label>Téléphone</label>
 
-        <input
-          id="authPhone"
-          placeholder="6XXXXXXXX"
-        >
+        <input id="authPhone" placeholder="6XXXXXXXX">
 
       </div>
 
     </div>
 
-    <button
-      id="authSubmit"
-      class="btn"
-      style="width:100%"
-      onclick="submitAuth()"
-    >
+    <button id="authSubmit" class="btn" style="width:100%" onclick="submitAuth()">
       Se connecter
     </button>
 
@@ -1479,9 +1399,7 @@ header{
 
 </div>
 
-
 <div id="toast" class="toast"></div>
-
 
 <script>
 
@@ -1533,8 +1451,7 @@ let cart =
 
 function toast(message){
 
-  const el =
-    document.getElementById("toast");
+  const el = document.getElementById("toast");
 
   el.textContent = message;
   el.classList.add("show");
@@ -1542,6 +1459,7 @@ function toast(message){
   setTimeout(()=>{
     el.classList.remove("show");
   },3000);
+
 }
 
 
@@ -1565,6 +1483,7 @@ function escapeHtml(value){
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
+
 }
 
 
@@ -1597,6 +1516,8 @@ function updateCartCount(){
 
   const badge =
     document.getElementById("cartCount");
+
+  if(!badge) return;
 
   if(total > 0){
 
@@ -1756,7 +1677,6 @@ async function submitAuth(){
   if(authMode === "login"){
 
     const {
-      data,
       error
     } =
       await supabaseClient.auth.signInWithPassword({
@@ -1778,6 +1698,7 @@ async function submitAuth(){
     await loadCurrentUser();
 
     return;
+
   }
 
 
@@ -1821,13 +1742,20 @@ async function submitAuth(){
 
   if(data.user){
 
-    await supabaseClient
-      .from("profiles")
-      .upsert({
-        id:data.user.id,
-        username:username || email.split("@")[0],
-        phone:phone || null
-      });
+    const {
+      error:profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .upsert({
+          id:data.user.id,
+          username:username || email.split("@")[0],
+          phone:phone || null
+        });
+
+    if(profileError){
+      console.error(profileError);
+    }
 
   }
 
@@ -1912,7 +1840,7 @@ async function loadCurrentUser(){
 
 
 /* =========================================================
-   HEADER / PP MINIATURE + ADMIN
+   HEADER
 ========================================================= */
 
 function renderHeaderAccount(){
@@ -1945,16 +1873,12 @@ function renderHeaderAccount(){
   ){
 
     button.classList.add("admin");
-
-    button.title =
-      "Profil — Administrateur";
+    button.title = "Profil — Administrateur";
 
   }else{
 
     button.classList.remove("admin");
-
-    button.title =
-      "Mon profil";
+    button.title = "Mon profil";
 
   }
 
@@ -2004,9 +1928,7 @@ async function loadProducts(){
 function productImage(product){
 
   if(product.image_url){
-
     return product.image_url;
-
   }
 
   if(product.image_urls){
@@ -2052,8 +1974,10 @@ function productImages(product){
     images = [];
   }
 
-  if(product.image_url &&
-     !images.includes(product.image_url)){
+  if(
+    product.image_url &&
+    !images.includes(product.image_url)
+  ){
 
     images.unshift(product.image_url);
 
@@ -2614,19 +2538,13 @@ function renderCart(){
 
           <div class="qty">
 
-            <button
-              onclick="changeQuantity('${item.id}',-1)"
-            >
+            <button onclick="changeQuantity('${item.id}',-1)">
               −
             </button>
 
-            <strong>
-              ${item.quantity}
-            </strong>
+            <strong>${item.quantity}</strong>
 
-            <button
-              onclick="changeQuantity('${item.id}',1)"
-            >
+            <button onclick="changeQuantity('${item.id}',1)">
               +
             </button>
 
@@ -2743,14 +2661,10 @@ async function openCheckout(){
 function toggleDeliveryAddress(){
 
   const method =
-    document.getElementById(
-      "deliveryMethod"
-    ).value;
+    document.getElementById("deliveryMethod").value;
 
   const group =
-    document.getElementById(
-      "deliveryAddressGroup"
-    );
+    document.getElementById("deliveryAddressGroup");
 
   group.classList.toggle(
     "hidden",
@@ -2820,10 +2734,8 @@ async function submitOrder(){
 
   const items =
     cart.map(item=>({
-
       product_id:String(item.id),
       quantity:Number(item.quantity)
-
     }));
 
 
@@ -2886,12 +2798,20 @@ async function submitOrder(){
 
 
 /* =========================================================
-   SELLER
+   VENDEUR
 ========================================================= */
+
+/*
+  Un vendeur est actif si :
+  - il est admin
+  - OU il possède l'accès libre
+  - OU sa date d'expiration est encore valide
+*/
 
 function isSellerActive(){
 
   if(!currentProfile) return false;
+
 
   if(
     currentProfile.role ===
@@ -2909,6 +2829,13 @@ function isSellerActive(){
   }
 
 
+  if(
+    currentProfile.seller_access_unlimited === true
+  ){
+    return true;
+  }
+
+
   if(!currentProfile.seller_expires_at){
     return false;
   }
@@ -2923,15 +2850,63 @@ function isSellerActive(){
 }
 
 
+function sellerAccessLabel(){
+
+  if(
+    currentProfile?.seller_access_unlimited === true
+  ){
+
+    return `
+      <span class="seller-status unlimited">
+        ♾️ ACCÈS LIBRE
+      </span>
+    `;
+
+  }
+
+
+  if(!currentProfile?.seller_expires_at){
+
+    return `
+      <span class="seller-status expired">
+        🔴 Désactivé / expiré
+      </span>
+    `;
+
+  }
+
+
+  const expiry =
+    new Date(currentProfile.seller_expires_at);
+
+  if(expiry <= new Date()){
+
+    return `
+      <span class="seller-status expired">
+        🔴 Expiré
+      </span>
+    `;
+
+  }
+
+
+  return `
+    <span class="seller-status active">
+      🟢 Actif jusqu'au
+      ${expiry.toLocaleDateString("fr-FR")}
+    </span>
+  `;
+
+}
+
+
 function renderSellPage(){
 
   const access =
     document.getElementById("sellerAccess");
 
   const form =
-    document.getElementById(
-      "sellFormContainer"
-    );
+    document.getElementById("sellFormContainer");
 
   if(!access || !form) return;
 
@@ -2948,10 +2923,7 @@ function renderSellPage(){
           Connecte-toi pour vendre sur Zackary sh🛍️p.
         </p>
 
-        <button
-          class="btn"
-          onclick="openAuth('login')"
-        >
+        <button class="btn" onclick="openAuth('login')">
           Se connecter
         </button>
 
@@ -2975,8 +2947,16 @@ function renderSellPage(){
         <h3>Compte vendeur non actif</h3>
 
         <p style="margin:8px 0">
-          Ton compte doit être activé par l'administration
-          avant de pouvoir publier.
+          Ton compte vendeur est actuellement désactivé
+          ou expiré.
+        </p>
+
+        <p
+          class="muted"
+          style="margin-top:8px"
+        >
+          L'inscription vendeur normale est de
+          <strong>1050 XAF</strong>.
         </p>
 
       </div>
@@ -3001,7 +2981,13 @@ function renderSellPage(){
         margin-bottom:15px
       "
     >
-      ✅ Ton compte vendeur est actif.
+
+      <strong>✅ Compte vendeur actif</strong>
+
+      <div style="margin-top:5px">
+        ${sellerAccessLabel()}
+      </div>
+
     </div>
 
   `;
@@ -3143,11 +3129,6 @@ async function publishProduct(){
   };
 
 
-  /*
-    On utilise les colonnes image_url / image_urls
-    si elles existent dans ta table actuelle.
-  */
-
   if(imageUrls.length){
 
     payload.image_url =
@@ -3180,21 +3161,10 @@ async function publishProduct(){
 
   toast("Produit publié avec succès.");
 
-  document
-    .getElementById("productName")
-    .value = "";
-
-  document
-    .getElementById("productPrice")
-    .value = "";
-
-  document
-    .getElementById("productDescription")
-    .value = "";
-
-  document
-    .getElementById("productImages")
-    .value = "";
+  document.getElementById("productName").value = "";
+  document.getElementById("productPrice").value = "";
+  document.getElementById("productDescription").value = "";
+  document.getElementById("productImages").value = "";
 
 
   await loadProducts();
@@ -3207,9 +3177,7 @@ async function publishProduct(){
 async function loadMyProducts(){
 
   const container =
-    document.getElementById(
-      "myProductsContainer"
-    );
+    document.getElementById("myProductsContainer");
 
   if(!container || !currentUser) return;
 
@@ -3494,9 +3462,7 @@ async function saveProfile(){
 function renderAccount(){
 
   const container =
-    document.getElementById(
-      "accountContent"
-    );
+    document.getElementById("accountContent");
 
   if(!container) return;
 
@@ -3520,10 +3486,7 @@ function renderAccount(){
           Connecte-toi pour accéder à ton compte.
         </p>
 
-        <button
-          class="btn"
-          onclick="openAuth('login')"
-        >
+        <button class="btn" onclick="openAuth('login')">
           Se connecter
         </button>
 
@@ -3626,7 +3589,7 @@ function renderAccount(){
       <div class="stats">
 
         <div class="stat">
-          <strong>${role}</strong>
+          <strong>${escapeHtml(role)}</strong>
           <span>Rôle</span>
         </div>
 
@@ -3645,10 +3608,26 @@ function renderAccount(){
     </div>
 
 
-    <div
-      class="form-card"
-      style="margin-top:15px"
-    >
+    ${
+      isSeller
+      ?
+      `
+      <div class="form-card" style="margin-top:15px">
+
+        <h3>État vendeur</h3>
+
+        <div style="margin-top:10px">
+          ${sellerAccessLabel()}
+        </div>
+
+      </div>
+      `
+      :
+      ""
+    }
+
+
+    <div class="form-card" style="margin-top:15px">
 
       <h3>Mes informations</h3>
 
@@ -3801,17 +3780,11 @@ function renderAccount(){
     }
 
 
-    <div
-      class="form-card"
-      style="margin-top:15px"
-    >
+    <div class="form-card" style="margin-top:15px">
 
       <h3>Support technique</h3>
 
-      <p
-        class="muted"
-        style="margin-top:7px"
-      >
+      <p class="muted" style="margin-top:7px">
         En cas de problème avec Zackary sh🛍️p :
       </p>
 
@@ -3851,9 +3824,7 @@ function renderAccount(){
 async function loadOrders(){
 
   const container =
-    document.getElementById(
-      "ordersContent"
-    );
+    document.getElementById("ordersContent");
 
   if(!container) return;
 
@@ -3992,9 +3963,7 @@ function renderOrderCard(order){
         </div>
 
 
-        <span
-          class="status ${escapeHtml(status)}"
-        >
+        <span class="status ${escapeHtml(status)}">
           ${escapeHtml(statusLabel)}
         </span>
 
@@ -4032,10 +4001,7 @@ function renderOrderCard(order){
 
 
       <div class="order-total">
-
-        Total :
-        ${formatPrice(order.total_amount)}
-
+        Total : ${formatPrice(order.total_amount)}
       </div>
 
 
@@ -4086,9 +4052,7 @@ function renderOrderCard(order){
 async function loadAdminPage(){
 
   const container =
-    document.getElementById(
-      "adminContent"
-    );
+    document.getElementById("adminContent");
 
   if(!container) return;
 
@@ -4135,6 +4099,15 @@ async function loadAdminPage(){
     ]);
 
 
+  if(sellersResult.error){
+    console.error(sellersResult.error);
+  }
+
+  if(ordersResult.error){
+    console.error(ordersResult.error);
+  }
+
+
   const sellers =
     sellersResult.data || [];
 
@@ -4149,23 +4122,19 @@ async function loadAdminPage(){
       <h2>🔵 Administration</h2>
 
       <p style="opacity:.75;margin-top:5px">
-        Zackary sh🛍️p
+        Gestion de Zackary sh🛍️p
       </p>
 
 
       <div class="stats">
 
         <div class="stat">
-          <strong>
-            ${sellers.length}
-          </strong>
+          <strong>${sellers.length}</strong>
           <span>Vendeurs</span>
         </div>
 
         <div class="stat">
-          <strong>
-            ${orders.length}
-          </strong>
+          <strong>${orders.length}</strong>
           <span>Commandes</span>
         </div>
 
@@ -4190,58 +4159,21 @@ async function loadAdminPage(){
     <div class="section">
 
       <div class="section-title">
-        <h2>Vendeurs</h2>
+        <div>
+          <h2>👥 Gestion des vendeurs</h2>
+          <p class="muted">
+            Active, désactive ou donne un accès spécial.
+          </p>
+        </div>
       </div>
 
-      <div class="form-card">
+
+      <div>
 
         ${
           sellers.length
           ?
-          sellers.map(seller=>`
-
-            <div
-              class="admin-row"
-              style="
-                background:#f5f6f8;
-                color:#111
-              "
-            >
-
-              <div>
-
-                <strong>
-                  @${escapeHtml(
-                    seller.username || "vendeur"
-                  )}
-                </strong>
-
-                <div class="muted">
-                  ${
-                    seller.seller_expires_at
-                    ?
-                    "Expire le " +
-                    new Date(
-                      seller.seller_expires_at
-                    ).toLocaleDateString("fr-FR")
-                    :
-                    "Pas de date d'expiration"
-                  }
-                </div>
-
-              </div>
-
-
-              <button
-                class="btn red"
-                onclick="disableSeller('${seller.id}')"
-              >
-                Désactiver
-              </button>
-
-            </div>
-
-          `).join("")
+          sellers.map(renderAdminSeller).join("")
           :
           `<div class="empty">
             Aucun vendeur.
@@ -4278,6 +4210,322 @@ async function loadAdminPage(){
 
 }
 
+
+function renderAdminSeller(seller){
+
+  const avatar =
+    seller.avatar_url ||
+    "https://placehold.co/100x100?text=👤";
+
+
+  let statusHtml = "";
+
+
+  if(seller.seller_access_unlimited === true){
+
+    statusHtml = `
+      <span class="seller-status unlimited">
+        ♾️ ACCÈS LIBRE
+      </span>
+    `;
+
+  }else if(
+    seller.seller_expires_at &&
+    new Date(seller.seller_expires_at) > new Date()
+  ){
+
+    statusHtml = `
+      <span class="seller-status active">
+        🟢 Actif jusqu'au
+        ${new Date(
+          seller.seller_expires_at
+        ).toLocaleDateString("fr-FR")}
+      </span>
+    `;
+
+  }else{
+
+    statusHtml = `
+      <span class="seller-status expired">
+        🔴 Désactivé / expiré
+      </span>
+    `;
+
+  }
+
+
+  return `
+
+    <div class="seller-admin-card">
+
+      <div class="seller-admin-top">
+
+        <img
+          class="seller-admin-avatar"
+          src="${escapeHtml(avatar)}"
+          alt=""
+        >
+
+        <div style="flex:1">
+
+          <strong>
+            @${escapeHtml(
+              seller.username || "vendeur"
+            )}
+          </strong>
+
+          <div
+            class="muted"
+            style="font-size:12px;margin-top:3px"
+          >
+            ${escapeHtml(
+              seller.phone ||
+              seller.whatsapp ||
+              "Téléphone non renseigné"
+            )}
+          </div>
+
+          <div>
+            ${statusHtml}
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="seller-admin-actions">
+
+        <button
+          class="btn green"
+          onclick="adminGrantFree30('${seller.id}')"
+        >
+          🎁 30 jours gratuits
+        </button>
+
+        <button
+          class="btn blue"
+          onclick="adminGrantUnlimited('${seller.id}')"
+        >
+          ♾️ Accès libre
+        </button>
+
+        <button
+          class="btn orange"
+          onclick="adminReactivate30('${seller.id}')"
+        >
+          🔄 Réactiver 30j
+        </button>
+
+        <button
+          class="btn red"
+          onclick="adminDisableSeller('${seller.id}')"
+        >
+          ⏸️ Désactiver
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   ADMIN — ACTIONS VENDEURS
+========================================================= */
+
+async function adminGrantFree30(sellerId){
+
+  if(
+    !currentProfile ||
+    currentProfile.role !== "creator_admin"
+  ){
+
+    toast("Accès refusé.");
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient.rpc(
+      "admin_grant_free_30_days",
+      {
+        p_seller_id:sellerId
+      }
+    );
+
+
+  if(error){
+
+    console.error(error);
+
+    toast(error.message);
+
+    return;
+
+  }
+
+
+  toast("🎁 30 jours gratuits accordés.");
+
+  await loadAdminPage();
+
+}
+
+
+async function adminGrantUnlimited(sellerId){
+
+  if(
+    !currentProfile ||
+    currentProfile.role !== "creator_admin"
+  ){
+
+    toast("Accès refusé.");
+    return;
+
+  }
+
+
+  if(!confirm(
+    "Donner un accès libre permanent à ce vendeur ?"
+  )){
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient.rpc(
+      "admin_grant_unlimited_access",
+      {
+        p_seller_id:sellerId
+      }
+    );
+
+
+  if(error){
+
+    console.error(error);
+
+    toast(error.message);
+
+    return;
+
+  }
+
+
+  toast("♾️ Accès libre activé.");
+
+  await loadAdminPage();
+
+}
+
+
+async function adminReactivate30(sellerId){
+
+  if(
+    !currentProfile ||
+    currentProfile.role !== "creator_admin"
+  ){
+
+    toast("Accès refusé.");
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient.rpc(
+      "admin_reactivate_30_days",
+      {
+        p_seller_id:sellerId
+      }
+    );
+
+
+  if(error){
+
+    console.error(error);
+
+    toast(error.message);
+
+    return;
+
+  }
+
+
+  toast("🔄 Vendeur réactivé pour 30 jours.");
+
+  await loadAdminPage();
+
+}
+
+
+async function adminDisableSeller(sellerId){
+
+  if(
+    !currentProfile ||
+    currentProfile.role !== "creator_admin"
+  ){
+
+    toast("Accès refusé.");
+    return;
+
+  }
+
+
+  if(!confirm(
+    "Désactiver immédiatement ce vendeur ?"
+  )){
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient.rpc(
+      "admin_disable_seller",
+      {
+        p_seller_id:sellerId
+      }
+    );
+
+
+  if(error){
+
+    console.error(error);
+
+    toast(error.message);
+
+    return;
+
+  }
+
+
+  toast("⏸️ Vendeur désactivé.");
+
+  await loadAdminPage();
+
+}
+
+
+/* =========================================================
+   ADMIN — COMMANDES
+========================================================= */
 
 function renderAdminOrder(order){
 
@@ -4329,9 +4577,7 @@ function renderAdminOrder(order){
 
       <div class="form-row" style="margin-top:12px">
 
-        <select
-          id="status-${order.id}"
-        >
+        <select id="status-${order.id}">
 
           <option value="pending">En attente</option>
           <option value="confirmed">Confirmée</option>
@@ -4381,7 +4627,6 @@ async function changeOrderStatus(
 ){
 
   const {
-    data,
     error
   } =
     await supabaseClient.rpc(
@@ -4413,41 +4658,6 @@ async function changeOrderStatus(
     loadAdminPage();
 
   }
-
-}
-
-
-async function disableSeller(id){
-
-  if(!confirm(
-    "Désactiver ce vendeur ?"
-  )){
-    return;
-  }
-
-
-  const {
-    error
-  } =
-    await supabaseClient.rpc(
-      "creator_disable_seller",
-      {
-        p_seller_id:id
-      }
-    );
-
-
-  if(error){
-
-    toast(error.message);
-    return;
-
-  }
-
-
-  toast("Vendeur désactivé.");
-
-  loadAdminPage();
 
 }
 
