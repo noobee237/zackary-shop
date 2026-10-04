@@ -24,6 +24,7 @@
   --green:#16a34a;
   --red:#dc2626;
   --orange:#f59e0b;
+  --purple:#7c3aed;
   --shadow:0 10px 30px rgba(0,0,0,.08);
   --radius:22px;
 }
@@ -47,10 +48,7 @@ body{
   padding-bottom:90px;
 }
 
-button,
-input,
-textarea,
-select{
+button,input,textarea,select{
   font:inherit;
 }
 
@@ -97,6 +95,7 @@ header{
   font-weight:900;
   letter-spacing:-.7px;
   white-space:nowrap;
+  background:none;
 }
 
 .logo span{
@@ -248,6 +247,11 @@ header{
   color:#111;
 }
 
+.btn.purple{
+  background:#7c3aed;
+  color:white;
+}
+
 .btn.light{
   background:#f0f1f3;
   color:#111;
@@ -346,9 +350,16 @@ header{
 
 .product-image{
   width:100%;
-  aspect-ratio:1/1.05;
   object-fit:cover;
   background:#e8e9eb;
+}
+
+.product-image.ratio-16-9{
+  aspect-ratio:16/9;
+}
+
+.product-image.ratio-4-3{
+  aspect-ratio:4/3;
 }
 
 .product-info{
@@ -372,6 +383,13 @@ header{
   margin-top:7px;
   font-size:12px;
   color:var(--muted);
+}
+
+.product-brand{
+  margin-top:6px;
+  font-size:12px;
+  color:#7c3aed;
+  font-weight:800;
 }
 
 .empty{
@@ -402,10 +420,17 @@ header{
 .detail-images img{
   width:100%;
   min-width:100%;
-  aspect-ratio:1/1;
   object-fit:contain;
   scroll-snap-align:start;
   background:#eee;
+}
+
+.detail-images.ratio-16-9 img{
+  aspect-ratio:16/9;
+}
+
+.detail-images.ratio-4-3 img{
+  aspect-ratio:4/3;
 }
 
 .detail-content{
@@ -429,6 +454,17 @@ header{
   line-height:1.55;
   color:#555;
   white-space:pre-wrap;
+}
+
+.brand-tag{
+  display:inline-block;
+  margin-top:10px;
+  padding:7px 11px;
+  border-radius:999px;
+  background:#ede9fe;
+  color:#6d28d9;
+  font-size:12px;
+  font-weight:900;
 }
 
 .seller-box{
@@ -505,6 +541,33 @@ header{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
+}
+
+.format-options{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.format-option{
+  border:2px solid #e5e7eb;
+  border-radius:15px;
+  padding:13px;
+  background:#fafafa;
+  cursor:pointer;
+}
+
+.format-option.active{
+  border-color:#111;
+  background:#f3f4f6;
+}
+
+.format-option strong{
+  display:block;
+}
+
+.format-option small{
+  color:var(--muted);
 }
 
 .profile-card{
@@ -739,6 +802,73 @@ header{
   color:#b91c1c;
 }
 
+.brand-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.brand-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 5px 18px rgba(0,0,0,.045);
+  cursor:pointer;
+  transition:.2s;
+}
+
+.brand-card:hover{
+  transform:translateY(-3px);
+}
+
+.brand-icon{
+  width:55px;
+  height:55px;
+  border-radius:17px;
+  background:#111;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  font-weight:900;
+  margin-bottom:12px;
+}
+
+.brand-name{
+  font-size:18px;
+  font-weight:900;
+}
+
+.brand-meta{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+
+.brand-admin-box{
+  margin-top:20px;
+  padding:17px;
+  border-radius:18px;
+  background:#f5f3ff;
+  border:1px solid #ddd6fe;
+}
+
+.creator-box{
+  margin-top:18px;
+  padding:18px;
+  border-radius:20px;
+  background:linear-gradient(135deg,#111,#292929);
+  color:white;
+}
+
+.creator-box p{
+  color:#d5d5d5;
+  margin-top:6px;
+  line-height:1.45;
+}
+
 .bottom-nav{
   position:fixed;
   left:50%;
@@ -894,6 +1024,10 @@ header{
   .product-grid{
     grid-template-columns:repeat(3,1fr);
   }
+
+  .brand-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
 }
 
 @media(max-width:600px){
@@ -937,6 +1071,10 @@ header{
 
   .seller-admin-actions{
     grid-template-columns:1fr;
+  }
+
+  .brand-grid{
+    grid-template-columns:1fr 1fr;
   }
 
   .bottom-nav{
@@ -984,6 +1122,7 @@ header{
 <section id="homePage" class="page active">
 
   <div class="hero">
+
     <h1>Le streetwear<br>de Yaoundé.</h1>
 
     <p>
@@ -992,89 +1131,226 @@ header{
     </p>
 
     <div class="hero-actions">
-      <button class="btn white" onclick="showPage('shopPage')">
+
+      <button
+        class="btn white"
+        onclick="showPage('shopPage')"
+      >
         🛍️ Voir la boutique
       </button>
 
-      <button class="btn" onclick="showPage('sellPage')">
+      <button
+        id="heroSellBtn"
+        class="btn hidden"
+        onclick="showPage('sellPage')"
+      >
         + Vendre
       </button>
+
+      <button
+        class="btn light"
+        onclick="showPage('brandsPage')"
+      >
+        🏷️ Découvrir les marques
+      </button>
+
     </div>
+
   </div>
 
   <div class="section">
+
     <div class="section-title">
+
       <h2>Nouveautés</h2>
-      <button class="btn light" onclick="showPage('shopPage')">
+
+      <button
+        class="btn light"
+        onclick="showPage('shopPage')"
+      >
         Tout voir
       </button>
+
     </div>
 
-    <div id="homeProducts" class="product-grid">
-      <div class="loading">Chargement...</div>
+    <div
+      id="homeProducts"
+      class="product-grid"
+    >
+      <div class="loading">
+        Chargement...
+      </div>
     </div>
+
   </div>
 
 </section>
+
 
 <section id="shopPage" class="page">
 
   <div class="section">
 
     <div class="section-title">
+
       <div>
         <h2>🛍️ Boutique</h2>
-        <p class="muted">Toutes les offres disponibles</p>
+        <p class="muted">
+          Toutes les offres disponibles
+        </p>
       </div>
+
     </div>
 
     <div class="search-box">
       🔎
+
       <input
         id="shopSearch"
         type="search"
-        placeholder="Rechercher un article..."
+        placeholder="Rechercher un article, une marque..."
         oninput="renderShopProducts()"
       >
+
     </div>
 
-    <div class="categories" style="margin-top:12px">
+    <div
+      class="categories"
+      style="margin-top:12px"
+    >
 
-      <button class="category active" data-category="Tous" onclick="setCategory('Tous')">
+      <button
+        class="category active"
+        data-category="Tous"
+        onclick="setCategory('Tous')"
+      >
         Tous
       </button>
 
-      <button class="category" data-category="T-shirts" onclick="setCategory('T-shirts')">
+      <button
+        class="category"
+        data-category="T-shirts"
+        onclick="setCategory('T-shirts')"
+      >
         T-shirts
       </button>
 
-      <button class="category" data-category="Ensembles/Jogging" onclick="setCategory('Ensembles/Jogging')">
+      <button
+        class="category"
+        data-category="Ensembles/Jogging"
+        onclick="setCategory('Ensembles/Jogging')"
+      >
         Ensembles/Jogging
       </button>
 
-      <button class="category" data-category="Pantalons" onclick="setCategory('Pantalons')">
+      <button
+        class="category"
+        data-category="Pantalons"
+        onclick="setCategory('Pantalons')"
+      >
         Pantalons
       </button>
 
-      <button class="category" data-category="Vestes" onclick="setCategory('Vestes')">
+      <button
+        class="category"
+        data-category="Vestes"
+        onclick="setCategory('Vestes')"
+      >
         Vestes
       </button>
 
-      <button class="category" data-category="Chaussures" onclick="setCategory('Chaussures')">
+      <button
+        class="category"
+        data-category="Chaussures"
+        onclick="setCategory('Chaussures')"
+      >
         Chaussures
       </button>
 
-      <button class="category" data-category="Accessoires" onclick="setCategory('Accessoires')">
+      <button
+        class="category"
+        data-category="Accessoires"
+        onclick="setCategory('Accessoires')"
+      >
         Accessoires
       </button>
 
     </div>
 
-    <div id="shopProducts" class="product-grid" style="margin-top:18px"></div>
+    <div
+      id="shopProducts"
+      class="product-grid"
+      style="margin-top:18px"
+    ></div>
 
   </div>
 
 </section>
+
+
+<section id="brandsPage" class="page">
+
+  <div class="section">
+
+    <div class="section-title">
+
+      <div>
+        <h2>🏷️ Marques</h2>
+
+        <p class="muted">
+          Les marques streetwear présentes sur Zackary sh🛍️p à Yaoundé.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="search-box">
+
+      🔎
+
+      <input
+        id="brandSearch"
+        type="search"
+        placeholder="Rechercher une marque..."
+        oninput="renderBrands()"
+      >
+
+    </div>
+
+    <div
+      id="brandsContainer"
+      class="brand-grid"
+      style="margin-top:18px"
+    ></div>
+
+    <div
+      id="sellerBrandBox"
+      class="brand-admin-box hidden"
+    ></div>
+
+    <div class="creator-box">
+
+      <strong>🛍️ Tu veux devenir vendeur ?</strong>
+
+      <p>
+        Pour souscrire à ton accès vendeur ou obtenir de l'aide,
+        contacte directement le créateur de Zackary sh🛍️p.
+      </p>
+
+      <button
+        class="btn green"
+        style="margin-top:13px"
+        onclick="contactCreator()"
+      >
+        💬 WhatsApp — 690 847 035
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
 
 <section id="productPage" class="page">
 
@@ -1090,68 +1366,121 @@ header{
 
 </section>
 
+
 <section id="cartPage" class="page">
 
   <div class="section">
 
     <div class="section-title">
+
       <div>
         <h2>🛒 Mon panier</h2>
-        <p class="muted">Tes articles sélectionnés</p>
+        <p class="muted">
+          Tes articles sélectionnés
+        </p>
       </div>
+
     </div>
 
     <div id="cartItems"></div>
 
-    <div id="cartSummary" class="form-card hidden" style="margin-top:15px"></div>
+    <div
+      id="cartSummary"
+      class="form-card hidden"
+      style="margin-top:15px"
+    ></div>
 
   </div>
 
 </section>
+
 
 <section id="sellPage" class="page">
 
   <div class="section">
 
     <div class="section-title">
+
       <div>
         <h2>Vendre</h2>
-        <p class="muted">Publie tes produits sur Zackary sh🛍️p</p>
+
+        <p class="muted">
+          Publie tes produits sur Zackary sh🛍️p
+        </p>
       </div>
+
     </div>
 
     <div id="sellerAccess"></div>
 
-    <div id="sellFormContainer" class="form-card hidden">
+    <div
+      id="sellFormContainer"
+      class="form-card hidden"
+    >
 
       <h3>Publier un produit</h3>
 
-      <p class="muted" style="margin:5px 0 20px">
+      <p
+        class="muted"
+        style="margin:5px 0 20px"
+      >
         Tu peux ajouter jusqu'à 4 photos.
       </p>
 
       <div class="form-group">
+
         <label>Nom du produit</label>
-        <input id="productName" placeholder="Ex : T-shirt oversize">
+
+        <input
+          id="productName"
+          placeholder="Ex : T-shirt oversize"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Marque</label>
+
+        <input
+          id="productBrand"
+          placeholder="Ex : NOVIS, YDE STREET, ..."
+        >
+
+        <small class="muted">
+          La marque sera visible sur ton produit et dans l'index des marques.
+        </small>
+
       </div>
 
       <div class="form-row">
 
         <div class="form-group">
+
           <label>Prix XAF</label>
-          <input id="productPrice" type="number" min="0" placeholder="15000">
+
+          <input
+            id="productPrice"
+            type="number"
+            min="0"
+            placeholder="15000"
+          >
+
         </div>
 
         <div class="form-group">
+
           <label>Catégorie</label>
 
           <select id="productCategory">
+
             <option>T-shirts</option>
             <option>Ensembles/Jogging</option>
             <option>Pantalons</option>
             <option>Vestes</option>
             <option>Chaussures</option>
             <option>Accessoires</option>
+
           </select>
 
         </div>
@@ -1159,6 +1488,51 @@ header{
       </div>
 
       <div class="form-group">
+
+        <label>Format des images</label>
+
+        <div class="format-options">
+
+          <div
+            id="format169"
+            class="format-option active"
+            onclick="selectProductFormat('16:9')"
+          >
+
+            <strong>▭ 16:9</strong>
+
+            <small>
+              Format large
+            </small>
+
+          </div>
+
+          <div
+            id="format43"
+            class="format-option"
+            onclick="selectProductFormat('4:3')"
+          >
+
+            <strong>▭ 4:3</strong>
+
+            <small>
+              Format classique
+            </small>
+
+          </div>
+
+        </div>
+
+        <input
+          id="productFormat"
+          type="hidden"
+          value="16:9"
+        >
+
+      </div>
+
+      <div class="form-group">
+
         <label>Description</label>
 
         <textarea
@@ -1169,6 +1543,7 @@ header{
       </div>
 
       <div class="form-group">
+
         <label>Photos</label>
 
         <input
@@ -1181,9 +1556,14 @@ header{
         <small class="muted">
           Maximum 4 images.
         </small>
+
       </div>
 
-      <button class="btn" style="width:100%" onclick="publishProduct()">
+      <button
+        class="btn"
+        style="width:100%"
+        onclick="publishProduct()"
+      >
         Publier le produit
       </button>
 
@@ -1195,6 +1575,7 @@ header{
 
 </section>
 
+
 <section id="accountPage" class="page">
 
   <div class="section">
@@ -1203,15 +1584,21 @@ header{
 
 </section>
 
+
 <section id="ordersPage" class="page">
 
   <div class="section">
 
     <div class="section-title">
+
       <div>
         <h2>📦 Commandes</h2>
-        <p class="muted">Suivi de tes commandes</p>
+
+        <p class="muted">
+          Suivi de tes commandes
+        </p>
       </div>
+
     </div>
 
     <div id="ordersContent"></div>
@@ -1219,6 +1606,7 @@ header{
   </div>
 
 </section>
+
 
 <section id="adminPage" class="page">
 
@@ -1230,66 +1618,134 @@ header{
 
 </main>
 
+
 <nav class="bottom-nav">
 
-  <button class="nav-btn active" data-page="homePage" onclick="showPage('homePage')">
+  <button
+    class="nav-btn active"
+    data-page="homePage"
+    onclick="showPage('homePage')"
+  >
     <span class="nav-icon">⌂</span>
     Accueil
   </button>
 
-  <button class="nav-btn" data-page="shopPage" onclick="showPage('shopPage')">
+  <button
+    class="nav-btn"
+    data-page="shopPage"
+    onclick="showPage('shopPage')"
+  >
     <span class="nav-icon">🛍️</span>
     Boutique
   </button>
 
-  <button class="nav-btn" data-page="cartPage" onclick="showPage('cartPage')">
+  <button
+    class="nav-btn"
+    data-page="cartPage"
+    onclick="showPage('cartPage')"
+  >
     <span class="nav-icon">
       🛒
-      <span id="cartCount" class="cart-count">0</span>
+      <span
+        id="cartCount"
+        class="cart-count"
+      >
+        0
+      </span>
     </span>
     Panier
   </button>
 
-  <button class="nav-btn" data-page="sellPage" onclick="showPage('sellPage')">
+  <!-- CLIENT : MARQUES -->
+  <button
+    id="brandsNavBtn"
+    class="nav-btn"
+    data-page="brandsPage"
+    onclick="showPage('brandsPage')"
+  >
+    <span class="nav-icon">🏷️</span>
+    Marques
+  </button>
+
+  <!-- VENDEUR / ADMIN : VENDRE -->
+  <button
+    id="sellNavBtn"
+    class="nav-btn hidden"
+    data-page="sellPage"
+    onclick="showPage('sellPage')"
+  >
     <span class="nav-icon">＋</span>
     Vendre
   </button>
 
-  <button class="nav-btn" data-page="accountPage" onclick="showPage('accountPage')">
+  <button
+    class="nav-btn"
+    data-page="accountPage"
+    onclick="showPage('accountPage')"
+  >
     <span class="nav-icon">👤</span>
     Profil
   </button>
 
 </nav>
 
-<div id="checkoutModal" class="modal">
+
+<div
+  id="checkoutModal"
+  class="modal"
+>
 
   <div class="modal-content">
 
     <div class="modal-header">
+
       <h2>Finaliser la commande</h2>
 
-      <button class="close" onclick="closeModal('checkoutModal')">
+      <button
+        class="close"
+        onclick="closeModal('checkoutModal')"
+      >
         ×
       </button>
+
     </div>
 
     <div class="form-group">
+
       <label>Numéro de téléphone</label>
 
-      <input id="checkoutPhone" placeholder="6XXXXXXXX">
+      <input
+        id="checkoutPhone"
+        placeholder="6XXXXXXXX"
+      >
+
     </div>
 
     <div class="form-group">
+
       <label>Mode de réception</label>
 
-      <select id="deliveryMethod" onchange="toggleDeliveryAddress()">
-        <option value="pickup">📍 Retrait</option>
-        <option value="delivery">🛵 Livraison</option>
+      <select
+        id="deliveryMethod"
+        onchange="toggleDeliveryAddress()"
+      >
+
+        <option value="pickup">
+          📍 Retrait
+        </option>
+
+        <option value="delivery">
+          🛵 Livraison
+        </option>
+
       </select>
+
     </div>
 
-    <div id="deliveryAddressGroup" class="form-group hidden">
+    <div
+      id="deliveryAddressGroup"
+      class="form-group hidden"
+    >
 
       <label>Adresse de livraison</label>
 
@@ -1313,7 +1769,11 @@ header{
 
     <div id="checkoutTotal"></div>
 
-    <button class="btn" style="width:100%;margin-top:15px" onclick="submitOrder()">
+    <button
+      class="btn"
+      style="width:100%;margin-top:15px"
+      onclick="submitOrder()"
+    >
       Confirmer la commande
     </button>
 
@@ -1321,15 +1781,24 @@ header{
 
 </div>
 
-<div id="authModal" class="modal">
+
+<div
+  id="authModal"
+  class="modal"
+>
 
   <div class="modal-content">
 
     <div class="modal-header">
 
-      <h2 id="authTitle">Connexion</h2>
+      <h2 id="authTitle">
+        Connexion
+      </h2>
 
-      <button class="close" onclick="closeModal('authModal')">
+      <button
+        class="close"
+        onclick="closeModal('authModal')"
+      >
         ×
       </button>
 
@@ -1337,11 +1806,19 @@ header{
 
     <div class="auth-tabs">
 
-      <button id="loginTab" class="auth-tab active" onclick="switchAuth('login')">
+      <button
+        id="loginTab"
+        class="auth-tab active"
+        onclick="switchAuth('login')"
+      >
         Connexion
       </button>
 
-      <button id="signupTab" class="auth-tab" onclick="switchAuth('signup')">
+      <button
+        id="signupTab"
+        class="auth-tab"
+        onclick="switchAuth('signup')"
+      >
         Inscription
       </button>
 
@@ -1371,13 +1848,19 @@ header{
 
     </div>
 
-    <div id="signupFields" class="hidden">
+    <div
+      id="signupFields"
+      class="hidden"
+    >
 
       <div class="form-group">
 
         <label>Nom / pseudo</label>
 
-        <input id="authUsername" placeholder="Mon pseudo">
+        <input
+          id="authUsername"
+          placeholder="Mon pseudo"
+        >
 
       </div>
 
@@ -1385,13 +1868,21 @@ header{
 
         <label>Téléphone</label>
 
-        <input id="authPhone" placeholder="6XXXXXXXX">
+        <input
+          id="authPhone"
+          placeholder="6XXXXXXXX"
+        >
 
       </div>
 
     </div>
 
-    <button id="authSubmit" class="btn" style="width:100%" onclick="submitAuth()">
+    <button
+      id="authSubmit"
+      class="btn"
+      style="width:100%"
+      onclick="submitAuth()"
+    >
       Se connecter
     </button>
 
@@ -1399,7 +1890,12 @@ header{
 
 </div>
 
-<div id="toast" class="toast"></div>
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
 
 <script>
 
@@ -1433,11 +1929,15 @@ const supabaseClient =
 
 let currentUser = null;
 let currentProfile = null;
+
 let products = [];
 let selectedProduct = null;
 let selectedSeller = null;
+
 let currentCategory = "Tous";
 let authMode = "login";
+
+let selectedProductFormat = "16:9";
 
 let cart =
   JSON.parse(
@@ -1446,14 +1946,28 @@ let cart =
 
 
 /* =========================================================
+   CONSTANTES
+========================================================= */
+
+const CREATOR_WHATSAPP =
+  "690847035";
+
+const SELLER_PRICE =
+  1050;
+
+
+/* =========================================================
    UTILITAIRES
 ========================================================= */
 
 function toast(message){
 
-  const el = document.getElementById("toast");
+  const el =
+    document.getElementById("toast");
 
-  el.textContent = message;
+  el.textContent =
+    message;
+
   el.classList.add("show");
 
   setTimeout(()=>{
@@ -1466,14 +1980,18 @@ function toast(message){
 function formatPrice(value){
 
   return Number(value || 0)
-    .toLocaleString("fr-FR") + " XAF";
+    .toLocaleString("fr-FR") +
+    " XAF";
 
 }
 
 
 function escapeHtml(value){
 
-  if(value === null || value === undefined){
+  if(
+    value === null ||
+    value === undefined
+  ){
     return "";
   }
 
@@ -1510,26 +2028,57 @@ function updateCartCount(){
 
   const total =
     cart.reduce(
-      (sum,item)=>sum + Number(item.quantity || 1),
+      (sum,item)=>
+        sum +
+        Number(item.quantity || 1),
       0
     );
 
   const badge =
-    document.getElementById("cartCount");
+    document.getElementById(
+      "cartCount"
+    );
 
   if(!badge) return;
 
   if(total > 0){
 
-    badge.style.display = "flex";
+    badge.style.display =
+      "flex";
+
     badge.textContent =
-      total > 99 ? "99+" : total;
+      total > 99
+        ? "99+"
+        : total;
 
   }else{
 
-    badge.style.display = "none";
+    badge.style.display =
+      "none";
 
   }
+
+}
+
+
+/* =========================================================
+   WHATSAPP CRÉATEUR
+========================================================= */
+
+function contactCreator(){
+
+  const message =
+    encodeURIComponent(
+      "Bonjour Novis, je souhaite souscrire à l'accès vendeur de Zackary sh🛍️p. Je voudrais connaître les modalités d'inscription à 1050 XAF."
+    );
+
+  window.open(
+    "https://wa.me/237" +
+    CREATOR_WHATSAPP +
+    "?text=" +
+    message,
+    "_blank"
+  );
 
 }
 
@@ -1539,6 +2088,26 @@ function updateCartCount(){
 ========================================================= */
 
 function showPage(pageId){
+
+  /*
+    Protection importante :
+    un client ne peut pas ouvrir sellPage
+    simplement en modifiant l'URL ou en exécutant
+    une fonction côté navigateur.
+  */
+
+  if(
+    pageId === "sellPage" &&
+    !isSellerOrAdmin()
+  ){
+
+    toast(
+      "L'espace Vendre est réservé aux vendeurs."
+    );
+
+    return;
+
+  }
 
   document
     .querySelectorAll(".page")
@@ -1571,6 +2140,10 @@ function showPage(pageId){
     renderShopProducts();
   }
 
+  if(pageId === "brandsPage"){
+    renderBrands();
+  }
+
   if(pageId === "cartPage"){
     renderCart();
   }
@@ -1589,6 +2162,85 @@ function showPage(pageId){
 
   if(pageId === "adminPage"){
     loadAdminPage();
+  }
+
+}
+
+
+/* =========================================================
+   NAVIGATION VENDEUR / CLIENT
+========================================================= */
+
+function isSellerOrAdmin(){
+
+  return !!(
+    currentProfile &&
+    (
+      currentProfile.role === "seller" ||
+      currentProfile.role === "creator_admin"
+    )
+  );
+
+}
+
+
+function updateNavigationByRole(){
+
+  const sellBtn =
+    document.getElementById(
+      "sellNavBtn"
+    );
+
+  const brandsBtn =
+    document.getElementById(
+      "brandsNavBtn"
+    );
+
+  const heroSellBtn =
+    document.getElementById(
+      "heroSellBtn"
+    );
+
+  const seller =
+    isSellerOrAdmin();
+
+  /*
+    CLIENT :
+    Marques visible
+    Vendre caché
+
+    VENDEUR / ADMIN :
+    Vendre visible
+    Marques reste accessible via bouton
+    et page, mais ne prend plus la place
+    de Vendre dans la barre principale.
+  */
+
+  if(sellBtn){
+
+    sellBtn.classList.toggle(
+      "hidden",
+      !seller
+    );
+
+  }
+
+  if(brandsBtn){
+
+    brandsBtn.classList.toggle(
+      "hidden",
+      seller
+    );
+
+  }
+
+  if(heroSellBtn){
+
+    heroSellBtn.classList.toggle(
+      "hidden",
+      !seller
+    );
+
   }
 
 }
@@ -1616,39 +2268,69 @@ function switchAuth(mode){
   authMode = mode;
 
   const loginTab =
-    document.getElementById("loginTab");
+    document.getElementById(
+      "loginTab"
+    );
 
   const signupTab =
-    document.getElementById("signupTab");
+    document.getElementById(
+      "signupTab"
+    );
 
   const signupFields =
-    document.getElementById("signupFields");
+    document.getElementById(
+      "signupFields"
+    );
 
   const title =
-    document.getElementById("authTitle");
+    document.getElementById(
+      "authTitle"
+    );
 
   const submit =
-    document.getElementById("authSubmit");
+    document.getElementById(
+      "authSubmit"
+    );
 
   if(mode === "login"){
 
-    loginTab.classList.add("active");
-    signupTab.classList.remove("active");
+    loginTab.classList.add(
+      "active"
+    );
 
-    signupFields.classList.add("hidden");
+    signupTab.classList.remove(
+      "active"
+    );
 
-    title.textContent = "Connexion";
-    submit.textContent = "Se connecter";
+    signupFields.classList.add(
+      "hidden"
+    );
+
+    title.textContent =
+      "Connexion";
+
+    submit.textContent =
+      "Se connecter";
 
   }else{
 
-    loginTab.classList.remove("active");
-    signupTab.classList.add("active");
+    loginTab.classList.remove(
+      "active"
+    );
 
-    signupFields.classList.remove("hidden");
+    signupTab.classList.add(
+      "active"
+    );
 
-    title.textContent = "Créer un compte";
-    submit.textContent = "Créer mon compte";
+    signupFields.classList.remove(
+      "hidden"
+    );
+
+    title.textContent =
+      "Créer un compte";
+
+    submit.textContent =
+      "Créer mon compte";
 
   }
 
@@ -1669,7 +2351,10 @@ async function submitAuth(){
 
   if(!email || !password){
 
-    toast("Remplis ton email et ton mot de passe.");
+    toast(
+      "Remplis ton email et ton mot de passe."
+    );
+
     return;
 
   }
@@ -1679,28 +2364,33 @@ async function submitAuth(){
     const {
       error
     } =
-      await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
+      await supabaseClient.auth
+        .signInWithPassword({
+          email,
+          password
+        });
 
     if(error){
 
       toast(error.message);
+
       return;
 
     }
 
-    toast("Connexion réussie.");
+    toast(
+      "Connexion réussie."
+    );
 
-    closeModal("authModal");
+    closeModal(
+      "authModal"
+    );
 
     await loadCurrentUser();
 
     return;
 
   }
-
 
   const username =
     document
@@ -1712,33 +2402,32 @@ async function submitAuth(){
       .getElementById("authPhone")
       .value.trim();
 
-
   const {
     data,
     error
   } =
-    await supabaseClient.auth.signUp({
+    await supabaseClient.auth
+      .signUp({
 
-      email,
-      password,
+        email,
+        password,
 
-      options:{
-        data:{
-          username,
-          phone
+        options:{
+          data:{
+            username,
+            phone
+          }
         }
-      }
 
-    });
-
+      });
 
   if(error){
 
     toast(error.message);
+
     return;
 
   }
-
 
   if(data.user){
 
@@ -1748,23 +2437,35 @@ async function submitAuth(){
       await supabaseClient
         .from("profiles")
         .upsert({
+
           id:data.user.id,
-          username:username || email.split("@")[0],
-          phone:phone || null
+
+          username:
+            username ||
+            email.split("@")[0],
+
+          phone:
+            phone || null
+
         });
 
     if(profileError){
-      console.error(profileError);
+
+      console.error(
+        profileError
+      );
+
     }
 
   }
-
 
   toast(
     "Compte créé. Vérifie ton email si nécessaire."
   );
 
-  closeModal("authModal");
+  closeModal(
+    "authModal"
+  );
 
   await loadCurrentUser();
 
@@ -1773,17 +2474,25 @@ async function submitAuth(){
 
 async function logout(){
 
-  await supabaseClient.auth.signOut();
+  await supabaseClient
+    .auth
+    .signOut();
 
   currentUser = null;
   currentProfile = null;
 
+  updateNavigationByRole();
+
   renderHeaderAccount();
   renderAccount();
 
-  showPage("homePage");
+  showPage(
+    "homePage"
+  );
 
-  toast("Déconnexion réussie.");
+  toast(
+    "Déconnexion réussie."
+  );
 
 }
 
@@ -1799,9 +2508,12 @@ async function loadCurrentUser(){
       user
     }
   } =
-    await supabaseClient.auth.getUser();
+    await supabaseClient
+      .auth
+      .getUser();
 
-  currentUser = user || null;
+  currentUser =
+    user || null;
 
   currentProfile = null;
 
@@ -1814,22 +2526,35 @@ async function loadCurrentUser(){
       await supabaseClient
         .from("profiles")
         .select("*")
-        .eq("id",currentUser.id)
+        .eq(
+          "id",
+          currentUser.id
+        )
         .maybeSingle();
 
     if(!error){
-      currentProfile = data;
+
+      currentProfile =
+        data;
+
     }
 
   }
 
+  updateNavigationByRole();
+
   renderHeaderAccount();
+
   renderAccount();
+
   renderSellPage();
+
+  renderBrands();
 
   if(
     currentProfile &&
-    currentProfile.role === "creator_admin"
+    currentProfile.role ===
+    "creator_admin"
   ){
 
     loadAdminPage();
@@ -1846,15 +2571,23 @@ async function loadCurrentUser(){
 function renderHeaderAccount(){
 
   const avatar =
-    document.getElementById("headerAvatar");
+    document.getElementById(
+      "headerAvatar"
+    );
 
   const button =
-    document.getElementById("headerProfileBtn");
+    document.getElementById(
+      "headerProfileBtn"
+    );
 
-  if(!avatar || !button) return;
+  if(!avatar || !button){
+    return;
+  }
 
-
-  if(currentProfile && currentProfile.avatar_url){
+  if(
+    currentProfile &&
+    currentProfile.avatar_url
+  ){
 
     avatar.src =
       currentProfile.avatar_url;
@@ -1866,19 +2599,27 @@ function renderHeaderAccount(){
 
   }
 
-
   if(
     currentProfile &&
-    currentProfile.role === "creator_admin"
+    currentProfile.role ===
+    "creator_admin"
   ){
 
-    button.classList.add("admin");
-    button.title = "Profil — Administrateur";
+    button.classList.add(
+      "admin"
+    );
+
+    button.title =
+      "Profil — Administrateur";
 
   }else{
 
-    button.classList.remove("admin");
-    button.title = "Mon profil";
+    button.classList.remove(
+      "admin"
+    );
+
+    button.title =
+      "Mon profil";
 
   }
 
@@ -1898,7 +2639,10 @@ async function loadProducts(){
     await supabaseClient
       .from("products")
       .select("*")
-      .order("created_at",{ascending:false});
+      .order(
+        "created_at",
+        {ascending:false}
+      );
 
   if(error){
 
@@ -1909,18 +2653,22 @@ async function loadProducts(){
     document.getElementById(
       "homeProducts"
     ).innerHTML =
-      `<div class="empty">
+      `
+      <div class="empty">
         Impossible de charger les produits.
-      </div>`;
+      </div>
+      `;
 
     return;
 
   }
 
-  products = data || [];
+  products =
+    data || [];
 
   renderHomeProducts();
   renderShopProducts();
+  renderBrands();
 
 }
 
@@ -1928,7 +2676,9 @@ async function loadProducts(){
 function productImage(product){
 
   if(product.image_url){
+
     return product.image_url;
+
   }
 
   if(product.image_urls){
@@ -1936,12 +2686,20 @@ function productImage(product){
     try{
 
       const arr =
-        typeof product.image_urls === "string"
-          ? JSON.parse(product.image_urls)
+        typeof product.image_urls ===
+        "string"
+          ? JSON.parse(
+              product.image_urls
+            )
           : product.image_urls;
 
-      if(Array.isArray(arr) && arr.length){
+      if(
+        Array.isArray(arr) &&
+        arr.length
+      ){
+
         return arr[0];
+
       }
 
     }catch(e){}
@@ -1962,29 +2720,44 @@ function productImages(product){
     try{
 
       images =
-        typeof product.image_urls === "string"
-          ? JSON.parse(product.image_urls)
+        typeof product.image_urls ===
+        "string"
+          ? JSON.parse(
+              product.image_urls
+            )
           : product.image_urls;
 
     }catch(e){}
 
   }
 
-  if(!Array.isArray(images)){
+  if(
+    !Array.isArray(images)
+  ){
+
     images = [];
+
   }
 
   if(
     product.image_url &&
-    !images.includes(product.image_url)
+    !images.includes(
+      product.image_url
+    )
   ){
 
-    images.unshift(product.image_url);
+    images.unshift(
+      product.image_url
+    );
 
   }
 
   if(!images.length){
-    images = [placeholder()];
+
+    images = [
+      placeholder()
+    ];
+
   }
 
   return images.slice(0,4);
@@ -1992,10 +2765,22 @@ function productImages(product){
 }
 
 
+function productFormat(product){
+
+  return (
+    product.image_format ||
+    "16:9"
+  );
+
+}
+
+
 function renderHomeProducts(){
 
   const container =
-    document.getElementById("homeProducts");
+    document.getElementById(
+      "homeProducts"
+    );
 
   if(!container) return;
 
@@ -2005,31 +2790,41 @@ function renderHomeProducts(){
   if(!latest.length){
 
     container.innerHTML =
-      `<div class="empty">
+      `
+      <div class="empty">
         Aucun produit pour le moment.
-      </div>`;
+      </div>
+      `;
 
     return;
 
   }
 
   container.innerHTML =
-    latest.map(productCard).join("");
+    latest
+      .map(productCard)
+      .join("");
 
 }
 
 
 function setCategory(category){
 
-  currentCategory = category;
+  currentCategory =
+    category;
 
   document
-    .querySelectorAll(".category")
+    .querySelectorAll(
+      ".category"
+    )
     .forEach(btn=>{
+
       btn.classList.toggle(
         "active",
-        btn.dataset.category === category
+        btn.dataset.category ===
+        category
       );
+
     });
 
   renderShopProducts();
@@ -2040,36 +2835,43 @@ function setCategory(category){
 function renderShopProducts(){
 
   const container =
-    document.getElementById("shopProducts");
+    document.getElementById(
+      "shopProducts"
+    );
 
   if(!container) return;
 
   const search =
     (
       document
-        .getElementById("shopSearch")
+        .getElementById(
+          "shopSearch"
+        )
         ?.value || ""
     )
       .toLowerCase()
       .trim();
 
-
   let filtered =
     [...products];
 
-
-  if(currentCategory !== "Tous"){
+  if(
+    currentCategory !==
+    "Tous"
+  ){
 
     filtered =
       filtered.filter(
         p =>
-          String(p.category || "")
+          String(
+            p.category || ""
+          )
             .toLowerCase() ===
-          currentCategory.toLowerCase()
+          currentCategory
+            .toLowerCase()
       );
 
   }
-
 
   if(search){
 
@@ -2082,30 +2884,37 @@ function renderShopProducts(){
             " " +
             (p.description || "") +
             " " +
-            (p.category || "")
-          ).toLowerCase();
+            (p.category || "") +
+            " " +
+            (p.brand || "")
+          )
+            .toLowerCase();
 
-        return text.includes(search);
+        return text.includes(
+          search
+        );
 
       });
 
   }
 
-
   if(!filtered.length){
 
     container.innerHTML =
-      `<div class="empty">
+      `
+      <div class="empty">
         Aucun article trouvé.
-      </div>`;
+      </div>
+      `;
 
     return;
 
   }
 
-
   container.innerHTML =
-    filtered.map(productCard).join("");
+    filtered
+      .map(productCard)
+      .join("");
 
 }
 
@@ -2120,6 +2929,20 @@ function productCard(product){
     product.seller_name ||
     "Vendeur";
 
+  const format =
+    productFormat(
+      product
+    );
+
+  const ratioClass =
+    format === "4:3"
+      ? "ratio-4-3"
+      : "ratio-16-9";
+
+  const brand =
+    product.brand ||
+    "";
+
   return `
     <article
       class="product-card"
@@ -2127,7 +2950,7 @@ function productCard(product){
     >
 
       <img
-        class="product-image"
+        class="product-image ${ratioClass}"
         src="${escapeHtml(image)}"
         alt="${escapeHtml(product.name)}"
         loading="lazy"
@@ -2136,12 +2959,29 @@ function productCard(product){
       <div class="product-info">
 
         <div class="product-name">
-          ${escapeHtml(product.name || "Produit")}
+          ${escapeHtml(
+            product.name ||
+            "Produit"
+          )}
         </div>
 
         <div class="product-price">
-          ${formatPrice(product.price)}
+          ${formatPrice(
+            product.price
+          )}
         </div>
+
+        ${
+          brand
+          ?
+          `
+          <div class="product-brand">
+            🏷️ ${escapeHtml(brand)}
+          </div>
+          `
+          :
+          ""
+        }
 
         <div class="product-seller">
           @${escapeHtml(seller)}
@@ -2156,14 +2996,16 @@ function productCard(product){
 
 
 /* =========================================================
-   PRODUCT DETAIL
+   PRODUIT — DETAIL
 ========================================================= */
 
 async function openProduct(id){
 
   selectedProduct =
     products.find(
-      p => String(p.id) === String(id)
+      p =>
+        String(p.id) ===
+        String(id)
     );
 
   if(!selectedProduct){
@@ -2177,23 +3019,27 @@ async function openProduct(id){
         .eq("id",id)
         .maybeSingle();
 
-    selectedProduct = data;
+    selectedProduct =
+      data;
 
   }
 
-
   if(!selectedProduct){
 
-    toast("Produit introuvable.");
+    toast(
+      "Produit introuvable."
+    );
+
     return;
 
   }
 
+  selectedSeller =
+    null;
 
-  selectedSeller = null;
-
-
-  if(selectedProduct.seller_id){
+  if(
+    selectedProduct.seller_id
+  ){
 
     const {
       data
@@ -2201,17 +3047,22 @@ async function openProduct(id){
       await supabaseClient
         .from("profiles")
         .select("*")
-        .eq("id",selectedProduct.seller_id)
+        .eq(
+          "id",
+          selectedProduct.seller_id
+        )
         .maybeSingle();
 
-    selectedSeller = data;
+    selectedSeller =
+      data;
 
   }
 
-
   renderProductDetail();
 
-  showPage("productPage");
+  showPage(
+    "productPage"
+  );
 
 }
 
@@ -2219,42 +3070,58 @@ async function openProduct(id){
 function renderProductDetail(){
 
   const container =
-    document.getElementById("productDetail");
+    document.getElementById(
+      "productDetail"
+    );
 
-  if(!selectedProduct) return;
+  if(!selectedProduct){
+    return;
+  }
 
   const images =
-    productImages(selectedProduct);
-
+    productImages(
+      selectedProduct
+    );
 
   const sellerName =
     selectedSeller?.username ||
     selectedProduct.seller_username ||
     "Vendeur";
 
-
   const sellerAvatar =
     selectedSeller?.avatar_url ||
     placeholder();
-
 
   const location =
     selectedSeller?.pickup_location ||
     selectedSeller?.location ||
     "Yaoundé";
 
+  const format =
+    productFormat(
+      selectedProduct
+    );
+
+  const ratioClass =
+    format === "4:3"
+      ? "ratio-4-3"
+      : "ratio-16-9";
 
   container.innerHTML = `
 
     <div class="detail-card">
 
-      <div class="detail-images">
+      <div
+        class="detail-images ${ratioClass}"
+      >
 
         ${images.map(img=>`
 
           <img
             src="${escapeHtml(img)}"
-            alt="${escapeHtml(selectedProduct.name)}"
+            alt="${escapeHtml(
+              selectedProduct.name
+            )}"
             onclick="zoomImage('${escapeHtml(img)}')"
           >
 
@@ -2262,17 +3129,37 @@ function renderProductDetail(){
 
       </div>
 
-
       <div class="detail-content">
 
         <h1 class="detail-title">
-          ${escapeHtml(selectedProduct.name)}
+          ${escapeHtml(
+            selectedProduct.name
+          )}
         </h1>
 
         <div class="detail-price">
-          ${formatPrice(selectedProduct.price)}
+          ${formatPrice(
+            selectedProduct.price
+          )}
         </div>
 
+        ${
+          selectedProduct.brand
+          ?
+          `
+          <div class="brand-tag">
+            🏷️ ${escapeHtml(
+              selectedProduct.brand
+            )}
+          </div>
+          `
+          :
+          ""
+        }
+
+        <div class="muted" style="margin-top:9px;font-size:12px">
+          Format image : ${escapeHtml(format)}
+        </div>
 
         <div class="detail-description">
           ${escapeHtml(
@@ -2281,29 +3168,33 @@ function renderProductDetail(){
           )}
         </div>
 
-
         <div class="seller-box">
 
           <img
             class="seller-avatar"
-            src="${escapeHtml(sellerAvatar)}"
+            src="${escapeHtml(
+              sellerAvatar
+            )}"
             alt="Vendeur"
           >
 
           <div>
 
             <div class="seller-name">
-              @${escapeHtml(sellerName)}
+              @${escapeHtml(
+                sellerName
+              )}
             </div>
 
             <div class="seller-location">
-              📍 ${escapeHtml(location)}
+              📍 ${escapeHtml(
+                location
+              )}
             </div>
 
           </div>
 
         </div>
-
 
         <div class="detail-actions">
 
@@ -2316,15 +3207,17 @@ function renderProductDetail(){
 
           ${
             selectedSeller?.whatsapp
-            ? `
-              <button
-                class="btn green"
-                onclick="contactSeller()"
-              >
-                WhatsApp
-              </button>
+            ?
             `
-            : ""
+            <button
+              class="btn green"
+              onclick="contactSeller()"
+            >
+              WhatsApp vendeur
+            </button>
+            `
+            :
+            ""
           }
 
         </div>
@@ -2347,8 +3240,26 @@ function zoomImage(src){
 
     win.document.write(`
       <title>Photo produit</title>
-      <body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center">
-        <img src="${src}" style="max-width:100%;max-height:100vh;object-fit:contain">
+
+      <body
+        style="
+          margin:0;
+          background:#000;
+          display:flex;
+          align-items:center;
+          justify-content:center
+        "
+      >
+
+        <img
+          src="${src}"
+          style="
+            max-width:100%;
+            max-height:100vh;
+            object-fit:contain
+          "
+        >
+
       </body>
     `);
 
@@ -2359,38 +3270,428 @@ function zoomImage(src){
 
 function contactSeller(){
 
-  if(!selectedSeller?.whatsapp){
+  if(
+    !selectedSeller?.whatsapp
+  ){
 
-    toast("WhatsApp du vendeur indisponible.");
+    toast(
+      "WhatsApp du vendeur indisponible."
+    );
+
     return;
 
   }
 
   let number =
-    String(selectedSeller.whatsapp)
-      .replace(/\D/g,"");
+    String(
+      selectedSeller.whatsapp
+    )
+      .replace(
+        /\D/g,
+        ""
+      );
 
+  if(
+    number.startsWith("0")
+  ){
 
-  if(number.startsWith("0")){
     number =
-      "237" + number.substring(1);
+      "237" +
+      number.substring(1);
+
   }
 
-  if(!number.startsWith("237")){
-    number = "237" + number;
-  }
+  if(
+    !number.startsWith("237")
+  ){
 
+    number =
+      "237" +
+      number;
+
+  }
 
   const text =
     encodeURIComponent(
       `Bonjour, je suis intéressé(e) par "${selectedProduct.name}" sur Zackary sh🛍️p.`
     );
 
-
   window.open(
     `https://wa.me/${number}?text=${text}`,
     "_blank"
   );
+
+}
+
+
+/* =========================================================
+   MARQUES
+========================================================= */
+
+function getBrandList(){
+
+  const map =
+    new Map();
+
+  products.forEach(product=>{
+
+    const brand =
+      String(
+        product.brand || ""
+      ).trim();
+
+    if(!brand) return;
+
+    const key =
+      brand.toLowerCase();
+
+    if(!map.has(key)){
+
+      map.set(
+        key,
+        {
+          name:brand,
+          count:1
+        }
+      );
+
+    }else{
+
+      map.get(key).count++;
+
+    }
+
+  });
+
+  /*
+    Ajoute également la marque déclarée
+    dans le profil vendeur lorsqu'elle existe.
+  */
+
+  const profileBrand =
+    String(
+      currentProfile?.brand_name ||
+      ""
+    ).trim();
+
+  if(profileBrand){
+
+    const key =
+      profileBrand.toLowerCase();
+
+    if(!map.has(key)){
+
+      map.set(
+        key,
+        {
+          name:profileBrand,
+          count:0
+        }
+      );
+
+    }
+
+  }
+
+  return Array.from(
+    map.values()
+  ).sort(
+    (a,b)=>
+      a.name.localeCompare(
+        b.name,
+        "fr"
+      )
+  );
+
+}
+
+
+function renderBrands(){
+
+  const container =
+    document.getElementById(
+      "brandsContainer"
+    );
+
+  if(!container) return;
+
+  const search =
+    (
+      document.getElementById(
+        "brandSearch"
+      )?.value || ""
+    )
+      .toLowerCase()
+      .trim();
+
+  let brands =
+    getBrandList();
+
+  if(search){
+
+    brands =
+      brands.filter(
+        brand =>
+          brand.name
+            .toLowerCase()
+            .includes(search)
+      );
+
+  }
+
+  if(!brands.length){
+
+    container.innerHTML =
+      `
+      <div
+        class="empty"
+        style="grid-column:1/-1"
+      >
+        Aucune marque n'a encore été ajoutée.
+        <br><br>
+        Les vendeurs peuvent ajouter leur marque
+        lorsqu'ils publient leurs articles.
+      </div>
+      `;
+
+  }else{
+
+    container.innerHTML =
+      brands.map(brand=>`
+
+        <div
+          class="brand-card"
+          onclick="filterBrand('${escapeHtml(brand.name)}')"
+        >
+
+          <div class="brand-icon">
+            ${escapeHtml(
+              brand.name
+                .charAt(0)
+                .toUpperCase()
+            )}
+          </div>
+
+          <div class="brand-name">
+            ${escapeHtml(
+              brand.name
+            )}
+          </div>
+
+          <div class="brand-meta">
+            ${brand.count}
+            article${brand.count > 1 ? "s" : ""}
+          </div>
+
+        </div>
+
+      `).join("");
+
+  }
+
+  renderSellerBrandBox();
+
+}
+
+
+function filterBrand(brand){
+
+  showPage(
+    "shopPage"
+  );
+
+  const search =
+    document.getElementById(
+      "shopSearch"
+    );
+
+  if(search){
+
+    search.value =
+      brand;
+
+  }
+
+  renderShopProducts();
+
+}
+
+
+function renderSellerBrandBox(){
+
+  const box =
+    document.getElementById(
+      "sellerBrandBox"
+    );
+
+  if(!box) return;
+
+  if(!isSellerOrAdmin()){
+
+    box.classList.add(
+      "hidden"
+    );
+
+    return;
+
+  }
+
+  box.classList.remove(
+    "hidden"
+  );
+
+  box.innerHTML = `
+
+    <strong>
+      🏷️ Ta marque
+    </strong>
+
+    <p
+      class="muted"
+      style="margin-top:6px"
+    >
+      Ajoute le nom de ta marque pour qu'elle
+      apparaisse dans l'index des marques de Yaoundé.
+    </p>
+
+    <div
+      class="form-group"
+      style="margin-top:14px"
+    >
+
+      <input
+        id="sellerBrandName"
+        value="${escapeHtml(
+          currentProfile?.brand_name || ""
+        )}"
+        placeholder="Nom de ta marque"
+      >
+
+    </div>
+
+    <button
+      class="btn purple"
+      onclick="saveSellerBrand()"
+    >
+      🏷️ Enregistrer ma marque
+    </button>
+
+  `;
+
+}
+
+
+async function saveSellerBrand(){
+
+  if(!isSellerOrAdmin()){
+
+    toast(
+      "Accès réservé aux vendeurs."
+    );
+
+    return;
+
+  }
+
+  const input =
+    document.getElementById(
+      "sellerBrandName"
+    );
+
+  const brand =
+    input?.value.trim();
+
+  if(!brand){
+
+    toast(
+      "Entre le nom de ta marque."
+    );
+
+    return;
+
+  }
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .update({
+        brand_name:brand
+      })
+      .eq(
+        "id",
+        currentUser.id
+      );
+
+  if(error){
+
+    console.error(error);
+
+    toast(
+      "Impossible d'enregistrer la marque : " +
+      error.message
+    );
+
+    return;
+
+  }
+
+  if(currentProfile){
+
+    currentProfile.brand_name =
+      brand;
+
+  }
+
+  toast(
+    "🏷️ Marque enregistrée."
+  );
+
+  renderBrands();
+  renderAccount();
+
+}
+
+
+/* =========================================================
+   FORMAT IMAGE
+========================================================= */
+
+function selectProductFormat(format){
+
+  selectedProductFormat =
+    format;
+
+  const input =
+    document.getElementById(
+      "productFormat"
+    );
+
+  if(input){
+
+    input.value =
+      format;
+
+  }
+
+  document
+    .getElementById(
+      "format169"
+    )
+    ?.classList.toggle(
+      "active",
+      format === "16:9"
+    );
+
+  document
+    .getElementById(
+      "format43"
+    )
+    ?.classList.toggle(
+      "active",
+      format === "4:3"
+    );
 
 }
 
@@ -2403,14 +3704,14 @@ function addToCart(){
 
   if(!selectedProduct) return;
 
-
   const existing =
     cart.find(
       item =>
         String(item.id) ===
-        String(selectedProduct.id)
+        String(
+          selectedProduct.id
+        )
     );
-
 
   if(existing){
 
@@ -2420,41 +3721,67 @@ function addToCart(){
 
     cart.push({
 
-      id:selectedProduct.id,
-      name:selectedProduct.name,
-      price:Number(selectedProduct.price || 0),
-      image:productImage(selectedProduct),
-      seller_id:selectedProduct.seller_id,
+      id:
+        selectedProduct.id,
+
+      name:
+        selectedProduct.name,
+
+      price:
+        Number(
+          selectedProduct.price ||
+          0
+        ),
+
+      image:
+        productImage(
+          selectedProduct
+        ),
+
+      seller_id:
+        selectedProduct.seller_id,
+
       quantity:1
 
     });
 
   }
 
-
   saveCart();
 
-  toast("Produit ajouté au panier.");
+  toast(
+    "Produit ajouté au panier."
+  );
 
 }
 
 
-function changeQuantity(id,delta){
+function changeQuantity(
+  id,
+  delta
+){
 
   const item =
     cart.find(
-      x => String(x.id) === String(id)
+      x =>
+        String(x.id) ===
+        String(id)
     );
 
   if(!item) return;
 
-  item.quantity += delta;
+  item.quantity +=
+    delta;
 
-  if(item.quantity <= 0){
+  if(
+    item.quantity <= 0
+  ){
 
     cart =
       cart.filter(
-        x => String(x.id) !== String(id)
+        x =>
+          String(x.id) !==
+          String(id)
       );
 
   }
@@ -2469,7 +3796,9 @@ function removeFromCart(id){
 
   cart =
     cart.filter(
-      x => String(x.id) !== String(id)
+      x =>
+        String(x.id) !==
+        String(id)
     );
 
   saveCart();
@@ -2483,8 +3812,12 @@ function cartTotal(){
   return cart.reduce(
     (sum,item)=>
       sum +
-      Number(item.price || 0) *
-      Number(item.quantity || 1),
+      Number(
+        item.price || 0
+      ) *
+      Number(
+        item.quantity || 1
+      ),
     0
   );
 
@@ -2494,27 +3827,42 @@ function cartTotal(){
 function renderCart(){
 
   const container =
-    document.getElementById("cartItems");
+    document.getElementById(
+      "cartItems"
+    );
 
   const summary =
-    document.getElementById("cartSummary");
+    document.getElementById(
+      "cartSummary"
+    );
 
   if(!cart.length){
 
     container.innerHTML =
-      `<div class="empty">
-        Ton panier est vide.<br><br>
-        <button class="btn" onclick="showPage('shopPage')">
+      `
+      <div class="empty">
+
+        Ton panier est vide.
+
+        <br><br>
+
+        <button
+          class="btn"
+          onclick="showPage('shopPage')"
+        >
           Voir la boutique
         </button>
-      </div>`;
 
-    summary.classList.add("hidden");
+      </div>
+      `;
+
+    summary.classList.add(
+      "hidden"
+    );
 
     return;
 
   }
-
 
   container.innerHTML =
     cart.map(item=>`
@@ -2522,29 +3870,42 @@ function renderCart(){
       <div class="cart-item">
 
         <img
-          src="${escapeHtml(item.image || placeholder())}"
+          src="${escapeHtml(
+            item.image ||
+            placeholder()
+          )}"
           alt=""
         >
 
         <div class="cart-main">
 
           <div class="cart-name">
-            ${escapeHtml(item.name)}
+            ${escapeHtml(
+              item.name
+            )}
           </div>
 
           <div class="cart-price">
-            ${formatPrice(item.price)}
+            ${formatPrice(
+              item.price
+            )}
           </div>
 
           <div class="qty">
 
-            <button onclick="changeQuantity('${item.id}',-1)">
+            <button
+              onclick="changeQuantity('${item.id}',-1)"
+            >
               −
             </button>
 
-            <strong>${item.quantity}</strong>
+            <strong>
+              ${item.quantity}
+            </strong>
 
-            <button onclick="changeQuantity('${item.id}',1)">
+            <button
+              onclick="changeQuantity('${item.id}',1)"
+            >
               +
             </button>
 
@@ -2563,17 +3924,30 @@ function renderCart(){
 
     `).join("");
 
-
-  summary.classList.remove("hidden");
+  summary.classList.remove(
+    "hidden"
+  );
 
   summary.innerHTML = `
 
-    <div style="display:flex;justify-content:space-between;align-items:center">
+    <div
+      style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center
+      "
+    >
 
-      <strong>Total</strong>
+      <strong>
+        Total
+      </strong>
 
-      <strong style="font-size:22px">
-        ${formatPrice(cartTotal())}
+      <strong
+        style="font-size:22px"
+      >
+        ${formatPrice(
+          cartTotal()
+        )}
       </strong>
 
     </div>
@@ -2599,21 +3973,27 @@ async function openCheckout(){
 
   if(!cart.length){
 
-    toast("Ton panier est vide.");
+    toast(
+      "Ton panier est vide."
+    );
+
     return;
 
   }
 
   if(!currentUser){
 
-    toast("Connecte-toi pour commander.");
+    toast(
+      "Connecte-toi pour commander."
+    );
 
-    openAuth("login");
+    openAuth(
+      "login"
+    );
 
     return;
 
   }
-
 
   const phone =
     currentProfile?.phone ||
@@ -2623,8 +4003,8 @@ async function openCheckout(){
 
   document.getElementById(
     "checkoutPhone"
-  ).value = phone;
-
+  ).value =
+    phone;
 
   document.getElementById(
     "checkoutTotal"
@@ -2643,17 +4023,22 @@ async function openCheckout(){
       <strong>Total</strong>
 
       <strong>
-        ${formatPrice(cartTotal())}
+        ${formatPrice(
+          cartTotal()
+        )}
       </strong>
 
     </div>
 
   `;
 
-
   document
-    .getElementById("checkoutModal")
-    .classList.add("show");
+    .getElementById(
+      "checkoutModal"
+    )
+    .classList.add(
+      "show"
+    );
 
 }
 
@@ -2661,10 +4046,14 @@ async function openCheckout(){
 function toggleDeliveryAddress(){
 
   const method =
-    document.getElementById("deliveryMethod").value;
+    document.getElementById(
+      "deliveryMethod"
+    ).value;
 
   const group =
-    document.getElementById("deliveryAddressGroup");
+    document.getElementById(
+      "deliveryAddressGroup"
+    );
 
   group.classList.toggle(
     "hidden",
@@ -2678,119 +4067,151 @@ async function submitOrder(){
 
   if(!currentUser){
 
-    toast("Connecte-toi d'abord.");
+    toast(
+      "Connecte-toi d'abord."
+    );
+
     return;
 
   }
-
 
   if(!cart.length){
 
-    toast("Panier vide.");
+    toast(
+      "Panier vide."
+    );
+
     return;
 
   }
 
-
   const phone =
     document
-      .getElementById("checkoutPhone")
+      .getElementById(
+        "checkoutPhone"
+      )
       .value.trim();
 
   const deliveryMethod =
     document
-      .getElementById("deliveryMethod")
-      .value;
+      .getElementById(
+        "deliveryMethod"
+      ).value;
 
   const address =
     document
-      .getElementById("deliveryAddress")
-      .value.trim();
+      .getElementById(
+        "deliveryAddress"
+      ).value.trim();
 
   const note =
     document
-      .getElementById("checkoutNote")
-      .value.trim();
-
+      .getElementById(
+        "checkoutNote"
+      ).value.trim();
 
   if(!phone){
 
-    toast("Ajoute ton numéro.");
+    toast(
+      "Ajoute ton numéro."
+    );
+
     return;
 
   }
 
-
   if(
-    deliveryMethod === "delivery" &&
+    deliveryMethod ===
+    "delivery" &&
     !address
   ){
 
-    toast("Ajoute ton adresse de livraison.");
+    toast(
+      "Ajoute ton adresse de livraison."
+    );
+
     return;
 
   }
 
-
   const items =
     cart.map(item=>({
-      product_id:String(item.id),
-      quantity:Number(item.quantity)
-    }));
 
+      product_id:
+        String(item.id),
+
+      quantity:
+        Number(
+          item.quantity
+        )
+
+    }));
 
   const {
     data,
     error
   } =
-    await supabaseClient.rpc(
-      "create_order",
-      {
-        p_items:items,
-        p_delivery_method:deliveryMethod,
-        p_delivery_address:
-          deliveryMethod === "delivery"
-            ? address
-            : null,
-        p_customer_phone:phone,
-        p_note:note || null
-      }
-    );
+    await supabaseClient
+      .rpc(
+        "create_order",
+        {
+          p_items:items,
 
+          p_delivery_method:
+            deliveryMethod,
+
+          p_delivery_address:
+            deliveryMethod ===
+            "delivery"
+              ? address
+              : null,
+
+          p_customer_phone:
+            phone,
+
+          p_note:
+            note || null
+        }
+      );
 
   if(error){
 
     console.error(error);
 
-    toast(error.message);
+    toast(
+      error.message
+    );
 
     return;
 
   }
 
-
   cart = [];
 
   saveCart();
 
-  closeModal("checkoutModal");
+  closeModal(
+    "checkoutModal"
+  );
 
   renderCart();
-
 
   const result =
     Array.isArray(data)
       ? data[0]
       : data;
 
-
   toast(
     "Commande créée : " +
-    (result?.order_code || "OK")
+    (
+      result?.order_code ||
+      "OK"
+    )
   );
 
-
-  showPage("ordersPage");
+  showPage(
+    "ordersPage"
+  );
 
   loadOrders();
 
@@ -2801,50 +4222,52 @@ async function submitOrder(){
    VENDEUR
 ========================================================= */
 
-/*
-  Un vendeur est actif si :
-  - il est admin
-  - OU il possède l'accès libre
-  - OU sa date d'expiration est encore valide
-*/
-
 function isSellerActive(){
 
-  if(!currentProfile) return false;
-
+  if(!currentProfile){
+    return false;
+  }
 
   if(
     currentProfile.role ===
     "creator_admin"
   ){
-    return true;
-  }
 
+    return true;
+
+  }
 
   if(
     currentProfile.role !==
     "seller"
   ){
-    return false;
-  }
 
+    return false;
+
+  }
 
   if(
-    currentProfile.seller_access_unlimited === true
+    currentProfile.seller_access_unlimited ===
+    true
   ){
+
     return true;
+
   }
 
+  if(
+    !currentProfile.seller_expires_at
+  ){
 
-  if(!currentProfile.seller_expires_at){
     return false;
-  }
 
+  }
 
   return (
     new Date(
       currentProfile.seller_expires_at
-    ) > new Date()
+    ) >
+    new Date()
   );
 
 }
@@ -2853,7 +4276,8 @@ function isSellerActive(){
 function sellerAccessLabel(){
 
   if(
-    currentProfile?.seller_access_unlimited === true
+    currentProfile?.seller_access_unlimited ===
+    true
   ){
 
     return `
@@ -2864,8 +4288,9 @@ function sellerAccessLabel(){
 
   }
 
-
-  if(!currentProfile?.seller_expires_at){
+  if(
+    !currentProfile?.seller_expires_at
+  ){
 
     return `
       <span class="seller-status expired">
@@ -2875,11 +4300,14 @@ function sellerAccessLabel(){
 
   }
 
-
   const expiry =
-    new Date(currentProfile.seller_expires_at);
+    new Date(
+      currentProfile.seller_expires_at
+    );
 
-  if(expiry <= new Date()){
+  if(
+    expiry <= new Date()
+  ){
 
     return `
       <span class="seller-status expired">
@@ -2889,11 +4317,14 @@ function sellerAccessLabel(){
 
   }
 
-
   return `
     <span class="seller-status active">
+
       🟢 Actif jusqu'au
-      ${expiry.toLocaleDateString("fr-FR")}
+      ${expiry.toLocaleDateString(
+        "fr-FR"
+      )}
+
     </span>
   `;
 
@@ -2903,13 +4334,21 @@ function sellerAccessLabel(){
 function renderSellPage(){
 
   const access =
-    document.getElementById("sellerAccess");
+    document.getElementById(
+      "sellerAccess"
+    );
 
   const form =
-    document.getElementById("sellFormContainer");
+    document.getElementById(
+      "sellFormContainer"
+    );
 
-  if(!access || !form) return;
-
+  if(
+    !access ||
+    !form
+  ){
+    return;
+  }
 
   if(!currentUser){
 
@@ -2917,13 +4356,21 @@ function renderSellPage(){
 
       <div class="empty">
 
-        <h3>Compte requis</h3>
+        <h3>
+          Compte requis
+        </h3>
 
-        <p style="margin:8px 0 18px">
-          Connecte-toi pour vendre sur Zackary sh🛍️p.
+        <p
+          style="margin:8px 0 18px"
+        >
+          Connecte-toi pour accéder
+          à l'espace vendeur.
         </p>
 
-        <button class="btn" onclick="openAuth('login')">
+        <button
+          class="btn"
+          onclick="openAuth('login')"
+        >
           Se connecter
         </button>
 
@@ -2931,12 +4378,13 @@ function renderSellPage(){
 
     `;
 
-    form.classList.add("hidden");
+    form.classList.add(
+      "hidden"
+    );
 
     return;
 
   }
-
 
   if(!isSellerActive()){
 
@@ -2944,11 +4392,15 @@ function renderSellPage(){
 
       <div class="empty">
 
-        <h3>Compte vendeur non actif</h3>
+        <h3>
+          Compte vendeur non actif
+        </h3>
 
-        <p style="margin:8px 0">
-          Ton compte vendeur est actuellement désactivé
-          ou expiré.
+        <p
+          style="margin:8px 0"
+        >
+          Ton compte vendeur est actuellement
+          désactivé ou expiré.
         </p>
 
         <p
@@ -2956,19 +4408,30 @@ function renderSellPage(){
           style="margin-top:8px"
         >
           L'inscription vendeur normale est de
-          <strong>1050 XAF</strong>.
+          <strong>
+            ${SELLER_PRICE} XAF
+          </strong>.
         </p>
+
+        <button
+          class="btn green"
+          style="margin-top:15px"
+          onclick="contactCreator()"
+        >
+          💬 Contacter le créateur
+        </button>
 
       </div>
 
     `;
 
-    form.classList.add("hidden");
+    form.classList.add(
+      "hidden"
+    );
 
     return;
 
   }
-
 
   access.innerHTML = `
 
@@ -2982,9 +4445,13 @@ function renderSellPage(){
       "
     >
 
-      <strong>✅ Compte vendeur actif</strong>
+      <strong>
+        ✅ Compte vendeur actif
+      </strong>
 
-      <div style="margin-top:5px">
+      <div
+        style="margin-top:5px"
+      >
         ${sellerAccessLabel()}
       </div>
 
@@ -2992,69 +4459,162 @@ function renderSellPage(){
 
   `;
 
-  form.classList.remove("hidden");
+  form.classList.remove(
+    "hidden"
+  );
+
+  const brandInput =
+    document.getElementById(
+      "productBrand"
+    );
+
+  if(
+    brandInput &&
+    currentProfile?.brand_name
+  ){
+
+    brandInput.value =
+      currentProfile.brand_name;
+
+  }
 
   loadMyProducts();
 
 }
 
 
+/* =========================================================
+   PUBLICATION PRODUIT
+========================================================= */
+
 async function publishProduct(){
 
   if(!isSellerActive()){
 
-    toast("Ton compte vendeur n'est pas actif.");
+    toast(
+      "Ton compte vendeur n'est pas actif."
+    );
+
     return;
 
   }
 
-
   const name =
     document
-      .getElementById("productName")
+      .getElementById(
+        "productName"
+      )
+      .value.trim();
+
+  const brand =
+    document
+      .getElementById(
+        "productBrand"
+      )
       .value.trim();
 
   const price =
     Number(
       document
-        .getElementById("productPrice")
+        .getElementById(
+          "productPrice"
+        )
         .value
     );
 
   const category =
     document
-      .getElementById("productCategory")
+      .getElementById(
+        "productCategory"
+      )
       .value;
 
   const description =
     document
-      .getElementById("productDescription")
+      .getElementById(
+        "productDescription"
+      )
       .value.trim();
+
+  const format =
+    document
+      .getElementById(
+        "productFormat"
+      )
+      .value ||
+      "16:9";
 
   const files =
     document
-      .getElementById("productImages")
+      .getElementById(
+        "productImages"
+      )
       .files;
 
+  if(
+    !name ||
+    !price
+  ){
 
-  if(!name || !price){
+    toast(
+      "Nom et prix obligatoires."
+    );
 
-    toast("Nom et prix obligatoires.");
     return;
 
   }
 
+  if(
+    files.length > 4
+  ){
 
-  if(files.length > 4){
+    toast(
+      "Maximum 4 images."
+    );
 
-    toast("Maximum 4 images.");
     return;
 
   }
 
+  /*
+    Si le vendeur a renseigné une marque,
+    elle devient également sa marque de profil.
+  */
+
+  if(brand){
+
+    const {
+      error:brandError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .update({
+          brand_name:brand
+        })
+        .eq(
+          "id",
+          currentUser.id
+        );
+
+    if(
+      brandError
+    ){
+
+      console.warn(
+        "Marque profil non enregistrée :",
+        brandError
+      );
+
+    }else if(currentProfile){
+
+      currentProfile.brand_name =
+        brand;
+
+    }
+
+  }
 
   let imageUrls = [];
-
 
   for(
     let i=0;
@@ -3062,35 +4622,45 @@ async function publishProduct(){
     i++
   ){
 
-    const file = files[i];
+    const file =
+      files[i];
 
     const extension =
-      file.name.split(".").pop();
+      file.name
+        .split(".")
+        .pop();
 
     const path =
       `${currentUser.id}/product-${Date.now()}-${i}.${extension}`;
-
 
     const {
       error
     } =
       await supabaseClient
         .storage
-        .from("product-images")
+        .from(
+          "product-images"
+        )
         .upload(
           path,
           file,
           {
-            cacheControl:"3600",
-            upsert:false,
-            contentType:file.type
+            cacheControl:
+              "3600",
+
+            upsert:
+              false,
+
+            contentType:
+              file.type
           }
         );
 
-
     if(error){
 
-      console.error(error);
+      console.error(
+        error
+      );
 
       toast(
         "Erreur image : " +
@@ -3101,15 +4671,17 @@ async function publishProduct(){
 
     }
 
-
     const {
       data
     } =
       supabaseClient
         .storage
-        .from("product-images")
-        .getPublicUrl(path);
-
+        .from(
+          "product-images"
+        )
+        .getPublicUrl(
+          path
+        );
 
     imageUrls.push(
       data.publicUrl
@@ -3117,19 +4689,30 @@ async function publishProduct(){
 
   }
 
-
   const payload = {
 
     name,
+
     price,
+
     category,
+
     description,
-    seller_id:currentUser.id
+
+    seller_id:
+      currentUser.id,
+
+    brand:
+      brand || null,
+
+    image_format:
+      format
 
   };
 
-
-  if(imageUrls.length){
+  if(
+    imageUrls.length
+  ){
 
     payload.image_url =
       imageUrls[0];
@@ -3139,37 +4722,58 @@ async function publishProduct(){
 
   }
 
-
   const {
     error
   } =
     await supabaseClient
       .from("products")
-      .insert(payload);
-
+      .insert(
+        payload
+      );
 
   if(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
-    toast(error.message);
+    toast(
+      error.message
+    );
 
     return;
 
   }
 
+  toast(
+    "Produit publié avec succès."
+  );
 
-  toast("Produit publié avec succès.");
+  document.getElementById(
+    "productName"
+  ).value = "";
 
-  document.getElementById("productName").value = "";
-  document.getElementById("productPrice").value = "";
-  document.getElementById("productDescription").value = "";
-  document.getElementById("productImages").value = "";
+  document.getElementById(
+    "productPrice"
+  ).value = "";
 
+  document.getElementById(
+    "productDescription"
+  ).value = "";
+
+  document.getElementById(
+    "productImages"
+  ).value = "";
+
+  selectProductFormat(
+    "16:9"
+  );
 
   await loadProducts();
 
   loadMyProducts();
+
+  renderBrands();
 
 }
 
@@ -3177,10 +4781,16 @@ async function publishProduct(){
 async function loadMyProducts(){
 
   const container =
-    document.getElementById("myProductsContainer");
+    document.getElementById(
+      "myProductsContainer"
+    );
 
-  if(!container || !currentUser) return;
-
+  if(
+    !container ||
+    !currentUser
+  ){
+    return;
+  }
 
   const {
     data,
@@ -3189,34 +4799,45 @@ async function loadMyProducts(){
     await supabaseClient
       .from("products")
       .select("*")
-      .eq("seller_id",currentUser.id)
-      .order("created_at",{ascending:false});
-
+      .eq(
+        "seller_id",
+        currentUser.id
+      )
+      .order(
+        "created_at",
+        {ascending:false}
+      );
 
   if(error){
 
     container.innerHTML =
-      `<div class="empty">${escapeHtml(error.message)}</div>`;
+      `
+      <div class="empty">
+        ${escapeHtml(
+          error.message
+        )}
+      </div>
+      `;
 
     return;
 
   }
 
-
   if(!data?.length){
 
     container.innerHTML = `
       <div class="section">
+
         <div class="empty">
           Tu n'as encore publié aucun article.
         </div>
+
       </div>
     `;
 
     return;
 
   }
-
 
   container.innerHTML = `
 
@@ -3232,7 +4853,9 @@ async function loadMyProducts(){
 
           <div>
 
-            ${productCard(product)}
+            ${productCard(
+              product
+            )}
 
             <button
               class="btn red"
@@ -3257,10 +4880,15 @@ async function loadMyProducts(){
 
 async function deleteProduct(id){
 
-  if(!confirm("Supprimer cet article ?")){
-    return;
-  }
+  if(
+    !confirm(
+      "Supprimer cet article ?"
+    )
+  ){
 
+    return;
+
+  }
 
   const {
     error
@@ -3268,19 +4896,28 @@ async function deleteProduct(id){
     await supabaseClient
       .from("products")
       .delete()
-      .eq("id",id)
-      .eq("seller_id",currentUser.id);
-
+      .eq(
+        "id",
+        id
+      )
+      .eq(
+        "seller_id",
+        currentUser.id
+      );
 
   if(error){
 
-    toast(error.message);
+    toast(
+      error.message
+    );
+
     return;
 
   }
 
-
-  toast("Produit supprimé.");
+  toast(
+    "Produit supprimé."
+  );
 
   await loadProducts();
 
@@ -3296,28 +4933,39 @@ async function deleteProduct(id){
 async function uploadAvatar(event){
 
   const file =
-    event.target.files?.[0];
+    event.target
+      .files?.[0];
 
-  if(!file || !currentUser){
-    return;
-  }
+  if(
+    !file ||
+    !currentUser
+  ){
 
-
-  if(!file.type.startsWith("image/")){
-
-    toast("Choisis une image.");
     return;
 
   }
 
+  if(
+    !file.type.startsWith(
+      "image/"
+    )
+  ){
+
+    toast(
+      "Choisis une image."
+    );
+
+    return;
+
+  }
 
   const extension =
-    file.name.split(".").pop();
-
+    file.name
+      .split(".")
+      .pop();
 
   const path =
     `${currentUser.id}/avatar-${Date.now()}.${extension}`;
-
 
   const {
     error
@@ -3329,16 +4977,22 @@ async function uploadAvatar(event){
         path,
         file,
         {
-          cacheControl:"3600",
-          upsert:false,
-          contentType:file.type
+          cacheControl:
+            "3600",
+
+          upsert:
+            false,
+
+          contentType:
+            file.type
         }
       );
 
-
   if(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
     toast(
       "Erreur upload : " +
@@ -3349,19 +5003,18 @@ async function uploadAvatar(event){
 
   }
 
-
   const {
     data
   } =
     supabaseClient
       .storage
       .from("avatars")
-      .getPublicUrl(path);
-
+      .getPublicUrl(
+        path
+      );
 
   const avatarUrl =
     data.publicUrl;
-
 
   const {
     error:updateError
@@ -3369,18 +5022,23 @@ async function uploadAvatar(event){
     await supabaseClient
       .from("profiles")
       .update({
-        avatar_url:avatarUrl
+        avatar_url:
+          avatarUrl
       })
-      .eq("id",currentUser.id);
-
+      .eq(
+        "id",
+        currentUser.id
+      );
 
   if(updateError){
 
-    toast(updateError.message);
+    toast(
+      updateError.message
+    );
+
     return;
 
   }
-
 
   if(currentProfile){
 
@@ -3389,40 +5047,56 @@ async function uploadAvatar(event){
 
   }
 
-
   renderHeaderAccount();
   renderAccount();
 
-  toast("Photo de profil enregistrée.");
+  toast(
+    "Photo de profil enregistrée."
+  );
 
 }
 
 
 async function saveProfile(){
 
-  if(!currentUser) return;
-
+  if(!currentUser){
+    return;
+  }
 
   const username =
     document
-      .getElementById("profileUsername")
+      .getElementById(
+        "profileUsername"
+      )
       .value.trim();
 
   const phone =
     document
-      .getElementById("profilePhone")
+      .getElementById(
+        "profilePhone"
+      )
       .value.trim();
 
   const whatsapp =
     document
-      .getElementById("profileWhatsapp")
+      .getElementById(
+        "profileWhatsapp"
+      )
       .value.trim();
 
   const location =
     document
-      .getElementById("profileLocation")
+      .getElementById(
+        "profileLocation"
+      )
       .value.trim();
 
+  const brand =
+    document
+      .getElementById(
+        "profileBrand"
+      )
+      ?.value.trim() || "";
 
   const {
     error
@@ -3432,25 +5106,38 @@ async function saveProfile(){
       .update({
 
         username,
+
         phone,
+
         whatsapp,
-        pickup_location:location
+
+        pickup_location:
+          location,
+
+        brand_name:
+          brand || null
 
       })
-      .eq("id",currentUser.id);
-
+      .eq(
+        "id",
+        currentUser.id
+      );
 
   if(error){
 
-    toast(error.message);
+    toast(
+      error.message
+    );
+
     return;
 
   }
 
-
   await loadCurrentUser();
 
-  toast("Profil sauvegardé.");
+  toast(
+    "Profil sauvegardé."
+  );
 
 }
 
@@ -3462,10 +5149,13 @@ async function saveProfile(){
 function renderAccount(){
 
   const container =
-    document.getElementById("accountContent");
+    document.getElementById(
+      "accountContent"
+    );
 
-  if(!container) return;
-
+  if(!container){
+    return;
+  }
 
   if(!currentUser){
 
@@ -3482,11 +5172,18 @@ function renderAccount(){
           Bienvenue
         </h2>
 
-        <p class="muted" style="margin:7px 0 20px">
-          Connecte-toi pour accéder à ton compte.
+        <p
+          class="muted"
+          style="margin:7px 0 20px"
+        >
+          Connecte-toi pour accéder
+          à ton compte.
         </p>
 
-        <button class="btn" onclick="openAuth('login')">
+        <button
+          class="btn"
+          onclick="openAuth('login')"
+        >
           Se connecter
         </button>
 
@@ -3498,24 +5195,21 @@ function renderAccount(){
 
   }
 
-
   const avatar =
     currentProfile?.avatar_url ||
     placeholder();
-
 
   const role =
     currentProfile?.role ||
     "client";
 
-
   const isAdmin =
-    role === "creator_admin";
-
+    role ===
+    "creator_admin";
 
   const isSeller =
-    role === "seller";
-
+    role ===
+    "seller";
 
   container.innerHTML = `
 
@@ -3524,11 +5218,15 @@ function renderAccount(){
       <img
         id="accountAvatar"
         class="profile-big"
-        src="${escapeHtml(avatar)}"
+        src="${escapeHtml(
+          avatar
+        )}"
         alt="Photo de profil"
       >
 
-      <div style="margin-top:15px">
+      <div
+        style="margin-top:15px"
+      >
 
         <label
           class="btn light"
@@ -3548,8 +5246,9 @@ function renderAccount(){
 
       </div>
 
-
-      <h2 style="margin-top:15px">
+      <h2
+        style="margin-top:15px"
+      >
         ${escapeHtml(
           currentProfile?.username ||
           currentUser.email?.split("@")[0] ||
@@ -3557,17 +5256,19 @@ function renderAccount(){
         )}
       </h2>
 
-
       ${
         isAdmin
         ?
-        `<div class="admin-badge show">
+        `
+        <div class="admin-badge show">
           🔵 ADMINISTRATEUR
-        </div>`
+        </div>
+        `
         :
         isSeller
         ?
-        `<div
+        `
+        <div
           style="
             display:inline-block;
             margin-top:10px;
@@ -3580,27 +5281,35 @@ function renderAccount(){
           "
         >
           🛍️ VENDEUR
-        </div>`
+        </div>
+        `
         :
         ""
       }
 
-
       <div class="stats">
 
         <div class="stat">
-          <strong>${escapeHtml(role)}</strong>
+          <strong>
+            ${escapeHtml(
+              role
+            )}
+          </strong>
           <span>Rôle</span>
         </div>
 
         <div class="stat">
-          <strong>${cart.length}</strong>
+          <strong>
+            ${cart.length}
+          </strong>
           <span>Panier</span>
         </div>
 
         <div class="stat">
-          <strong>1050</strong>
-          <span>Inscription vendeur</span>
+          <strong>
+            ${SELLER_PRICE}
+          </strong>
+          <span>Accès vendeur</span>
         </div>
 
       </div>
@@ -3612,9 +5321,14 @@ function renderAccount(){
       isSeller
       ?
       `
-      <div class="form-card" style="margin-top:15px">
+      <div
+        class="form-card"
+        style="margin-top:15px"
+      >
 
-        <h3>État vendeur</h3>
+        <h3>
+          État vendeur
+        </h3>
 
         <div style="margin-top:10px">
           ${sellerAccessLabel()}
@@ -3627,66 +5341,111 @@ function renderAccount(){
     }
 
 
-    <div class="form-card" style="margin-top:15px">
+    <div
+      class="form-card"
+      style="margin-top:15px"
+    >
 
-      <h3>Mes informations</h3>
+      <h3>
+        Mes informations
+      </h3>
 
-      <div class="form-group" style="margin-top:18px">
+      <div
+        class="form-group"
+        style="margin-top:18px"
+      >
 
-        <label>Nom / pseudo</label>
+        <label>
+          Nom / pseudo
+        </label>
 
         <input
           id="profileUsername"
           value="${escapeHtml(
-            currentProfile?.username || ""
+            currentProfile?.username ||
+            ""
           )}"
         >
 
       </div>
 
-
       <div class="form-group">
 
-        <label>Téléphone</label>
+        <label>
+          Téléphone
+        </label>
 
         <input
           id="profilePhone"
           value="${escapeHtml(
-            currentProfile?.phone || ""
+            currentProfile?.phone ||
+            ""
           )}"
         >
 
       </div>
 
-
       <div class="form-group">
 
-        <label>WhatsApp vendeur</label>
+        <label>
+          WhatsApp vendeur
+        </label>
 
         <input
           id="profileWhatsapp"
           value="${escapeHtml(
-            currentProfile?.whatsapp || ""
+            currentProfile?.whatsapp ||
+            ""
           )}"
         >
 
       </div>
 
-
       <div class="form-group">
 
-        <label>Lieu de retrait</label>
+        <label>
+          Lieu de retrait
+        </label>
 
         <input
           id="profileLocation"
           value="${escapeHtml(
-            currentProfile?.pickup_location || ""
+            currentProfile?.pickup_location ||
+            ""
           )}"
           placeholder="Yaoundé, quartier..."
         >
 
       </div>
 
+      ${
+        isSeller || isAdmin
+        ?
+        `
+        <div class="form-group">
+
+          <label>
+            🏷️ Ma marque
+          </label>
+
+          <input
+            id="profileBrand"
+            value="${escapeHtml(
+              currentProfile?.brand_name ||
+              ""
+            )}"
+            placeholder="Nom de ta marque"
+          >
+
+          <small class="muted">
+            Ta marque sera visible dans l'index des marques.
+          </small>
+
+        </div>
+        `
+        :
+        ""
+      }
 
       <button
         class="btn"
@@ -3703,9 +5462,14 @@ function renderAccount(){
 
       <div class="form-card">
 
-        <h3>Mes commandes</h3>
+        <h3>
+          Mes commandes
+        </h3>
 
-        <p class="muted" style="margin-top:5px">
+        <p
+          class="muted"
+          style="margin-top:5px"
+        >
           Consulte et suis tes commandes.
         </p>
 
@@ -3730,7 +5494,9 @@ function renderAccount(){
 
         <div class="form-card">
 
-          <h3>Espace vendeur</h3>
+          <h3>
+            Espace vendeur
+          </h3>
 
           <button
             class="btn light"
@@ -3738,6 +5504,14 @@ function renderAccount(){
             onclick="showPage('sellPage')"
           >
             🛍️ Mes produits
+          </button>
+
+          <button
+            class="btn purple"
+            style="width:100%;margin-top:8px"
+            onclick="showPage('brandsPage')"
+          >
+            🏷️ Gérer ma marque
           </button>
 
         </div>
@@ -3757,9 +5531,13 @@ function renderAccount(){
 
         <div class="admin-panel">
 
-          <h2>🔵 Administration</h2>
+          <h2>
+            🔵 Administration
+          </h2>
 
-          <p style="opacity:.75;margin-top:5px">
+          <p
+            style="opacity:.75;margin-top:5px"
+          >
             Gestion des vendeurs et commandes.
           </p>
 
@@ -3780,11 +5558,19 @@ function renderAccount(){
     }
 
 
-    <div class="form-card" style="margin-top:15px">
+    <div
+      class="form-card"
+      style="margin-top:15px"
+    >
 
-      <h3>Support technique</h3>
+      <h3>
+        Support technique
+      </h3>
 
-      <p class="muted" style="margin-top:7px">
+      <p
+        class="muted"
+        style="margin-top:7px"
+      >
         En cas de problème avec Zackary sh🛍️p :
       </p>
 
@@ -3800,6 +5586,14 @@ function renderAccount(){
       >
         ✉️ novisfb512@gmail.com
       </a>
+
+      <button
+        class="btn green"
+        style="width:100%;margin-top:8px"
+        onclick="contactCreator()"
+      >
+        💬 WhatsApp créateur
+      </button>
 
     </div>
 
@@ -3824,10 +5618,13 @@ function renderAccount(){
 async function loadOrders(){
 
   const container =
-    document.getElementById("ordersContent");
+    document.getElementById(
+      "ordersContent"
+    );
 
-  if(!container) return;
-
+  if(!container){
+    return;
+  }
 
   if(!currentUser){
 
@@ -3841,9 +5638,7 @@ async function loadOrders(){
 
   }
 
-
   let query;
-
 
   if(
     currentProfile?.role ===
@@ -3857,7 +5652,10 @@ async function loadOrders(){
           *,
           order_items(*)
         `)
-        .order("created_at",{ascending:false});
+        .order(
+          "created_at",
+          {ascending:false}
+        );
 
   }else{
 
@@ -3879,40 +5677,46 @@ async function loadOrders(){
 
   }
 
-
   const {
     data,
     error
   } =
     await query;
 
-
   if(error){
 
     container.innerHTML =
-      `<div class="empty">
-        ${escapeHtml(error.message)}
-      </div>`;
+      `
+      <div class="empty">
+        ${escapeHtml(
+          error.message
+        )}
+      </div>
+      `;
 
     return;
 
   }
-
 
   if(!data?.length){
 
     container.innerHTML =
-      `<div class="empty">
+      `
+      <div class="empty">
         Aucune commande pour le moment.
-      </div>`;
+      </div>
+      `;
 
     return;
 
   }
 
-
   container.innerHTML =
-    data.map(renderOrderCard).join("");
+    data
+      .map(
+        renderOrderCard
+      )
+      .join("");
 
 }
 
@@ -3920,25 +5724,40 @@ async function loadOrders(){
 function renderOrderCard(order){
 
   const status =
-    order.status || "pending";
-
+    order.status ||
+    "pending";
 
   const statusLabel = {
 
-    pending:"En attente",
-    confirmed:"Confirmée",
-    preparing:"Préparation",
-    ready:"Prête",
-    shipped:"Expédiée",
-    delivered:"Livrée",
-    cancelled:"Annulée"
+    pending:
+      "En attente",
 
-  }[status] || status;
+    confirmed:
+      "Confirmée",
 
+    preparing:
+      "Préparation",
+
+    ready:
+      "Prête",
+
+    shipped:
+      "Expédiée",
+
+    delivered:
+      "Livrée",
+
+    cancelled:
+      "Annulée"
+
+  }[
+    status
+  ] ||
+  status;
 
   const items =
-    order.order_items || [];
-
+    order.order_items ||
+    [];
 
   return `
 
@@ -3950,25 +5769,34 @@ function renderOrderCard(order){
 
           <div class="order-code">
             ${escapeHtml(
-              order.order_code || order.id
+              order.order_code ||
+              order.id
             )}
           </div>
 
           <small class="muted">
+
             ${new Date(
               order.created_at
-            ).toLocaleString("fr-FR")}
+            ).toLocaleString(
+              "fr-FR"
+            )}
+
           </small>
 
         </div>
 
-
-        <span class="status ${escapeHtml(status)}">
-          ${escapeHtml(statusLabel)}
+        <span
+          class="status ${escapeHtml(
+            status
+          )}"
+        >
+          ${escapeHtml(
+            statusLabel
+          )}
         </span>
 
       </div>
-
 
       <div style="margin-top:15px">
 
@@ -3985,12 +5813,16 @@ function renderOrderCard(order){
           >
 
             <span>
-              ${escapeHtml(item.product_name)}
+              ${escapeHtml(
+                item.product_name
+              )}
               × ${item.quantity}
             </span>
 
             <strong>
-              ${formatPrice(item.subtotal)}
+              ${formatPrice(
+                item.subtotal
+              )}
             </strong>
 
           </div>
@@ -3999,11 +5831,12 @@ function renderOrderCard(order){
 
       </div>
 
-
       <div class="order-total">
-        Total : ${formatPrice(order.total_amount)}
+        Total :
+        ${formatPrice(
+          order.total_amount
+        )}
       </div>
-
 
       <div
         class="muted"
@@ -4011,19 +5844,25 @@ function renderOrderCard(order){
       >
 
         ${
-          order.delivery_method === "delivery"
-          ? "🛵 Livraison"
-          : "📍 Retrait"
+          order.delivery_method ===
+          "delivery"
+          ?
+          "🛵 Livraison"
+          :
+          "📍 Retrait"
         }
 
       </div>
 
-
       ${
         status === "pending" &&
         currentUser &&
-        String(order.customer_id) ===
-        String(currentUser.id)
+        String(
+          order.customer_id
+        ) ===
+        String(
+          currentUser.id
+        )
         ?
         `
         <button
@@ -4052,10 +5891,13 @@ function renderOrderCard(order){
 async function loadAdminPage(){
 
   const container =
-    document.getElementById("adminContent");
+    document.getElementById(
+      "adminContent"
+    );
 
-  if(!container) return;
-
+  if(!container){
+    return;
+  }
 
   if(
     !currentProfile ||
@@ -4064,14 +5906,15 @@ async function loadAdminPage(){
   ){
 
     container.innerHTML =
-      `<div class="empty">
+      `
+      <div class="empty">
         Accès administrateur refusé.
-      </div>`;
+      </div>
+      `;
 
     return;
 
   }
-
 
   const [
     sellersResult,
@@ -4082,7 +5925,10 @@ async function loadAdminPage(){
       supabaseClient
         .from("profiles")
         .select("*")
-        .eq("role","seller")
+        .eq(
+          "role",
+          "seller"
+        )
         .order(
           "created_at",
           {ascending:false}
@@ -4098,57 +5944,88 @@ async function loadAdminPage(){
 
     ]);
 
+  if(
+    sellersResult.error
+  ){
 
-  if(sellersResult.error){
-    console.error(sellersResult.error);
+    console.error(
+      sellersResult.error
+    );
+
   }
 
-  if(ordersResult.error){
-    console.error(ordersResult.error);
-  }
+  if(
+    ordersResult.error
+  ){
 
+    console.error(
+      ordersResult.error
+    );
+
+  }
 
   const sellers =
-    sellersResult.data || [];
+    sellersResult.data ||
+    [];
 
   const orders =
-    ordersResult.data || [];
-
+    ordersResult.data ||
+    [];
 
   container.innerHTML = `
 
     <div class="admin-panel">
 
-      <h2>🔵 Administration</h2>
+      <h2>
+        🔵 Administration
+      </h2>
 
-      <p style="opacity:.75;margin-top:5px">
+      <p
+        style="opacity:.75;margin-top:5px"
+      >
         Gestion de Zackary sh🛍️p
       </p>
-
 
       <div class="stats">
 
         <div class="stat">
-          <strong>${sellers.length}</strong>
-          <span>Vendeurs</span>
-        </div>
-
-        <div class="stat">
-          <strong>${orders.length}</strong>
-          <span>Commandes</span>
+          <strong>
+            ${sellers.length}
+          </strong>
+          <span>
+            Vendeurs
+          </span>
         </div>
 
         <div class="stat">
           <strong>
+            ${orders.length}
+          </strong>
+          <span>
+            Commandes
+          </span>
+        </div>
+
+        <div class="stat">
+
+          <strong>
             ${formatPrice(
               orders.reduce(
                 (s,o)=>
-                  s + Number(o.total_amount || 0),
+                  s +
+                  Number(
+                    o.total_amount ||
+                    0
+                  ),
                 0
               )
             )}
           </strong>
-          <span>Volume</span>
+
+          <span>
+            Volume
+          </span>
+
         </div>
 
       </div>
@@ -4159,25 +6036,37 @@ async function loadAdminPage(){
     <div class="section">
 
       <div class="section-title">
+
         <div>
-          <h2>👥 Gestion des vendeurs</h2>
+
+          <h2>
+            👥 Gestion des vendeurs
+          </h2>
+
           <p class="muted">
             Active, désactive ou donne un accès spécial.
           </p>
-        </div>
-      </div>
 
+        </div>
+
+      </div>
 
       <div>
 
         ${
           sellers.length
           ?
-          sellers.map(renderAdminSeller).join("")
+          sellers
+            .map(
+              renderAdminSeller
+            )
+            .join("")
           :
-          `<div class="empty">
+          `
+          <div class="empty">
             Aucun vendeur.
-          </div>`
+          </div>
+          `
         }
 
       </div>
@@ -4188,7 +6077,9 @@ async function loadAdminPage(){
     <div class="section">
 
       <div class="section-title">
-        <h2>Commandes récentes</h2>
+        <h2>
+          Commandes récentes
+        </h2>
       </div>
 
       ${
@@ -4196,12 +6087,16 @@ async function loadAdminPage(){
         ?
         orders
           .slice(0,20)
-          .map(renderAdminOrder)
+          .map(
+            renderAdminOrder
+          )
           .join("")
         :
-        `<div class="empty">
+        `
+        <div class="empty">
           Aucune commande.
-        </div>`
+        </div>
+        `
       }
 
     </div>
@@ -4217,11 +6112,13 @@ function renderAdminSeller(seller){
     seller.avatar_url ||
     "https://placehold.co/100x100?text=👤";
 
+  let statusHtml =
+    "";
 
-  let statusHtml = "";
-
-
-  if(seller.seller_access_unlimited === true){
+  if(
+    seller.seller_access_unlimited ===
+    true
+  ){
 
     statusHtml = `
       <span class="seller-status unlimited">
@@ -4231,15 +6128,23 @@ function renderAdminSeller(seller){
 
   }else if(
     seller.seller_expires_at &&
-    new Date(seller.seller_expires_at) > new Date()
+    new Date(
+      seller.seller_expires_at
+    ) >
+    new Date()
   ){
 
     statusHtml = `
       <span class="seller-status active">
+
         🟢 Actif jusqu'au
+
         ${new Date(
           seller.seller_expires_at
-        ).toLocaleDateString("fr-FR")}
+        ).toLocaleDateString(
+          "fr-FR"
+        )}
+
       </span>
     `;
 
@@ -4253,7 +6158,6 @@ function renderAdminSeller(seller){
 
   }
 
-
   return `
 
     <div class="seller-admin-card">
@@ -4262,7 +6166,9 @@ function renderAdminSeller(seller){
 
         <img
           class="seller-admin-avatar"
-          src="${escapeHtml(avatar)}"
+          src="${escapeHtml(
+            avatar
+          )}"
           alt=""
         >
 
@@ -4270,7 +6176,8 @@ function renderAdminSeller(seller){
 
           <strong>
             @${escapeHtml(
-              seller.username || "vendeur"
+              seller.username ||
+              "vendeur"
             )}
           </strong>
 
@@ -4285,6 +6192,27 @@ function renderAdminSeller(seller){
             )}
           </div>
 
+          ${
+            seller.brand_name
+            ?
+            `
+            <div
+              style="
+                color:#7c3aed;
+                font-size:12px;
+                font-weight:800;
+                margin-top:5px
+              "
+            >
+              🏷️ ${escapeHtml(
+                seller.brand_name
+              )}
+            </div>
+            `
+            :
+            ""
+          }
+
           <div>
             ${statusHtml}
           </div>
@@ -4292,7 +6220,6 @@ function renderAdminSeller(seller){
         </div>
 
       </div>
-
 
       <div class="seller-admin-actions">
 
@@ -4337,186 +6264,232 @@ function renderAdminSeller(seller){
    ADMIN — ACTIONS VENDEURS
 ========================================================= */
 
-async function adminGrantFree30(sellerId){
+async function adminGrantFree30(
+  sellerId
+){
 
   if(
     !currentProfile ||
-    currentProfile.role !== "creator_admin"
+    currentProfile.role !==
+    "creator_admin"
   ){
 
-    toast("Accès refusé.");
+    toast(
+      "Accès refusé."
+    );
+
     return;
 
   }
-
 
   const {
     error
   } =
-    await supabaseClient.rpc(
-      "admin_grant_free_30_days",
-      {
-        p_seller_id:sellerId
-      }
-    );
-
+    await supabaseClient
+      .rpc(
+        "admin_grant_free_30_days",
+        {
+          p_seller_id:
+            sellerId
+        }
+      );
 
   if(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
-    toast(error.message);
+    toast(
+      error.message
+    );
 
     return;
 
   }
 
-
-  toast("🎁 30 jours gratuits accordés.");
+  toast(
+    "🎁 30 jours gratuits accordés."
+  );
 
   await loadAdminPage();
 
 }
 
 
-async function adminGrantUnlimited(sellerId){
+async function adminGrantUnlimited(
+  sellerId
+){
 
   if(
     !currentProfile ||
-    currentProfile.role !== "creator_admin"
+    currentProfile.role !==
+    "creator_admin"
   ){
 
-    toast("Accès refusé.");
-    return;
-
-  }
-
-
-  if(!confirm(
-    "Donner un accès libre permanent à ce vendeur ?"
-  )){
+    toast(
+      "Accès refusé."
+    );
 
     return;
 
   }
 
+  if(
+    !confirm(
+      "Donner un accès libre permanent à ce vendeur ?"
+    )
+  ){
+
+    return;
+
+  }
 
   const {
     error
   } =
-    await supabaseClient.rpc(
-      "admin_grant_unlimited_access",
-      {
-        p_seller_id:sellerId
-      }
-    );
-
+    await supabaseClient
+      .rpc(
+        "admin_grant_unlimited_access",
+        {
+          p_seller_id:
+            sellerId
+        }
+      );
 
   if(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
-    toast(error.message);
+    toast(
+      error.message
+    );
 
     return;
 
   }
 
-
-  toast("♾️ Accès libre activé.");
+  toast(
+    "♾️ Accès libre activé."
+  );
 
   await loadAdminPage();
 
 }
 
 
-async function adminReactivate30(sellerId){
+async function adminReactivate30(
+  sellerId
+){
 
   if(
     !currentProfile ||
-    currentProfile.role !== "creator_admin"
+    currentProfile.role !==
+    "creator_admin"
   ){
 
-    toast("Accès refusé.");
+    toast(
+      "Accès refusé."
+    );
+
     return;
 
   }
-
 
   const {
     error
   } =
-    await supabaseClient.rpc(
-      "admin_reactivate_30_days",
-      {
-        p_seller_id:sellerId
-      }
-    );
-
+    await supabaseClient
+      .rpc(
+        "admin_reactivate_30_days",
+        {
+          p_seller_id:
+            sellerId
+        }
+      );
 
   if(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
-    toast(error.message);
+    toast(
+      error.message
+    );
 
     return;
 
   }
 
-
-  toast("🔄 Vendeur réactivé pour 30 jours.");
+  toast(
+    "🔄 Vendeur réactivé pour 30 jours."
+  );
 
   await loadAdminPage();
 
 }
 
 
-async function adminDisableSeller(sellerId){
+async function adminDisableSeller(
+  sellerId
+){
 
   if(
     !currentProfile ||
-    currentProfile.role !== "creator_admin"
+    currentProfile.role !==
+    "creator_admin"
   ){
 
-    toast("Accès refusé.");
-    return;
-
-  }
-
-
-  if(!confirm(
-    "Désactiver immédiatement ce vendeur ?"
-  )){
+    toast(
+      "Accès refusé."
+    );
 
     return;
 
   }
 
+  if(
+    !confirm(
+      "Désactiver immédiatement ce vendeur ?"
+    )
+  ){
+
+    return;
+
+  }
 
   const {
     error
   } =
-    await supabaseClient.rpc(
-      "admin_disable_seller",
-      {
-        p_seller_id:sellerId
-      }
-    );
-
+    await supabaseClient
+      .rpc(
+        "admin_disable_seller",
+        {
+          p_seller_id:
+            sellerId
+        }
+      );
 
   if(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
-    toast(error.message);
+    toast(
+      error.message
+    );
 
     return;
 
   }
 
-
-  toast("⏸️ Vendeur désactivé.");
+  toast(
+    "⏸️ Vendeur désactivé."
+  );
 
   await loadAdminPage();
 
@@ -4527,7 +6500,9 @@ async function adminDisableSeller(sellerId){
    ADMIN — COMMANDES
 ========================================================= */
 
-function renderAdminOrder(order){
+function renderAdminOrder(
+  order
+){
 
   return `
 
@@ -4539,14 +6514,16 @@ function renderAdminOrder(order){
 
           <div class="order-code">
             ${escapeHtml(
-              order.order_code || order.id
+              order.order_code ||
+              order.id
             )}
           </div>
 
           <small class="muted">
             Client :
             ${escapeHtml(
-              order.customer_phone || "—"
+              order.customer_phone ||
+              "—"
             )}
           </small>
 
@@ -4554,16 +6531,17 @@ function renderAdminOrder(order){
 
         <span
           class="status ${escapeHtml(
-            order.status || "pending"
+            order.status ||
+            "pending"
           )}"
         >
           ${escapeHtml(
-            order.status || "pending"
+            order.status ||
+            "pending"
           )}
         </span>
 
       </div>
-
 
       <div
         style="
@@ -4571,21 +6549,47 @@ function renderAdminOrder(order){
           font-weight:900
         "
       >
-        ${formatPrice(order.total_amount)}
+        ${formatPrice(
+          order.total_amount
+        )}
       </div>
 
+      <div
+        class="form-row"
+        style="margin-top:12px"
+      >
 
-      <div class="form-row" style="margin-top:12px">
+        <select
+          id="status-${order.id}"
+        >
 
-        <select id="status-${order.id}">
+          <option value="pending">
+            En attente
+          </option>
 
-          <option value="pending">En attente</option>
-          <option value="confirmed">Confirmée</option>
-          <option value="preparing">Préparation</option>
-          <option value="ready">Prête</option>
-          <option value="shipped">Expédiée</option>
-          <option value="delivered">Livrée</option>
-          <option value="cancelled">Annulée</option>
+          <option value="confirmed">
+            Confirmée
+          </option>
+
+          <option value="preparing">
+            Préparation
+          </option>
+
+          <option value="ready">
+            Prête
+          </option>
+
+          <option value="shipped">
+            Expédiée
+          </option>
+
+          <option value="delivered">
+            Livrée
+          </option>
+
+          <option value="cancelled">
+            Annulée
+          </option>
 
         </select>
 
@@ -4605,13 +6609,14 @@ function renderAdminOrder(order){
 }
 
 
-async function adminUpdateOrder(id){
+async function adminUpdateOrder(
+  id
+){
 
   const status =
     document.getElementById(
       `status-${id}`
     ).value;
-
 
   await changeOrderStatus(
     id,
@@ -4629,24 +6634,31 @@ async function changeOrderStatus(
   const {
     error
   } =
-    await supabaseClient.rpc(
-      "update_order_status",
-      {
-        p_order_id:orderId,
-        p_status:status
-      }
-    );
+    await supabaseClient
+      .rpc(
+        "update_order_status",
+        {
+          p_order_id:
+            orderId,
 
+          p_status:
+            status
+        }
+      );
 
   if(error){
 
-    toast(error.message);
+    toast(
+      error.message
+    );
+
     return;
 
   }
 
-
-  toast("Statut mis à jour.");
+  toast(
+    "Statut mis à jour."
+  );
 
   loadOrders();
 
@@ -4670,7 +6682,9 @@ function closeModal(id){
 
   document
     .getElementById(id)
-    ?.classList.remove("show");
+    ?.classList.remove(
+      "show"
+    );
 
 }
 
@@ -4685,11 +6699,17 @@ document.addEventListener(
 
     updateCartCount();
 
+    selectProductFormat(
+      "16:9"
+    );
+
     await loadCurrentUser();
 
     await loadProducts();
 
     renderCart();
+
+    updateNavigationByRole();
 
   }
 );
@@ -4700,24 +6720,39 @@ document.addEventListener(
 ========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
-  async (event,session)=>{
+  async (
+    event,
+    session
+  )=>{
 
-    if(event === "SIGNED_IN"){
+    if(
+      event ===
+      "SIGNED_IN"
+    ){
 
       currentUser =
-        session?.user || null;
+        session?.user ||
+        null;
 
       await loadCurrentUser();
 
     }
 
+    if(
+      event ===
+      "SIGNED_OUT"
+    ){
 
-    if(event === "SIGNED_OUT"){
+      currentUser =
+        null;
 
-      currentUser = null;
-      currentProfile = null;
+      currentProfile =
+        null;
+
+      updateNavigationByRole();
 
       renderHeaderAccount();
+
       renderAccount();
 
     }
