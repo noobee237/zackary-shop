@@ -1,29 +1,609 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+>
+
+<title>Zackary sh🛍️p</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
 /* =========================================================
-   ZACKARY SHOP — UI PREMIUM / STYLE IPHONE
+   BASE
 ========================================================= */
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
 html{
   scroll-behavior:smooth;
 }
 
 body{
-  -webkit-tap-highlight-color:transparent;
-  overscroll-behavior-y:none;
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
+  "SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;
+
+  background:
+    radial-gradient(
+      circle at 20% 0%,
+      rgba(255,255,255,.95),
+      transparent 35%
+    ),
+    linear-gradient(
+      180deg,
+      #f7f7f8 0%,
+      #eeeeef 100%
+    );
+
+  color:#111;
+
+  min-height:100vh;
+
+  padding-bottom:
+    calc(100px + env(safe-area-inset-bottom));
+
+  overflow-x:hidden;
 }
 
-/* Pages avec transition */
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+img{
+  max-width:100%;
+}
+
+
+/* =========================================================
+   LIQUID GLASS
+========================================================= */
+
+.glass{
+  background:rgba(255,255,255,.48);
+
+  backdrop-filter:
+    blur(25px)
+    saturate(180%);
+
+  -webkit-backdrop-filter:
+    blur(25px)
+    saturate(180%);
+
+  border:
+    1px solid rgba(255,255,255,.68);
+
+  box-shadow:
+    0 12px 35px rgba(0,0,0,.08),
+    inset 0 1px 1px rgba(255,255,255,.85);
+}
+
+.glass-card{
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.65),
+      rgba(255,255,255,.30)
+    );
+
+  backdrop-filter:
+    blur(24px)
+    saturate(180%);
+
+  -webkit-backdrop-filter:
+    blur(24px)
+    saturate(180%);
+
+  border:
+    1px solid rgba(255,255,255,.72);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.07),
+    inset 0 1px 1px rgba(255,255,255,.85);
+
+  border-radius:26px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+
+  padding:
+    calc(10px + env(safe-area-inset-top))
+    14px
+    10px;
+
+  background:rgba(247,247,248,.70);
+
+  backdrop-filter:
+    blur(25px)
+    saturate(180%);
+
+  -webkit-backdrop-filter:
+    blur(25px)
+    saturate(180%);
+
+  border-bottom:
+    1px solid rgba(255,255,255,.55);
+}
+
+.header-inner{
+  max-width:1100px;
+  margin:auto;
+
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo{
+  font-size:21px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.header-spacer{
+  flex:1;
+}
+
+.account-button{
+  width:42px;
+  height:42px;
+
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.75);
+
+  background:rgba(255,255,255,.50);
+
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  box-shadow:
+    0 5px 20px rgba(0,0,0,.08),
+    inset 0 1px 1px white;
+
+  transition:.2s ease;
+}
+
+.account-button:active{
+  transform:scale(.9);
+}
+
+.account-button img{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.search-wrap{
+  max-width:1100px;
+  margin:10px auto 0;
+}
+
+.search-box{
+  width:100%;
+
+  border:0;
+  outline:none;
+
+  padding:13px 17px;
+
+  border-radius:18px;
+
+  background:rgba(255,255,255,.65);
+
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.70),
+    0 5px 18px rgba(0,0,0,.04);
+
+  transition:.25s ease;
+}
+
+.search-box:focus{
+  box-shadow:
+    inset 0 0 0 2px rgba(0,0,0,.12),
+    0 7px 25px rgba(0,0,0,.08);
+}
+
+
+/* =========================================================
+   PAGES
+========================================================= */
 
 .page{
   display:none;
-  padding:18px 15px 95px;
-  animation:pageIn .28s cubic-bezier(.22,.61,.36,1);
+
+  max-width:1100px;
+  margin:0 auto;
+
+  padding:
+    18px
+    16px
+    115px;
+
+  min-height:calc(100vh - 100px);
 }
 
 .page.active{
   display:block;
+  animation:pageIn .35s cubic-bezier(.22,.61,.36,1);
 }
 
 @keyframes pageIn{
+  from{
+    opacity:0;
+    transform:translateY(12px) scale(.985);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+@keyframes pageOut{
+  from{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  to{
+    opacity:0;
+    transform:translateY(-8px);
+  }
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard-hero{
+  position:relative;
+
+  padding:20px;
+
+  margin-bottom:18px;
+
+  overflow:hidden;
+}
+
+.dashboard-hero::before{
+  content:"";
+
+  position:absolute;
+
+  width:180px;
+  height:180px;
+
+  right:-80px;
+  top:-80px;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,255,255,.9),
+      rgba(255,255,255,0)
+    );
+
+  pointer-events:none;
+}
+
+.dashboard-welcome{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  width:100%;
+
+  gap:12px;
+}
+
+.dashboard-welcome > div{
+  min-width:0;
+}
+
+.dashboard-welcome small{
+  display:block;
+  color:#666;
+  margin-bottom:4px;
+}
+
+.dashboard-welcome strong{
+  display:block;
+  font-size:21px;
+
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.dashboard-profile-button{
+  flex-shrink:0;
+
+  width:48px;
+  height:48px;
+
+  padding:0;
+
+  border-radius:50%;
+
+  border:
+    1px solid rgba(255,255,255,.75);
+
+  background:rgba(255,255,255,.42);
+
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+
+  box-shadow:
+    0 5px 20px rgba(0,0,0,.08),
+    inset 0 1px 2px rgba(255,255,255,.9);
+
+  overflow:hidden;
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.dashboard-profile-button:active{
+  transform:scale(.88);
+}
+
+.dashboard-profile-button .dashboard-avatar{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.dashboard-role{
+  display:inline-flex;
+
+  margin-top:15px;
+
+  padding:7px 12px;
+
+  border-radius:999px;
+
+  background:rgba(255,255,255,.48);
+
+  border:1px solid rgba(255,255,255,.7);
+
+  font-size:12px;
+  font-weight:700;
+
+  color:#555;
+}
+
+
+/* =========================================================
+   QUICK ACTIONS
+========================================================= */
+
+.quick-actions{
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:12px;
+
+  margin-bottom:24px;
+}
+
+.quick-action{
+  border:0;
+
+  text-align:left;
+
+  padding:17px;
+
+  min-height:125px;
+
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease;
+}
+
+.quick-action:active{
+  transform:scale(.96);
+}
+
+.quick-action-icon{
+  width:42px;
+  height:42px;
+
+  border-radius:15px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:rgba(255,255,255,.58);
+
+  margin-bottom:12px;
+
+  font-size:20px;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.9);
+}
+
+.quick-action strong{
+  display:block;
+  font-size:15px;
+}
+
+.quick-action span{
+  display:block;
+
+  margin-top:4px;
+
+  font-size:12px;
+  color:#777;
+}
+
+
+/* =========================================================
+   SECTION TITLES
+========================================================= */
+
+.dashboard-section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  margin:20px 2px 12px;
+}
+
+.dashboard-section-title h2{
+  margin:0;
+  font-size:20px;
+}
+
+.dashboard-section-title span{
+  font-size:13px;
+  color:#777;
+}
+
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+.categories{
+  display:flex;
+  gap:9px;
+
+  overflow-x:auto;
+
+  padding:
+    2px
+    2px
+    12px;
+
+  scrollbar-width:none;
+}
+
+.categories::-webkit-scrollbar{
+  display:none;
+}
+
+.category-btn{
+  flex-shrink:0;
+
+  border:0;
+
+  padding:10px 14px;
+
+  border-radius:999px;
+
+  background:rgba(255,255,255,.60);
+
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+
+  border:
+    1px solid rgba(255,255,255,.7);
+
+  color:#333;
+
+  transition:.2s ease;
+}
+
+.category-btn.active{
+  background:#111;
+  color:white;
+}
+
+.category-btn:active{
+  transform:scale(.94);
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+.products-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:13px;
+}
+
+.product-card{
+  overflow:hidden;
+
+  border-radius:23px;
+
+  background:rgba(255,255,255,.62);
+
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+
+  border:
+    1px solid rgba(255,255,255,.75);
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.06);
+
+  cursor:pointer;
+
+  animation:
+    cardIn .4s cubic-bezier(.22,.61,.36,1);
+
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease;
+}
+
+.product-card:active{
+  transform:scale(.965);
+}
+
+@keyframes cardIn{
   from{
     opacity:0;
     transform:translateY(10px);
@@ -35,334 +615,4927 @@ body{
   }
 }
 
-/* Header plus proche d'une app */
+.product-image{
+  width:100%;
+  aspect-ratio:1/1;
 
-header{
+  object-fit:cover;
+
+  background:#eee;
+}
+
+.product-info{
+  padding:12px;
+}
+
+.product-name{
+  font-weight:700;
+  font-size:14px;
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.product-price{
+  margin-top:5px;
+
+  font-weight:800;
+  font-size:15px;
+}
+
+.product-seller{
+  margin-top:5px;
+
+  font-size:11px;
+  color:#777;
+}
+
+
+/* =========================================================
+   PRODUCT PAGE
+========================================================= */
+
+.back-button{
+  border:0;
+
+  padding:10px 14px;
+
+  border-radius:999px;
+
+  background:rgba(255,255,255,.62);
+
   backdrop-filter:blur(18px);
   -webkit-backdrop-filter:blur(18px);
-  background:rgba(255,255,255,.88);
-  box-shadow:0 1px 10px rgba(0,0,0,.04);
+
+  margin-bottom:14px;
 }
 
-.logo{
-  letter-spacing:-.5px;
+.product-detail{
+  overflow:hidden;
+
+  border-radius:28px;
+
+  background:rgba(255,255,255,.60);
+
+  border:
+    1px solid rgba(255,255,255,.75);
+
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+
+  box-shadow:
+    0 12px 35px rgba(0,0,0,.07);
 }
 
-/* Boutons avec petit effet tactile */
+.product-main-image{
+  width:100%;
 
-button{
-  -webkit-tap-highlight-color:transparent;
-  transition:
-    transform .16s ease,
-    opacity .16s ease,
-    background .2s ease,
-    box-shadow .2s ease;
+  max-height:500px;
+
+  object-fit:contain;
+
+  background:#eee;
+
+  cursor:zoom-in;
 }
 
-button:active{
-  transform:scale(.96);
-  opacity:.8;
+.product-thumbnails{
+  display:flex;
+  gap:8px;
+
+  padding:12px;
+
+  overflow-x:auto;
 }
 
-/* Cartes */
+.product-thumbnail{
+  width:70px;
+  height:70px;
 
-.product-card,
-.form-card,
-.account-profile,
-.admin-card,
-.sale-row,
-.product-detail-info{
-  transition:
-    transform .22s ease,
-    box-shadow .22s ease;
+  object-fit:cover;
+
+  border-radius:14px;
+
+  border:2px solid transparent;
+
+  cursor:pointer;
 }
 
-.product-card:active{
-  transform:scale(.985);
+.product-thumbnail.active{
+  border-color:#111;
 }
 
-/* Apparition des produits */
-
-.product-card{
-  animation:cardIn .3s ease both;
+.product-detail-content{
+  padding:18px;
 }
 
-@keyframes cardIn{
+.product-detail-content h1{
+  margin:0;
+  font-size:24px;
+}
+
+.detail-price{
+  margin-top:8px;
+
+  font-size:21px;
+  font-weight:800;
+}
+
+.detail-description{
+  margin-top:15px;
+
+  line-height:1.55;
+  color:#555;
+}
+
+.seller-box{
+  display:flex;
+  align-items:center;
+
+  gap:10px;
+
+  padding:13px;
+
+  margin-top:18px;
+
+  border-radius:19px;
+
+  background:rgba(255,255,255,.5);
+}
+
+.seller-avatar{
+  width:43px;
+  height:43px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+}
+
+.buy-button{
+  width:100%;
+
+  border:0;
+
+  margin-top:16px;
+
+  padding:15px;
+
+  border-radius:18px;
+
+  background:#111;
+  color:white;
+
+  font-weight:700;
+
+  transition:.2s ease;
+}
+
+.buy-button:active{
+  transform:scale(.97);
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+.cart-empty{
+  text-align:center;
+
+  padding:50px 20px;
+
+  border-radius:28px;
+}
+
+.cart-icon-large{
+  font-size:50px;
+  margin-bottom:10px;
+}
+
+.cart-item{
+  display:flex;
+  gap:12px;
+
+  padding:13px;
+
+  margin-bottom:10px;
+
+  align-items:center;
+}
+
+.cart-item-image{
+  width:70px;
+  height:70px;
+
+  object-fit:cover;
+
+  border-radius:16px;
+}
+
+.cart-item-info{
+  flex:1;
+}
+
+.cart-item-name{
+  font-weight:700;
+}
+
+.cart-item-price{
+  margin-top:4px;
+
+  font-weight:700;
+}
+
+.cart-remove{
+  border:0;
+
+  width:36px;
+  height:36px;
+
+  border-radius:50%;
+
+  background:rgba(0,0,0,.06);
+}
+
+.cart-total{
+  margin-top:15px;
+
+  padding:18px;
+
+  display:flex;
+  justify-content:space-between;
+
+  border-radius:22px;
+}
+
+.cart-checkout{
+  width:100%;
+
+  margin-top:12px;
+
+  padding:15px;
+
+  border:0;
+
+  border-radius:18px;
+
+  background:#111;
+  color:white;
+
+  font-weight:700;
+}
+
+
+/* =========================================================
+   ACCOUNT
+========================================================= */
+
+.account-card{
+  padding:20px;
+
+  border-radius:28px;
+
+  margin-bottom:15px;
+}
+
+.profile-center{
+  text-align:center;
+}
+
+.profile-large-avatar{
+  width:100px;
+  height:100px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+
+  border:
+    4px solid rgba(255,255,255,.75);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.12);
+}
+
+.profile-upload{
+  margin-top:12px;
+
+  display:inline-block;
+
+  padding:9px 14px;
+
+  border-radius:999px;
+
+  background:#111;
+  color:white;
+
+  font-size:13px;
+
+  cursor:pointer;
+}
+
+.profile-upload input{
+  display:none;
+}
+
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.form-group{
+  margin-bottom:13px;
+}
+
+.form-group label{
+  display:block;
+
+  margin-bottom:6px;
+
+  font-size:13px;
+  font-weight:600;
+}
+
+.form-control{
+  width:100%;
+
+  border:0;
+  outline:none;
+
+  padding:13px 14px;
+
+  border-radius:16px;
+
+  background:rgba(255,255,255,.68);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.05);
+}
+
+textarea.form-control{
+  min-height:100px;
+  resize:vertical;
+}
+
+.primary-button{
+  width:100%;
+
+  padding:14px;
+
+  border:0;
+
+  border-radius:17px;
+
+  background:#111;
+  color:white;
+
+  font-weight:700;
+
+  transition:.2s ease;
+}
+
+.primary-button:active{
+  transform:scale(.97);
+}
+
+.secondary-button{
+  padding:11px 15px;
+
+  border:0;
+
+  border-radius:15px;
+
+  background:rgba(0,0,0,.07);
+}
+
+.danger-button{
+  padding:10px 13px;
+
+  border:0;
+
+  border-radius:14px;
+
+  background:#ff3b30;
+  color:white;
+}
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+.auth-tabs{
+  display:flex;
+
+  gap:8px;
+
+  margin-bottom:15px;
+}
+
+.auth-tab{
+  flex:1;
+
+  border:0;
+
+  padding:11px;
+
+  border-radius:15px;
+
+  background:rgba(0,0,0,.05);
+}
+
+.auth-tab.active{
+  background:#111;
+  color:white;
+}
+
+.auth-form{
+  padding:20px;
+
+  border-radius:26px;
+}
+
+
+/* =========================================================
+   SELLER
+========================================================= */
+
+.seller-section{
+  padding:18px;
+
+  margin-bottom:15px;
+
+  border-radius:26px;
+}
+
+.seller-product{
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+  padding:12px;
+
+  margin-bottom:9px;
+}
+
+.seller-product img{
+  width:65px;
+  height:65px;
+
+  border-radius:15px;
+
+  object-fit:cover;
+}
+
+.seller-product-info{
+  flex:1;
+}
+
+.sales-card{
+  padding:16px;
+
+  margin-bottom:10px;
+
+  border-radius:20px;
+}
+
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+.admin-card{
+  padding:18px;
+
+  margin-bottom:12px;
+
+  border-radius:23px;
+}
+
+.admin-seller{
+  padding:14px;
+
+  margin-top:10px;
+
+  border-radius:18px;
+
+  background:rgba(255,255,255,.5);
+}
+
+.admin-actions{
+  display:flex;
+
+  gap:7px;
+
+  flex-wrap:wrap;
+
+  margin-top:10px;
+}
+
+
+/* =========================================================
+   MODAL ZOOM
+========================================================= */
+
+.zoom-modal{
+  position:fixed;
+
+  inset:0;
+
+  z-index:1000;
+
+  display:none;
+
+  align-items:center;
+  justify-content:center;
+
+  padding:20px;
+
+  background:rgba(0,0,0,.72);
+
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+}
+
+.zoom-modal.active{
+  display:flex;
+
+  animation:modalIn .25s ease;
+}
+
+@keyframes modalIn{
   from{
     opacity:0;
-    transform:translateY(8px);
   }
 
   to{
     opacity:1;
-    transform:translateY(0);
   }
 }
 
-/* Dashboard */
+.zoom-modal img{
+  max-width:100%;
+  max-height:90vh;
 
-.dashboard-hero{
-  position:relative;
-  overflow:hidden;
-  background:#111;
-  color:#fff;
-  border-radius:24px;
-  padding:22px;
-  margin-bottom:16px;
-  box-shadow:0 10px 30px rgba(0,0,0,.12);
+  object-fit:contain;
+
+  border-radius:22px;
 }
 
-.dashboard-hero::after{
-  content:"";
+.zoom-close{
   position:absolute;
-  width:150px;
-  height:150px;
-  border-radius:50%;
-  background:rgba(255,255,255,.06);
-  right:-50px;
-  top:-55px;
-}
 
-.dashboard-welcome{
-  display:flex;
-  align-items:center;
-  gap:13px;
-  position:relative;
-  z-index:1;
-}
+  top:calc(15px + env(safe-area-inset-top));
+  right:15px;
 
-.dashboard-avatar{
-  width:54px;
-  height:54px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid rgba(255,255,255,.8);
-}
+  width:44px;
+  height:44px;
 
-.dashboard-welcome small{
-  display:block;
-  opacity:.7;
-  font-size:12px;
-  margin-bottom:3px;
-}
-
-.dashboard-welcome strong{
-  font-size:19px;
-}
-
-.dashboard-role{
-  display:inline-block;
-  margin-top:10px;
-  padding:5px 9px;
-  border-radius:20px;
-  background:rgba(255,255,255,.12);
-  font-size:11px;
-}
-
-/* Raccourcis */
-
-.quick-actions{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  margin-bottom:18px;
-}
-
-.quick-action{
   border:0;
-  background:#fff;
-  border-radius:18px;
-  padding:17px 14px;
-  text-align:left;
-  box-shadow:0 3px 14px rgba(0,0,0,.06);
+
+  border-radius:50%;
+
+  background:rgba(255,255,255,.18);
+
+  color:white;
+
+  font-size:25px;
 }
 
-.quick-action-icon{
-  width:38px;
-  height:38px;
-  border-radius:12px;
-  background:#f2f2f2;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:20px;
-  margin-bottom:10px;
-}
 
-.quick-action strong{
-  display:block;
-  font-size:14px;
-}
-
-.quick-action span{
-  display:block;
-  color:#777;
-  font-size:11px;
-  margin-top:3px;
-}
-
-/* Statistiques */
-
-.stats-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  margin-bottom:18px;
-}
-
-.stat-card{
-  background:#fff;
-  border-radius:18px;
-  padding:15px;
-  box-shadow:0 3px 14px rgba(0,0,0,.05);
-}
-
-.stat-card small{
-  color:#777;
-  font-size:11px;
-}
-
-.stat-card strong{
-  display:block;
-  font-size:21px;
-  margin-top:5px;
-}
-
-/* Titre dashboard */
-
-.dashboard-section-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin:20px 2px 11px;
-}
-
-.dashboard-section-title h2{
-  font-size:18px;
-}
-
-.dashboard-section-title span{
-  color:#777;
-  font-size:12px;
-}
-
-/* Barre de navigation style iPhone */
+/* =========================================================
+   BOTTOM NAVIGATION — LIQUID GLASS
+========================================================= */
 
 .bottom-nav{
-  height:76px;
-  padding:
-    8px
-    max(8px, env(safe-area-inset-left))
-    max(8px, env(safe-area-inset-right))
-    max(8px, env(safe-area-inset-bottom));
+  position:fixed;
 
-  background:rgba(255,255,255,.92);
+  z-index:500;
 
-  backdrop-filter:blur(22px);
-  -webkit-backdrop-filter:blur(22px);
+  left:50%;
+  bottom:
+    calc(10px + env(safe-area-inset-bottom));
 
-  border-top:1px solid rgba(0,0,0,.08);
+  transform:translateX(-50%);
 
-  box-shadow:0 -5px 20px rgba(0,0,0,.05);
+  width:
+    min(94%,560px);
+
+  height:70px;
+
+  padding:7px;
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(5,1fr);
+
+  align-items:center;
+
+  border-radius:28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.72),
+      rgba(255,255,255,.35)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.85);
+
+  backdrop-filter:
+    blur(30px)
+    saturate(190%);
+
+  -webkit-backdrop-filter:
+    blur(30px)
+    saturate(190%);
+
+  box-shadow:
+    0 15px 45px rgba(0,0,0,.14),
+    inset 0 1px 1px rgba(255,255,255,.95);
+
 }
 
 .nav-btn{
   position:relative;
-  min-width:62px;
-  height:58px;
-  border-radius:17px;
+
+  height:55px;
+
+  border:0;
+
+  background:transparent;
+
+  border-radius:20px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
   justify-content:center;
+
+  gap:2px;
+
   color:#777;
+
+  transition:
+    transform .22s ease,
+    background .22s ease,
+    color .22s ease;
 }
 
-.nav-btn span{
+.nav-btn span:first-child{
+  font-size:20px;
+  line-height:20px;
+}
+
+.nav-btn span:last-child{
   font-size:10px;
+  font-weight:600;
 }
 
 .nav-btn.active{
   color:#111;
-  background:#f1f1f1;
+
+  background:
+    rgba(255,255,255,.52);
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.9);
 }
 
-.nav-btn.active::before{
-  content:"";
+.nav-btn:active{
+  transform:scale(.88);
+}
+
+
+/* =========================================================
+   CENTER CART
+========================================================= */
+
+.nav-cart{
+  width:61px;
+  height:61px;
+
+  margin:auto;
+
+  transform:translateY(-15px);
+
+  border-radius:50% !important;
+
+  background:#111 !important;
+
+  color:white !important;
+
+  border:
+    4px solid rgba(255,255,255,.80) !important;
+
+  box-shadow:
+    0 9px 25px rgba(0,0,0,.20),
+    0 0 0 5px rgba(255,255,255,.22),
+    inset 0 1px 2px rgba(255,255,255,.25);
+
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+}
+
+.nav-cart span:first-child{
+  font-size:22px !important;
+}
+
+.nav-cart span:last-child{
+  font-size:9px;
+}
+
+.nav-cart:active{
+  transform:translateY(-15px) scale(.88);
+}
+
+
+/* =========================================================
+   CART BADGE
+========================================================= */
+
+.cart-badge{
   position:absolute;
-  top:4px;
-  width:5px;
-  height:5px;
-  border-radius:50%;
-  background:#111;
+
+  top:2px;
+  right:1px;
+
+  min-width:18px;
+  height:18px;
+
+  padding:0 5px;
+
+  border-radius:999px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#ff3b30;
+  color:white;
+
+  font-size:10px;
+  font-weight:800;
+
+  border:2px solid rgba(255,255,255,.9);
 }
 
-/* Bouton central */
 
-.nav-btn.nav-main{
-  background:#111;
-  color:#fff;
-  width:58px;
-  min-width:58px;
-  height:58px;
-  border-radius:20px;
-  box-shadow:0 7px 18px rgba(0,0,0,.18);
-  transform:translateY(-8px);
+/* =========================================================
+   LOADING / EMPTY
+========================================================= */
+
+.loading,
+.empty{
+  padding:35px 20px;
+
+  text-align:center;
+
+  color:#777;
 }
 
-.nav-btn.nav-main:active{
-  transform:translateY(-8px) scale(.94);
-}
 
-.nav-btn.nav-main.active{
-  background:#111;
-  color:#fff;
-}
-
-.nav-btn.nav-main.active::before{
-  display:none;
-}
-
-/* Petite séparation */
-
-.nav-spacer{
-  width:4px;
-}
-
-/* Mobile cards */
-
-@media(max-width:699px){
-
-  .section-title{
-    font-size:21px;
-    letter-spacing:-.4px;
-  }
-
-  .products-grid{
-    gap:10px;
-  }
-
-  .product-card{
-    border-radius:17px;
-  }
-
-  .product-card-image{
-    aspect-ratio: .92;
-  }
-
-}
-
-/* Desktop */
+/* =========================================================
+   DESKTOP
+========================================================= */
 
 @media(min-width:700px){
 
-  .dashboard-hero{
-    margin-top:10px;
+  .products-grid{
+    grid-template-columns:
+      repeat(4,minmax(0,1fr));
   }
 
   .quick-actions{
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:
+      repeat(4,minmax(0,1fr));
   }
 
-  .stats-grid{
-    grid-template-columns:repeat(4,1fr);
+  .dashboard-hero{
+    padding:26px;
   }
 
 }
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:420px){
+
+  .page{
+    padding-left:12px;
+    padding-right:12px;
+  }
+
+  .quick-actions{
+    gap:9px;
+  }
+
+  .quick-action{
+    padding:14px;
+    min-height:115px;
+  }
+
+  .bottom-nav{
+    width:96%;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *::before,
+  *::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =======================================================
+     HEADER
+======================================================== -->
+
+<header>
+
+  <div class="header-inner">
+
+    <div class="logo">
+      Zackary sh🛍️p
+    </div>
+
+    <div class="header-spacer"></div>
+
+    <button
+      class="account-button"
+      onclick="showPage('accountPage')"
+      aria-label="Mon compte"
+    >
+
+      <img
+        id="headerAvatar"
+        src="https://ui-avatars.com/api/?name=User&background=eeeeee&color=111111"
+        alt="Compte"
+      >
+
+    </button>
+
+  </div>
+
+
+  <div class="search-wrap">
+
+    <input
+      id="searchInput"
+      class="search-box"
+      type="search"
+      placeholder="🔎 Rechercher un article..."
+      oninput="handleSearch(this.value)"
+    >
+
+  </div>
+
+</header>
+
+
+<!-- =======================================================
+     HOME / DASHBOARD
+======================================================== -->
+
+<main
+  id="homePage"
+  class="page active"
+>
+
+  <div id="dashboardHome"></div>
+
+
+  <div class="dashboard-section-title">
+
+    <h2>
+      Découvrir
+    </h2>
+
+    <span>
+      Tout voir
+    </span>
+
+  </div>
+
+
+  <div
+    id="categories"
+    class="categories"
+  ></div>
+
+
+  <div
+    id="productsGrid"
+    class="products-grid"
+  >
+
+    <div class="loading">
+      Chargement...
+    </div>
+
+  </div>
+
+</main>
+
+
+<!-- =======================================================
+     PRODUCT PAGE
+======================================================== -->
+
+<main
+  id="productPage"
+  class="page"
+>
+
+  <button
+    class="back-button"
+    onclick="showPage('homePage')"
+  >
+    ← Retour
+  </button>
+
+
+  <div
+    id="productDetail"
+  ></div>
+
+</main>
+
+
+<!-- =======================================================
+     CART PAGE
+======================================================== -->
+
+<main
+  id="cartPage"
+  class="page"
+>
+
+  <div class="dashboard-section-title">
+
+    <h2>
+      Mon panier 🛒
+    </h2>
+
+    <span id="cartCountText">
+      0 article
+    </span>
+
+  </div>
+
+
+  <div id="cartContent"></div>
+
+</main>
+
+
+<!-- =======================================================
+     SELL PAGE
+======================================================== -->
+
+<main
+  id="sellPage"
+  class="page"
+>
+
+  <div class="dashboard-section-title">
+
+    <h2>
+      Espace vendeur
+    </h2>
+
+  </div>
+
+
+  <div id="sellerContent"></div>
+
+</main>
+
+
+<!-- =======================================================
+     ACCOUNT PAGE
+======================================================== -->
+
+<main
+  id="accountPage"
+  class="page"
+>
+
+  <div class="dashboard-section-title">
+
+    <h2>
+      Mon compte
+    </h2>
+
+  </div>
+
+
+  <div id="accountContent"></div>
+
+</main>
+
+
+<!-- =======================================================
+     ADMIN PAGE
+======================================================== -->
+
+<main
+  id="adminPage"
+  class="page"
+>
+
+  <div class="dashboard-section-title">
+
+    <h2>
+      Administration
+    </h2>
+
+  </div>
+
+
+  <div id="adminContent"></div>
+
+</main>
+
+
+<!-- =======================================================
+     ZOOM
+======================================================== -->
+
+<div
+  id="zoomModal"
+  class="zoom-modal"
+  onclick="closeZoom(event)"
+>
+
+  <button
+    class="zoom-close"
+    onclick="closeZoom()"
+  >
+    ×
+  </button>
+
+  <img
+    id="zoomImage"
+    src=""
+    alt="Image produit"
+  >
+
+</div>
+
+
+<!-- =======================================================
+     BOTTOM NAV
+======================================================== -->
+
+<nav class="bottom-nav">
+
+  <button
+    id="navHome"
+    class="nav-btn active"
+    onclick="showPage('homePage')"
+  >
+
+    <span>
+      ⌂
+    </span>
+
+    <span>
+      Accueil
+    </span>
+
+  </button>
+
+
+  <button
+    id="navShop"
+    class="nav-btn"
+    onclick="showPage('homePage')"
+  >
+
+    <span>
+      🛍️
+    </span>
+
+    <span>
+      Boutique
+    </span>
+
+  </button>
+
+
+  <button
+    id="navCart"
+    class="nav-btn nav-cart"
+    onclick="openCart()"
+  >
+
+    <span>
+      🛒
+    </span>
+
+    <span>
+      Panier
+    </span>
+
+    <span
+      id="cartBadge"
+      class="cart-badge"
+      style="display:none"
+    >
+      0
+    </span>
+
+  </button>
+
+
+  <button
+    id="navSell"
+    class="nav-btn"
+    onclick="showSellPage()"
+  >
+
+    <span>
+      ＋
+    </span>
+
+    <span>
+      Vendre
+    </span>
+
+  </button>
+
+
+  <button
+    id="navAccount"
+    class="nav-btn"
+    onclick="showPage('accountPage')"
+  >
+
+    <span>
+      ●
+    </span>
+
+    <span>
+      Profil
+    </span>
+
+  </button>
+
+</nav>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+  "https://leoyfcpkjbvdhalyefcv.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_ZVx9Vqel2vvEylmrQGRT-A_SeAk8K3-";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let currentUser = null;
+
+let currentProfile = null;
+
+let currentProducts = [];
+
+let selectedCategory = "Tous";
+
+let selectedProduct = null;
+
+let currentProductImages = [];
+
+let cart =
+  JSON.parse(
+    localStorage.getItem("zackary_cart") || "[]"
+  );
+
+
+const categoriesList = [
+
+  "Tous",
+
+  "T-shirts",
+
+  "Ensembles/Jogging",
+
+  "Pantalons",
+
+  "Vestes",
+
+  "Chaussures",
+
+  "Accessoires"
+
+];
+
+
+/* =========================================================
+   UTILITIES
+========================================================= */
+
+function escapeHtml(value){
+
+  if(value === null || value === undefined){
+    return "";
+  }
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+function formatPrice(value){
+
+  const number =
+    Number(value || 0);
+
+  return number.toLocaleString("fr-FR") + " XAF";
+}
+
+
+function getAvatarUrl(profile){
+
+  if(
+    profile &&
+    profile.avatar_url
+  ){
+
+    return profile.avatar_url;
+  }
+
+  const name =
+    profile?.username ||
+    "User";
+
+  return (
+    "https://ui-avatars.com/api/?name=" +
+    encodeURIComponent(name) +
+    "&background=eeeeee&color=111111"
+  );
+}
+
+
+/* =========================================================
+   PAGE NAVIGATION
+========================================================= */
+
+function showPage(pageId){
+
+  const currentPage =
+    document.querySelector(".page.active");
+
+  const nextPage =
+    document.getElementById(pageId);
+
+  if(!nextPage){
+    return;
+  }
+
+  if(currentPage === nextPage){
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+    return;
+  }
+
+  if(currentPage){
+
+    currentPage.style.animation =
+      "pageOut .18s ease forwards";
+
+    setTimeout(() => {
+
+      currentPage.classList.remove("active");
+
+      currentPage.style.animation = "";
+
+      nextPage.classList.add("active");
+
+    },180);
+
+  }else{
+
+    nextPage.classList.add("active");
+
+  }
+
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(btn => {
+
+      btn.classList.remove("active");
+
+    });
+
+
+  if(
+    pageId === "homePage" ||
+    pageId === "productPage"
+  ){
+
+    document
+      .getElementById("navHome")
+      ?.classList.add("active");
+
+  }
+
+
+  if(pageId === "cartPage"){
+
+    document
+      .getElementById("navCart")
+      ?.classList.add("active");
+
+  }
+
+
+  if(pageId === "sellPage"){
+
+    document
+      .getElementById("navSell")
+      ?.classList.add("active");
+
+  }
+
+
+  if(pageId === "accountPage"){
+
+    document
+      .getElementById("navAccount")
+      ?.classList.add("active");
+
+  }
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function renderDashboard(){
+
+  const container =
+    document.getElementById("dashboardHome");
+
+  if(!container){
+    return;
+  }
+
+
+  /* VISITEUR */
+
+  if(!currentUser){
+
+    container.innerHTML = `
+
+      <div class="dashboard-hero glass-card">
+
+        <div class="dashboard-welcome">
+
+          <div>
+
+            <small>
+              Bienvenue sur
+            </small>
+
+            <strong>
+              Zackary sh🛍️p
+            </strong>
+
+          </div>
+
+          <button
+            class="dashboard-profile-button"
+            onclick="showPage('accountPage')"
+            aria-label="Mon profil"
+          >
+
+            <img
+              class="dashboard-avatar"
+              src="https://ui-avatars.com/api/?name=Zackary&background=eeeeee&color=111111"
+              alt="Zackary"
+            >
+
+          </button>
+
+        </div>
+
+
+        <div class="dashboard-role">
+          Mode visiteur
+        </div>
+
+      </div>
+
+
+      <div class="quick-actions">
+
+        <button
+          class="quick-action glass-card"
+          onclick="showPage('accountPage')"
+        >
+
+          <div class="quick-action-icon">
+            👤
+          </div>
+
+          <strong>
+            Se connecter
+          </strong>
+
+          <span>
+            Accéder à mon compte
+          </span>
+
+        </button>
+
+
+        <button
+          class="quick-action glass-card"
+          onclick="showPage('homePage')"
+        >
+
+          <div class="quick-action-icon">
+            🛍️
+          </div>
+
+          <strong>
+            Boutique
+          </strong>
+
+          <span>
+            Découvrir les articles
+          </span>
+
+        </button>
+
+
+        <button
+          class="quick-action glass-card"
+          onclick="openCart()"
+        >
+
+          <div class="quick-action-icon">
+            🛒
+          </div>
+
+          <strong>
+            Mon panier
+          </strong>
+
+          <span>
+            Voir mes achats
+          </span>
+
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  const profile =
+    currentProfile || {};
+
+  const avatar =
+    getAvatarUrl(profile);
+
+  let role = "Client";
+
+
+  if(profile.role === "seller"){
+    role = "Vendeur";
+  }
+
+
+  if(profile.role === "creator_admin"){
+    role = "Administrateur";
+  }
+
+
+  let quickActions = `
+
+    <button
+      class="quick-action glass-card"
+      onclick="showPage('homePage')"
+    >
+
+      <div class="quick-action-icon">
+        🛍️
+      </div>
+
+      <strong>
+        Boutique
+      </strong>
+
+      <span>
+        Explorer les articles
+      </span>
+
+    </button>
+
+
+    <button
+      class="quick-action glass-card"
+      onclick="openCart()"
+    >
+
+      <div class="quick-action-icon">
+        🛒
+      </div>
+
+      <strong>
+        Mon panier
+      </strong>
+
+      <span>
+        Voir mes articles
+      </span>
+
+    </button>
+
+
+    <button
+      class="quick-action glass-card"
+      onclick="showPage('accountPage')"
+    >
+
+      <div class="quick-action-icon">
+        👤
+      </div>
+
+      <strong>
+        Mon profil
+      </strong>
+
+      <span>
+        Gérer mon compte
+      </span>
+
+    </button>
+
+  `;
+
+
+  if(profile.role === "seller"){
+
+    quickActions += `
+
+      <button
+        class="quick-action glass-card"
+        onclick="showSellPage()"
+      >
+
+        <div class="quick-action-icon">
+          ➕
+        </div>
+
+        <strong>
+          Ajouter
+        </strong>
+
+        <span>
+          Publier un article
+        </span>
+
+      </button>
+
+
+      <button
+        class="quick-action glass-card"
+        onclick="showSellPage()"
+      >
+
+        <div class="quick-action-icon">
+          📊
+        </div>
+
+        <strong>
+          Mes ventes
+        </strong>
+
+        <span>
+          Voir mon activité
+        </span>
+
+      </button>
+
+    `;
+
+  }
+
+
+  if(profile.role === "creator_admin"){
+
+    quickActions += `
+
+      <button
+        class="quick-action glass-card"
+        onclick="showAdminPage()"
+      >
+
+        <div class="quick-action-icon">
+          ⚙️
+        </div>
+
+        <strong>
+          Administration
+        </strong>
+
+        <span>
+          Gérer Zackary sh🛍️p
+        </span>
+
+      </button>
+
+    `;
+
+  }
+
+
+  container.innerHTML = `
+
+    <div class="dashboard-hero glass-card">
+
+      <div class="dashboard-welcome">
+
+        <div>
+
+          <small>
+            Bonjour 👋
+          </small>
+
+          <strong>
+            ${escapeHtml(
+              profile.username ||
+              "Utilisateur"
+            )}
+          </strong>
+
+        </div>
+
+
+        <!-- PROFIL EN HAUT À DROITE -->
+
+        <button
+          class="dashboard-profile-button"
+          onclick="showPage('accountPage')"
+          aria-label="Mon profil"
+        >
+
+          <img
+            class="dashboard-avatar"
+            src="${escapeHtml(avatar)}"
+            alt="Photo de profil"
+          >
+
+        </button>
+
+      </div>
+
+
+      <div class="dashboard-role">
+        ${escapeHtml(role)}
+      </div>
+
+    </div>
+
+
+    <div class="quick-actions">
+
+      ${quickActions}
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+function renderCategories(){
+
+  const container =
+    document.getElementById("categories");
+
+  if(!container){
+    return;
+  }
+
+
+  container.innerHTML =
+    categoriesList.map(category => `
+
+      <button
+        class="category-btn ${
+          selectedCategory === category
+          ? "active"
+          : ""
+        }"
+        onclick="selectCategory('${escapeHtml(category)}')"
+      >
+
+        ${escapeHtml(category)}
+
+      </button>
+
+    `).join("");
+
+}
+
+
+function selectCategory(category){
+
+  selectedCategory = category;
+
+  renderCategories();
+
+  renderProducts();
+
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+async function loadProducts(){
+
+  const grid =
+    document.getElementById("productsGrid");
+
+  if(grid){
+
+    grid.innerHTML = `
+      <div class="loading">
+        Chargement des articles...
+      </div>
+    `;
+
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("products")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+  if(error){
+
+    console.error(error);
+
+    if(grid){
+
+      grid.innerHTML = `
+        <div class="empty">
+          Impossible de charger les articles.
+        </div>
+      `;
+
+    }
+
+    return;
+  }
+
+
+  currentProducts =
+    data || [];
+
+
+  await disableExpiredSellers();
+
+  renderProducts();
+
+}
+
+
+function getProductImages(product){
+
+  const images = [];
+
+  if(product.image_url){
+    images.push(product.image_url);
+  }
+
+  if(product.image_url_2){
+    images.push(product.image_url_2);
+  }
+
+  if(product.image_url_3){
+    images.push(product.image_url_3);
+  }
+
+  if(product.image_url_4){
+    images.push(product.image_url_4);
+  }
+
+
+  if(
+    Array.isArray(product.images)
+  ){
+
+    product.images.forEach(img => {
+
+      if(
+        img &&
+        !images.includes(img)
+      ){
+
+        images.push(img);
+
+      }
+
+    });
+
+  }
+
+
+  return images;
+}
+
+
+function renderProducts(){
+
+  const grid =
+    document.getElementById("productsGrid");
+
+  if(!grid){
+    return;
+  }
+
+
+  let products =
+    [...currentProducts];
+
+
+  if(selectedCategory !== "Tous"){
+
+    products =
+      products.filter(product => {
+
+        return (
+          product.category ===
+          selectedCategory
+        );
+
+      });
+
+  }
+
+
+  const search =
+    (
+      document.getElementById(
+        "searchInput"
+      )?.value || ""
+    )
+      .trim()
+      .toLowerCase();
+
+
+  if(search){
+
+    products =
+      products.filter(product => {
+
+        return (
+
+          String(
+            product.name || ""
+          )
+          .toLowerCase()
+          .includes(search)
+
+          ||
+
+          String(
+            product.description || ""
+          )
+          .toLowerCase()
+          .includes(search)
+
+          ||
+
+          String(
+            product.category || ""
+          )
+          .toLowerCase()
+          .includes(search)
+
+        );
+
+      });
+
+  }
+
+
+  if(!products.length){
+
+    grid.innerHTML = `
+
+      <div
+        class="empty"
+        style="grid-column:1/-1"
+      >
+
+        Aucun article trouvé.
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  grid.innerHTML =
+    products.map(product => {
+
+      const images =
+        getProductImages(product);
+
+      const image =
+        images[0] ||
+        "https://via.placeholder.com/600x600?text=Produit";
+
+
+      return `
+
+        <article
+          class="product-card"
+          onclick="openProduct('${escapeHtml(product.id)}')"
+        >
+
+          <img
+            class="product-image"
+            src="${escapeHtml(image)}"
+            alt="${escapeHtml(product.name || "Produit")}"
+            loading="lazy"
+          >
+
+
+          <div class="product-info">
+
+            <div class="product-name">
+
+              ${escapeHtml(
+                product.name ||
+                "Article"
+              )}
+
+            </div>
+
+
+            <div class="product-price">
+
+              ${formatPrice(
+                product.price
+              )}
+
+            </div>
+
+
+            <div class="product-seller">
+
+              ${escapeHtml(
+                product.category ||
+                "Article"
+              )}
+
+            </div>
+
+          </div>
+
+        </article>
+
+      `;
+
+    }).join("");
+
+}
+
+
+function handleSearch(value){
+
+  renderProducts();
+
+}
+
+
+/* =========================================================
+   PRODUCT DETAIL
+========================================================= */
+
+function openProduct(productId){
+
+  const product =
+    currentProducts.find(
+      item =>
+        String(item.id) ===
+        String(productId)
+    );
+
+
+  if(!product){
+    return;
+  }
+
+
+  selectedProduct =
+    product;
+
+
+  currentProductImages =
+    getProductImages(product);
+
+
+  if(!currentProductImages.length){
+
+    currentProductImages = [
+      "https://via.placeholder.com/800x800?text=Produit"
+    ];
+
+  }
+
+
+  renderProductDetail();
+
+  showPage("productPage");
+
+}
+
+
+function renderProductDetail(){
+
+  const container =
+    document.getElementById(
+      "productDetail"
+    );
+
+  if(
+    !container ||
+    !selectedProduct
+  ){
+    return;
+  }
+
+
+  const product =
+    selectedProduct;
+
+
+  const images =
+    currentProductImages;
+
+
+  const mainImage =
+    images[0];
+
+
+  container.innerHTML = `
+
+    <div class="product-detail">
+
+      <img
+        id="mainProductImage"
+        class="product-main-image"
+        src="${escapeHtml(mainImage)}"
+        alt="${escapeHtml(product.name || "Produit")}"
+        onclick="openZoom('${escapeHtml(mainImage)}')"
+      >
+
+
+      <div class="product-thumbnails">
+
+        ${images.map(
+          (image,index) => `
+
+            <img
+              class="product-thumbnail ${
+                index === 0
+                ? "active"
+                : ""
+              }"
+              src="${escapeHtml(image)}"
+              onclick="changeMainProductImage(
+                '${escapeHtml(image)}',
+                this
+              )"
+              alt="Photo ${index + 1}"
+            >
+
+          `
+        ).join("")}
+
+      </div>
+
+
+      <div class="product-detail-content">
+
+        <h1>
+          ${escapeHtml(
+            product.name ||
+            "Article"
+          )}
+        </h1>
+
+
+        <div class="detail-price">
+
+          ${formatPrice(
+            product.price
+          )}
+
+        </div>
+
+
+        <div class="detail-description">
+
+          ${escapeHtml(
+            product.description ||
+            "Aucune description."
+          )}
+
+        </div>
+
+
+        <div class="seller-box">
+
+          <img
+            id="productSellerAvatar"
+            class="seller-avatar"
+            src="https://ui-avatars.com/api/?name=Vendeur&background=eeeeee&color=111111"
+            alt="Vendeur"
+          >
+
+          <div>
+
+            <strong>
+              ${escapeHtml(
+                product.seller_name ||
+                "Vendeur Zackary sh🛍️p"
+              )}
+            </strong>
+
+            <div
+              style="
+                font-size:12px;
+                color:#777;
+                margin-top:3px;
+              "
+            >
+              ${escapeHtml(
+                product.category ||
+                ""
+              )}
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="buy-button"
+          onclick="addToCart('${escapeHtml(product.id)}')"
+        >
+
+          🛒 Ajouter au panier
+
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  loadProductSeller(product);
+
+}
+
+
+async function loadProductSeller(product){
+
+  if(!product.seller_id){
+    return;
+  }
+
+
+  const {
+    data
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select(
+        "username,avatar_url,phone,whatsapp"
+      )
+      .eq(
+        "id",
+        product.seller_id
+      )
+      .maybeSingle();
+
+
+  if(!data){
+    return;
+  }
+
+
+  const avatar =
+    document.getElementById(
+      "productSellerAvatar"
+    );
+
+  if(avatar){
+
+    avatar.src =
+      getAvatarUrl(data);
+
+  }
+
+}
+
+
+function changeMainProductImage(
+  image,
+  element
+){
+
+  const main =
+    document.getElementById(
+      "mainProductImage"
+    );
+
+  if(main){
+
+    main.src =
+      image;
+
+    main.onclick =
+      () => openZoom(image);
+
+  }
+
+
+  document
+    .querySelectorAll(
+      ".product-thumbnail"
+    )
+    .forEach(
+      thumb =>
+        thumb.classList.remove(
+          "active"
+        )
+    );
+
+
+  element.classList.add("active");
+
+}
+
+
+/* =========================================================
+   ZOOM
+========================================================= */
+
+function openZoom(image){
+
+  const modal =
+    document.getElementById(
+      "zoomModal"
+    );
+
+  const img =
+    document.getElementById(
+      "zoomImage"
+    );
+
+
+  if(!modal || !img){
+    return;
+  }
+
+
+  img.src =
+    image;
+
+
+  modal.classList.add("active");
+
+}
+
+
+function closeZoom(event){
+
+  if(
+    event &&
+    event.target &&
+    event.target.id !==
+      "zoomModal"
+  ){
+
+    return;
+
+  }
+
+
+  document
+    .getElementById(
+      "zoomModal"
+    )
+    ?.classList.remove(
+      "active"
+    );
+
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+function saveCart(){
+
+  localStorage.setItem(
+    "zackary_cart",
+    JSON.stringify(cart)
+  );
+
+  updateCartBadge();
+
+}
+
+
+function addToCart(productId){
+
+  const product =
+    currentProducts.find(
+      item =>
+        String(item.id) ===
+        String(productId)
+    );
+
+
+  if(!product){
+    return;
+  }
+
+
+  const existing =
+    cart.find(
+      item =>
+        String(item.id) ===
+        String(product.id)
+    );
+
+
+  if(existing){
+
+    existing.quantity =
+      Number(
+        existing.quantity || 1
+      ) + 1;
+
+  }else{
+
+    cart.push({
+
+      id:product.id,
+
+      name:product.name,
+
+      price:Number(
+        product.price || 0
+      ),
+
+      image:
+        getProductImages(
+          product
+        )[0] || "",
+
+      quantity:1
+
+    });
+
+  }
+
+
+  saveCart();
+
+  renderCart();
+
+  showCartToast();
+
+}
+
+
+function removeFromCart(productId){
+
+  cart =
+    cart.filter(
+      item =>
+        String(item.id) !==
+        String(productId)
+    );
+
+
+  saveCart();
+
+  renderCart();
+
+}
+
+
+function clearCart(){
+
+  cart = [];
+
+  saveCart();
+
+  renderCart();
+
+}
+
+
+function updateCartBadge(){
+
+  const count =
+    cart.reduce(
+      (total,item) =>
+        total +
+        Number(
+          item.quantity || 1
+        ),
+      0
+    );
+
+
+  const badge =
+    document.getElementById(
+      "cartBadge"
+    );
+
+
+  if(!badge){
+    return;
+  }
+
+
+  if(count > 0){
+
+    badge.style.display =
+      "flex";
+
+    badge.textContent =
+      count > 99
+      ? "99+"
+      : count;
+
+  }else{
+
+    badge.style.display =
+      "none";
+
+  }
+
+
+  const text =
+    document.getElementById(
+      "cartCountText"
+    );
+
+
+  if(text){
+
+    text.textContent =
+      `${count} ${
+        count > 1
+        ? "articles"
+        : "article"
+      }`;
+
+  }
+
+}
+
+
+function openCart(){
+
+  renderCart();
+
+  showPage("cartPage");
+
+}
+
+
+function renderCart(){
+
+  const container =
+    document.getElementById(
+      "cartContent"
+    );
+
+  if(!container){
+    return;
+  }
+
+
+  updateCartBadge();
+
+
+  if(!cart.length){
+
+    container.innerHTML = `
+
+      <div class="cart-empty glass-card">
+
+        <div class="cart-icon-large">
+          🛒
+        </div>
+
+        <h3>
+          Ton panier est vide
+        </h3>
+
+        <p style="color:#777">
+          Ajoute des articles pour les retrouver ici.
+        </p>
+
+        <button
+          class="primary-button"
+          onclick="showPage('homePage')"
+        >
+          Découvrir la boutique
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  let total = 0;
+
+
+  const items =
+    cart.map(item => {
+
+      const quantity =
+        Number(
+          item.quantity || 1
+        );
+
+
+      const subtotal =
+        Number(item.price || 0) *
+        quantity;
+
+
+      total += subtotal;
+
+
+      return `
+
+        <div class="cart-item glass-card">
+
+          <img
+            class="cart-item-image"
+            src="${escapeHtml(item.image)}"
+            alt="${escapeHtml(item.name)}"
+          >
+
+          <div class="cart-item-info">
+
+            <div class="cart-item-name">
+              ${escapeHtml(item.name)}
+            </div>
+
+            <div
+              style="
+                color:#777;
+                font-size:12px;
+                margin-top:3px;
+              "
+            >
+              Quantité : ${quantity}
+            </div>
+
+            <div class="cart-item-price">
+              ${formatPrice(subtotal)}
+            </div>
+
+          </div>
+
+
+          <button
+            class="cart-remove"
+            onclick="removeFromCart('${escapeHtml(item.id)}')"
+          >
+            ×
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+
+  container.innerHTML = `
+
+    ${items}
+
+
+    <div class="cart-total glass-card">
+
+      <strong>
+        Total
+      </strong>
+
+      <strong>
+        ${formatPrice(total)}
+      </strong>
+
+    </div>
+
+
+    <button
+      class="cart-checkout"
+      onclick="checkoutCart()"
+    >
+
+      Commander
+
+    </button>
+
+
+    <button
+      class="secondary-button"
+      style="
+        width:100%;
+        margin-top:9px;
+      "
+      onclick="clearCart()"
+    >
+
+      Vider le panier
+
+    </button>
+
+  `;
+
+}
+
+
+function showCartToast(){
+
+  const toast =
+    document.createElement(
+      "div"
+    );
+
+
+  toast.textContent =
+    "✓ Article ajouté au panier";
+
+
+  toast.style.cssText = `
+
+    position:fixed;
+    left:50%;
+    bottom:105px;
+    transform:translateX(-50%);
+    z-index:9999;
+
+    padding:12px 18px;
+
+    border-radius:999px;
+
+    background:rgba(20,20,20,.88);
+    color:white;
+
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+
+    font-size:13px;
+    font-weight:600;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+
+    animation:pageIn .25s ease;
+
+  `;
+
+
+  document.body.appendChild(toast);
+
+
+  setTimeout(() => {
+
+    toast.remove();
+
+  },1800);
+
+}
+
+
+function checkoutCart(){
+
+  if(!currentUser){
+
+    alert(
+      "Connecte-toi à ton compte pour continuer la commande."
+    );
+
+    showPage("accountPage");
+
+    return;
+  }
+
+
+  alert(
+    "Le panier est prêt. Le système de paiement/commande peut être connecté ensuite."
+  );
+
+}
+
+
+/* =========================================================
+   ACCOUNT
+========================================================= */
+
+async function renderAccount(){
+
+  const container =
+    document.getElementById(
+      "accountContent"
+    );
+
+  if(!container){
+    return;
+  }
+
+
+  if(!currentUser){
+
+    renderLoggedOutAccount();
+
+    return;
+
+  }
+
+
+  const profile =
+    currentProfile || {};
+
+
+  container.innerHTML = `
+
+    <div class="account-card glass-card">
+
+      <div class="profile-center">
+
+        <img
+          id="profileAvatar"
+          class="profile-large-avatar"
+          src="${escapeHtml(
+            getAvatarUrl(profile)
+          )}"
+          alt="Photo de profil"
+        >
+
+
+        <br>
+
+
+        <label class="profile-upload">
+
+          📷 Modifier la photo
+
+          <input
+            type="file"
+            accept="image/*"
+            onchange="uploadAvatar(this.files[0])"
+          >
+
+        </label>
+
+
+        <h2>
+          ${escapeHtml(
+            profile.username ||
+            "Utilisateur"
+          )}
+        </h2>
+
+
+        <p style="color:#777">
+          ${escapeHtml(
+            profile.role ||
+            "client"
+          )}
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="account-card glass-card">
+
+      <div class="form-group">
+
+        <label>
+          Nom d'utilisateur
+        </label>
+
+        <input
+          id="profileUsername"
+          class="form-control"
+          value="${escapeHtml(
+            profile.username || ""
+          )}"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Téléphone / WhatsApp
+        </label>
+
+        <input
+          id="profilePhone"
+          class="form-control"
+          value="${escapeHtml(
+            profile.phone || ""
+          )}"
+        >
+
+      </div>
+
+
+      <button
+        class="primary-button"
+        onclick="saveProfile()"
+      >
+
+        Enregistrer
+
+      </button>
+
+    </div>
+
+
+    <button
+      class="danger-button"
+      style="
+        width:100%;
+        padding:14px;
+      "
+      onclick="logout()"
+    >
+
+      Se déconnecter
+
+    </button>
+
+  `;
+
+}
+
+
+function renderLoggedOutAccount(){
+
+  const container =
+    document.getElementById(
+      "accountContent"
+    );
+
+  if(!container){
+    return;
+  }
+
+
+  container.innerHTML = `
+
+    <div class="auth-form glass-card">
+
+      <div class="auth-tabs">
+
+        <button
+          id="loginTab"
+          class="auth-tab active"
+          onclick="showLoginForm()"
+        >
+          Connexion
+        </button>
+
+        <button
+          id="registerTab"
+          class="auth-tab"
+          onclick="showRegisterForm()"
+        >
+          Inscription
+        </button>
+
+      </div>
+
+
+      <div id="authFormContent"></div>
+
+    </div>
+
+  `;
+
+
+  showLoginForm();
+
+}
+
+
+function showLoginForm(){
+
+  document
+    .getElementById("loginTab")
+    ?.classList.add("active");
+
+  document
+    .getElementById("registerTab")
+    ?.classList.remove("active");
+
+
+  const content =
+    document.getElementById(
+      "authFormContent"
+    );
+
+
+  if(!content){
+    return;
+  }
+
+
+  content.innerHTML = `
+
+    <div class="form-group">
+
+      <label>
+        Email
+      </label>
+
+      <input
+        id="loginEmail"
+        class="form-control"
+        type="email"
+        placeholder="email@example.com"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>
+        Mot de passe
+      </label>
+
+      <input
+        id="loginPassword"
+        class="form-control"
+        type="password"
+        placeholder="••••••••"
+      >
+
+    </div>
+
+
+    <button
+      class="primary-button"
+      onclick="login()"
+    >
+
+      Se connecter
+
+    </button>
+
+  `;
+
+}
+
+
+function showRegisterForm(){
+
+  document
+    .getElementById("loginTab")
+    ?.classList.remove("active");
+
+  document
+    .getElementById("registerTab")
+    ?.classList.add("active");
+
+
+  const content =
+    document.getElementById(
+      "authFormContent"
+    );
+
+
+  if(!content){
+    return;
+  }
+
+
+  content.innerHTML = `
+
+    <div class="form-group">
+
+      <label>
+        Nom d'utilisateur
+      </label>
+
+      <input
+        id="registerUsername"
+        class="form-control"
+        placeholder="Votre nom"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>
+        Email
+      </label>
+
+      <input
+        id="registerEmail"
+        class="form-control"
+        type="email"
+        placeholder="email@example.com"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>
+        Mot de passe
+      </label>
+
+      <input
+        id="registerPassword"
+        class="form-control"
+        type="password"
+        placeholder="Minimum 6 caractères"
+      >
+
+    </div>
+
+
+    <button
+      class="primary-button"
+      onclick="register()"
+    >
+
+      Créer mon compte
+
+    </button>
+
+  `;
+
+}
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+async function login(){
+
+  const email =
+    document.getElementById(
+      "loginEmail"
+    )?.value.trim();
+
+  const password =
+    document.getElementById(
+      "loginPassword"
+    )?.value;
+
+
+  if(!email || !password){
+
+    alert(
+      "Remplis tous les champs."
+    );
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient.auth.signInWithPassword({
+
+      email,
+      password
+
+    });
+
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  await checkUser();
+
+  showPage("homePage");
+
+}
+
+
+async function register(){
+
+  const username =
+    document.getElementById(
+      "registerUsername"
+    )?.value.trim();
+
+  const email =
+    document.getElementById(
+      "registerEmail"
+    )?.value.trim();
+
+  const password =
+    document.getElementById(
+      "registerPassword"
+    )?.value;
+
+
+  if(
+    !username ||
+    !email ||
+    !password
+  ){
+
+    alert(
+      "Remplis tous les champs."
+    );
+
+    return;
+
+  }
+
+
+  if(password.length < 6){
+
+    alert(
+      "Le mot de passe doit contenir au moins 6 caractères."
+    );
+
+    return;
+
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.signUp({
+
+      email,
+      password
+
+    });
+
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  if(data.user){
+
+    await supabaseClient
+      .from("profiles")
+      .upsert({
+
+        id:data.user.id,
+
+        username,
+
+        role:"client"
+
+      });
+
+  }
+
+
+  alert(
+    "Compte créé avec succès."
+  );
+
+
+  await checkUser();
+
+  showPage("homePage");
+
+}
+
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  currentUser = null;
+
+  currentProfile = null;
+
+  renderDashboard();
+
+  renderLoggedOutAccount();
+
+  updateHeaderAvatar();
+
+  showPage("homePage");
+
+}
+
+
+/* =========================================================
+   USER
+========================================================= */
+
+async function checkUser(){
+
+  const {
+    data
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  currentUser =
+    data?.user || null;
+
+
+  if(currentUser){
+
+    const {
+      data:profile
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq(
+          "id",
+          currentUser.id
+        )
+        .maybeSingle();
+
+
+    currentProfile =
+      profile || null;
+
+
+    if(
+      currentProfile &&
+      currentProfile.role ===
+      "seller"
+    ){
+
+      await checkSellerExpiration();
+
+    }
+
+  }else{
+
+    currentProfile = null;
+
+  }
+
+
+  renderDashboard();
+
+  renderAccount();
+
+  updateHeaderAvatar();
+
+  updateCartBadge();
+
+}
+
+
+function updateHeaderAvatar(){
+
+  const avatar =
+    document.getElementById(
+      "headerAvatar"
+    );
+
+  if(!avatar){
+    return;
+  }
+
+
+  if(currentProfile){
+
+    avatar.src =
+      getAvatarUrl(
+        currentProfile
+      );
+
+  }else{
+
+    avatar.src =
+      "https://ui-avatars.com/api/?name=User&background=eeeeee&color=111111";
+
+  }
+
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+async function saveProfile(){
+
+  if(!currentUser){
+    return;
+  }
+
+
+  const username =
+    document.getElementById(
+      "profileUsername"
+    )?.value.trim();
+
+  const phone =
+    document.getElementById(
+      "profilePhone"
+    )?.value.trim();
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .update({
+
+        username,
+
+        phone
+
+      })
+      .eq(
+        "id",
+        currentUser.id
+      );
+
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  currentProfile = {
+
+    ...currentProfile,
+
+    username,
+
+    phone
+
+  };
+
+
+  renderDashboard();
+
+  renderAccount();
+
+  updateHeaderAvatar();
+
+
+  alert(
+    "Profil enregistré."
+  );
+
+}
+
+
+/* =========================================================
+   AVATAR
+========================================================= */
+
+async function uploadAvatar(file){
+
+  if(!currentUser){
+
+    alert(
+      "Connecte-toi d'abord."
+    );
+
+    return;
+
+  }
+
+
+  if(!file){
+    return;
+  }
+
+
+  if(
+    !file.type.startsWith("image/")
+  ){
+
+    alert(
+      "Sélectionne une image."
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    const path =
+      `${currentUser.id}/avatar.jpg`;
+
+
+    const {
+      error:uploadError
+    } =
+      await supabaseClient
+        .storage
+        .from("avatars")
+        .upload(
+          path,
+          file,
+          {
+            cacheControl:"3600",
+            upsert:true,
+            contentType:file.type
+          }
+        );
+
+
+    if(uploadError){
+
+      alert(
+        uploadError.message
+      );
+
+      return;
+
+    }
+
+
+    const {
+      data:publicData
+    } =
+      supabaseClient
+        .storage
+        .from("avatars")
+        .getPublicUrl(
+          path
+        );
+
+
+    const avatarUrl =
+      publicData.publicUrl +
+      "?v=" +
+      Date.now();
+
+
+    const {
+      error:profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .update({
+
+          avatar_url:
+            avatarUrl
+
+        })
+        .eq(
+          "id",
+          currentUser.id
+        );
+
+
+    if(profileError){
+
+      alert(
+        profileError.message
+      );
+
+      return;
+
+    }
+
+
+    currentProfile = {
+
+      ...currentProfile,
+
+      avatar_url:
+        avatarUrl
+
+    };
+
+
+    renderDashboard();
+
+    renderAccount();
+
+    updateHeaderAvatar();
+
+
+    alert(
+      "Photo de profil enregistrée."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Erreur pendant l'envoi de la photo."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SELLER
+========================================================= */
+
+async function showSellPage(){
+
+  if(!currentUser){
+
+    alert(
+      "Connecte-toi pour accéder à cet espace."
+    );
+
+    showPage("accountPage");
+
+    return;
+
+  }
+
+
+  if(
+    currentProfile?.role !== "seller" &&
+    currentProfile?.role !== "creator_admin"
+  ){
+
+    alert(
+      "Cet espace est réservé aux vendeurs."
+    );
+
+    return;
+
+  }
+
+
+  await renderSellerPage();
+
+  showPage("sellPage");
+
+}
+
+
+async function renderSellerPage(){
+
+  const container =
+    document.getElementById(
+      "sellerContent"
+    );
+
+  if(!container){
+    return;
+  }
+
+
+  const isAdmin =
+    currentProfile?.role ===
+    "creator_admin";
+
+
+  let productsQuery =
+    supabaseClient
+      .from("products")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+  if(!isAdmin){
+
+    productsQuery =
+      productsQuery.eq(
+        "seller_id",
+        currentUser.id
+      );
+
+  }
+
+
+  const {
+    data:products
+  } =
+    await productsQuery;
+
+
+  const myProducts =
+    products || [];
+
+
+  container.innerHTML = `
+
+    <div class="seller-section glass-card">
+
+      <h3>
+        Publier un article
+      </h3>
+
+
+      <div class="form-group">
+
+        <label>
+          Nom du produit
+        </label>
+
+        <input
+          id="productName"
+          class="form-control"
+          placeholder="Ex : T-shirt Oversize"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Prix XAF
+        </label>
+
+        <input
+          id="productPrice"
+          class="form-control"
+          type="number"
+          placeholder="15000"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Catégorie
+        </label>
+
+        <select
+          id="productCategory"
+          class="form-control"
+        >
+
+          ${categoriesList
+            .filter(
+              category =>
+                category !== "Tous"
+            )
+            .map(
+              category => `
+                <option>
+                  ${escapeHtml(category)}
+                </option>
+              `
+            )
+            .join("")}
+
+        </select>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Description
+        </label>
+
+        <textarea
+          id="productDescription"
+          class="form-control"
+          placeholder="Décris ton article..."
+        ></textarea>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Photos — jusqu'à 4
+        </label>
+
+        <input
+          id="productImages"
+          class="form-control"
+          type="file"
+          accept="image/*"
+          multiple
+        >
+
+      </div>
+
+
+      <button
+        class="primary-button"
+        onclick="publishProduct()"
+      >
+
+        Publier l'article
+
+      </button>
+
+    </div>
+
+
+    <div class="seller-section glass-card">
+
+      <h3>
+        ${isAdmin
+          ? "Tous les articles"
+          : "Mes articles"}
+      </h3>
+
+
+      <div id="sellerProductsList">
+
+        ${
+          myProducts.length
+          ? myProducts.map(
+              product =>
+                renderSellerProduct(
+                  product
+                )
+            ).join("")
+          : `
+            <div class="empty">
+              Aucun article.
+            </div>
+          `
+        }
+
+      </div>
+
+    </div>
+
+
+    <div class="seller-section glass-card">
+
+      <h3>
+        Mes ventes
+      </h3>
+
+      <div id="sellerSales">
+        Chargement...
+      </div>
+
+    </div>
+
+  `;
+
+
+  await renderSellerSales();
+
+}
+
+
+function renderSellerProduct(product){
+
+  const images =
+    getProductImages(product);
+
+
+  const image =
+    images[0] ||
+    "https://via.placeholder.com/300";
+
+
+  return `
+
+    <div class="seller-product glass-card">
+
+      <img
+        src="${escapeHtml(image)}"
+        alt="${escapeHtml(product.name)}"
+      >
+
+
+      <div class="seller-product-info">
+
+        <strong>
+          ${escapeHtml(
+            product.name ||
+            "Article"
+          )}
+        </strong>
+
+        <div
+          style="
+            color:#777;
+            font-size:12px;
+            margin-top:3px;
+          "
+        >
+
+          ${formatPrice(
+            product.price
+          )}
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="danger-button"
+        onclick="deleteProduct('${escapeHtml(product.id)}')"
+      >
+
+        Supprimer
+
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   PUBLISH PRODUCT
+========================================================= */
+
+async function publishProduct(){
+
+  if(!currentUser){
+    return;
+  }
+
+
+  const name =
+    document.getElementById(
+      "productName"
+    )?.value.trim();
+
+  const price =
+    Number(
+      document.getElementById(
+        "productPrice"
+      )?.value
+    );
+
+  const category =
+    document.getElementById(
+      "productCategory"
+    )?.value;
+
+  const description =
+    document.getElementById(
+      "productDescription"
+    )?.value.trim();
+
+
+  const files =
+    Array.from(
+      document.getElementById(
+        "productImages"
+      )?.files || []
+    );
+
+
+  if(
+    !name ||
+    !price ||
+    !category
+  ){
+
+    alert(
+      "Remplis les informations principales."
+    );
+
+    return;
+
+  }
+
+
+  if(files.length > 4){
+
+    alert(
+      "Maximum 4 photos."
+    );
+
+    return;
+
+  }
+
+
+  const uploadedImages = [];
+
+
+  for(
+    let i = 0;
+    i < files.length;
+    i++
+  ){
+
+    const file =
+      files[i];
+
+
+    const extension =
+      file.name
+        .split(".")
+        .pop()
+        .toLowerCase();
+
+
+    const path =
+      `${currentUser.id}/${Date.now()}-${i}.${extension}`;
+
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .storage
+        .from("product-images")
+        .upload(
+          path,
+          file,
+          {
+            upsert:false,
+            contentType:file.type
+          }
+        );
+
+
+    if(error){
+
+      alert(
+        error.message
+      );
+
+      return;
+
+    }
+
+
+    const {
+      data
+    } =
+      supabaseClient
+        .storage
+        .from("product-images")
+        .getPublicUrl(
+          path
+        );
+
+
+    uploadedImages.push(
+      data.publicUrl
+    );
+
+  }
+
+
+  const productData = {
+
+    seller_id:
+      currentUser.id,
+
+    seller_name:
+      currentProfile?.username ||
+      "Vendeur",
+
+    name,
+
+    price,
+
+    category,
+
+    description
+
+  };
+
+
+  if(uploadedImages[0]){
+    productData.image_url =
+      uploadedImages[0];
+  }
+
+  if(uploadedImages[1]){
+    productData.image_url_2 =
+      uploadedImages[1];
+  }
+
+  if(uploadedImages[2]){
+    productData.image_url_3 =
+      uploadedImages[2];
+  }
+
+  if(uploadedImages[3]){
+    productData.image_url_4 =
+      uploadedImages[3];
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("products")
+      .insert(
+        productData
+      );
+
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  alert(
+    "Article publié avec succès."
+  );
+
+
+  await loadProducts();
+
+  await renderSellerPage();
+
+}
+
+
+/* =========================================================
+   DELETE PRODUCT
+========================================================= */
+
+async function deleteProduct(productId){
+
+  if(!currentUser){
+    return;
+  }
+
+
+  const confirmed =
+    confirm(
+      "Supprimer définitivement cet article ?"
+    );
+
+
+  if(!confirmed){
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("products")
+      .delete()
+      .eq(
+        "id",
+        productId
+      );
+
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  await loadProducts();
+
+  await renderSellerPage();
+
+}
+
+
+/* =========================================================
+   SELLER SALES
+========================================================= */
+
+async function renderSellerSales(){
+
+  const container =
+    document.getElementById(
+      "sellerSales"
+    );
+
+  if(!container){
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("sales")
+      .select("*")
+      .eq(
+        "seller_id",
+        currentUser.id
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+  if(error){
+
+    container.innerHTML = `
+      <div class="empty">
+        Impossible de charger les ventes.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  if(!data?.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        Aucune vente pour le moment.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    data.map(
+      sale => `
+
+        <div class="sales-card glass-card">
+
+          <strong>
+            ${escapeHtml(
+              sale.product_name ||
+              "Vente"
+            )}
+          </strong>
+
+          <div
+            style="
+              color:#777;
+              margin-top:5px;
+              font-size:13px;
+            "
+          >
+
+            ${formatPrice(
+              sale.amount ||
+              sale.price ||
+              0
+            )}
+
+          </div>
+
+        </div>
+
+      `
+    ).join("");
+
+}
+
+
+/* =========================================================
+   SELLER EXPIRATION
+========================================================= */
+
+async function checkSellerExpiration(){
+
+  if(
+    !currentUser ||
+    !currentProfile ||
+    currentProfile.role !== "seller"
+  ){
+
+    return;
+
+  }
+
+
+  if(
+    !currentProfile.seller_expires_at
+  ){
+
+    return;
+
+  }
+
+
+  const expiration =
+    new Date(
+      currentProfile.seller_expires_at
+    );
+
+
+  if(
+    expiration <= new Date()
+  ){
+
+    await supabaseClient.rpc(
+      "disable_expired_sellers"
+    );
+
+
+    await checkUser();
+
+  }
+
+}
+
+
+async function disableExpiredSellers(){
+
+  try{
+
+    await supabaseClient.rpc(
+      "disable_expired_sellers"
+    );
+
+  }catch(error){
+
+    console.log(
+      "Expiration check:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+function showAdminPage(){
+
+  if(
+    currentProfile?.role !==
+    "creator_admin"
+  ){
+
+    alert(
+      "Accès administrateur uniquement."
+    );
+
+    return;
+
+  }
+
+
+  renderAdminPanel();
+
+  showPage("adminPage");
+
+}
+
+
+async function renderAdminPanel(){
+
+  if(
+    currentProfile?.role !==
+    "creator_admin"
+  ){
+
+    return;
+
+  }
+
+
+  const container =
+    document.getElementById(
+      "adminContent"
+    );
+
+  if(!container){
+    return;
+  }
+
+
+  container.innerHTML = `
+
+    <div class="admin-card glass-card">
+
+      <h3>
+        Gestion des vendeurs
+      </h3>
+
+      <div id="adminSellers">
+        Chargement...
+      </div>
+
+    </div>
+
+
+    <div class="admin-card glass-card">
+
+      <h3>
+        Ventes globales
+      </h3>
+
+      <div id="globalSales">
+        Chargement...
+      </div>
+
+    </div>
+
+  `;
+
+
+  await renderAdminSellers();
+
+  await renderGlobalSales();
+
+}
+
+
+async function renderAdminSellers(){
+
+  const container =
+    document.getElementById(
+      "adminSellers"
+    );
+
+  if(!container){
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq(
+        "role",
+        "seller"
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+  if(error){
+
+    container.innerHTML = `
+      <div class="empty">
+        ${escapeHtml(error.message)}
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  if(!data?.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        Aucun vendeur.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    data.map(
+      seller => {
+
+        const active =
+          seller.seller_expires_at &&
+          new Date(
+            seller.seller_expires_at
+          ) > new Date();
+
+
+        return `
+
+          <div class="admin-seller">
+
+            <div
+              style="
+                display:flex;
+                align-items:center;
+                gap:10px;
+              "
+            >
+
+              <img
+                class="seller-avatar"
+                src="${escapeHtml(
+                  getAvatarUrl(seller)
+                )}"
+                alt="Vendeur"
+              >
+
+              <div>
+
+                <strong>
+                  ${escapeHtml(
+                    seller.username ||
+                    "Vendeur"
+                  )}
+                </strong>
+
+                <div
+                  style="
+                    font-size:12px;
+                    color:#777;
+                    margin-top:3px;
+                  "
+                >
+
+                  ${
+                    active
+                    ? "Actif"
+                    : "Inactif"
+                  }
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-actions">
+
+              <button
+                class="secondary-button"
+                onclick="activateSeller('${escapeHtml(seller.id)}')"
+              >
+
+                +30 jours
+
+              </button>
+
+
+              <button
+                class="danger-button"
+                onclick="disableSeller('${escapeHtml(seller.id)}')"
+              >
+
+                Désactiver
+
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+async function activateSeller(userId){
+
+  const {
+    error
+  } =
+    await supabaseClient.rpc(
+      "creator_activate_seller",
+      {
+        seller_id:userId
+      }
+    );
+
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  alert(
+    "Vendeur activé pour 30 jours."
+  );
+
+
+  await renderAdminPanel();
+
+}
+
+
+async function disableSeller(userId){
+
+  const {
+    error
+  } =
+    await supabaseClient.rpc(
+      "creator_disable_seller",
+      {
+        seller_id:userId
+      }
+    );
+
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  alert(
+    "Vendeur désactivé."
+  );
+
+
+  await renderAdminPanel();
+
+}
+
+
+async function renderGlobalSales(){
+
+  const container =
+    document.getElementById(
+      "globalSales"
+    );
+
+  if(!container){
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("sales")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+  if(error){
+
+    container.innerHTML = `
+      <div class="empty">
+        Impossible de charger les ventes.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  if(!data?.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        Aucune vente enregistrée.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  let total = 0;
+
+
+  data.forEach(
+    sale => {
+
+      total += Number(
+        sale.amount ||
+        sale.price ||
+        0
+      );
+
+    }
+  );
+
+
+  container.innerHTML = `
+
+    <div
+      class="sales-card glass-card"
+      style="
+        margin-bottom:12px;
+      "
+    >
+
+      <strong>
+        Chiffre d'affaires total
+      </strong>
+
+      <div
+        style="
+          font-size:22px;
+          font-weight:800;
+          margin-top:5px;
+        "
+      >
+
+        ${formatPrice(total)}
+
+      </div>
+
+    </div>
+
+
+    ${data.map(
+      sale => `
+
+        <div class="sales-card glass-card">
+
+          <strong>
+            ${escapeHtml(
+              sale.product_name ||
+              "Vente"
+            )}
+          </strong>
+
+          <div
+            style="
+              color:#777;
+              font-size:12px;
+              margin-top:4px;
+            "
+          >
+
+            ${formatPrice(
+              sale.amount ||
+              sale.price ||
+              0
+            )}
+
+          </div>
+
+        </div>
+
+      `
+    ).join("")}
+
+  `;
+
+}
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+  async (event, session) => {
+
+    currentUser =
+      session?.user || null;
+
+
+    setTimeout(
+      async () => {
+
+        await checkUser();
+
+      },
+      0
+    );
+
+  }
+);
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+async function initialize(){
+
+  renderCategories();
+
+  updateCartBadge();
+
+  await checkUser();
+
+  await loadProducts();
+
+  renderCart();
+
+}
+
+
+/* =========================================================
+   PERIODIC SELLER CHECK
+========================================================= */
+
+setInterval(
+  async () => {
+
+    if(currentUser){
+
+      await checkSellerExpiration();
+
+    }
+
+  },
+  60000
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+initialize();
+
+</script>
+
+</body>
+</html>
