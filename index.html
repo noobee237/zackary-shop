@@ -111,11 +111,12 @@ header p{
   border-radius:15px;
   overflow:hidden;
   box-shadow:0 2px 8px rgba(0,0,0,.08);
+  cursor:pointer;
 }
 
 .product img{
   width:100%;
-  height:170px;
+  height:190px;
   object-fit:cover;
   background:#eee;
 }
@@ -209,6 +210,16 @@ header p{
   margin-top:10px;
 }
 
+.delete-btn{
+  width:100%;
+  border:0;
+  background:#d00;
+  color:white;
+  padding:10px;
+  border-radius:9px;
+  margin-top:8px;
+}
+
 .hidden{
   display:none!important;
 }
@@ -257,11 +268,181 @@ footer{
   margin-bottom:3px;
 }
 
+/* =========================
+FICHE PRODUIT
+========================= */
+
+.product-page{
+  margin:20px 15px;
+  background:white;
+  border-radius:18px;
+  padding:15px;
+}
+
+.back-btn{
+  border:0;
+  background:#eee;
+  padding:10px 14px;
+  border-radius:10px;
+  margin-bottom:15px;
+}
+
+.main-image{
+  width:100%;
+  height:350px;
+  object-fit:contain;
+  background:#f1f1f1;
+  border-radius:15px;
+  cursor:zoom-in;
+}
+
+.thumbnails{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  margin-top:10px;
+}
+
+.thumbnail{
+  width:70px;
+  height:70px;
+  object-fit:cover;
+  border-radius:10px;
+  border:2px solid transparent;
+  cursor:pointer;
+}
+
+.thumbnail.active{
+  border-color:#111;
+}
+
+.product-detail-title{
+  font-size:24px;
+  margin-top:18px;
+}
+
+.product-detail-price{
+  font-size:21px;
+  font-weight:bold;
+  margin:10px 0;
+}
+
+.product-description{
+  color:#555;
+  line-height:1.5;
+  margin:12px 0;
+}
+
+.seller-profile{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 0;
+  border-top:1px solid #eee;
+  border-bottom:1px solid #eee;
+  margin:15px 0;
+}
+
+.avatar{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#eee;
+}
+
+.avatar-large{
+  width:80px;
+  height:80px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#eee;
+}
+
+.order-large{
+  width:100%;
+  border:0;
+  background:#111;
+  color:white;
+  padding:14px;
+  border-radius:11px;
+  font-weight:bold;
+  font-size:16px;
+}
+
+/* =========================
+ZOOM
+========================= */
+
+.zoom-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.94);
+  z-index:20000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+}
+
+.zoom-modal img{
+  max-width:100%;
+  max-height:90vh;
+  object-fit:contain;
+  cursor:zoom-out;
+}
+
+.close-zoom{
+  position:absolute;
+  top:20px;
+  right:20px;
+  background:white;
+  border:0;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  font-size:22px;
+}
+
+.profile{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.profile input[type="file"]{
+  margin-top:10px;
+}
+
+.my-product{
+  padding:12px 0;
+  border-bottom:1px solid #ddd;
+}
+
+.my-product-image{
+  width:70px;
+  height:70px;
+  object-fit:cover;
+  border-radius:10px;
+  float:left;
+  margin-right:10px;
+}
+
+.clear{
+  clear:both;
+}
+
 @media(max-width:500px){
+
   .products{
     grid-template-columns:repeat(2,1fr);
   }
+
+  .main-image{
+    height:320px;
+  }
+
 }
+
 </style>
 </head>
 
@@ -286,50 +467,151 @@ footer{
 <!-- CATEGORIES -->
 
 <div class="categories">
-  <button class="active" onclick="category('Tous',this)">Tous</button>
-  <button onclick="category('T-shirts',this)">T-shirts</button>
-  <button onclick="category('Ensembles/Jogging',this)">Ensembles</button>
-  <button onclick="category('Pantalons',this)">Pantalons</button>
-  <button onclick="category('Vestes',this)">Vestes</button>
-  <button onclick="category('Chaussures',this)">Chaussures</button>
-  <button onclick="category('Accessoires',this)">Accessoires</button>
+
+  <button
+    class="active"
+    onclick="category('Tous',this)"
+  >
+    Tous
+  </button>
+
+  <button onclick="category('T-shirts',this)">
+    T-shirts
+  </button>
+
+  <button onclick="category('Ensembles/Jogging',this)">
+    Ensembles
+  </button>
+
+  <button onclick="category('Pantalons',this)">
+    Pantalons
+  </button>
+
+  <button onclick="category('Vestes',this)">
+    Vestes
+  </button>
+
+  <button onclick="category('Chaussures',this)">
+    Chaussures
+  </button>
+
+  <button onclick="category('Accessoires',this)">
+    Accessoires
+  </button>
+
 </div>
+
 
 <!-- ACCUEIL -->
 
 <section id="home">
 
   <div class="hero">
+
     <h2>Bienvenue 👋</h2>
+
     <p>
       Découvre les vêtements disponibles sur
       Zackary sh🛍️p.
       Livraison possible à Byemassi et environs.
     </p>
+
   </div>
 
 </section>
 
+
 <!-- BOUTIQUE -->
 
-<section class="section" id="shop">
+<section
+  class="section"
+  id="shop"
+>
 
   <div class="section-title">
+
     <h2>🛍️ Boutique</h2>
+
     <small id="count"></small>
+
   </div>
 
-  <div class="products" id="products">
+  <div
+    class="products"
+    id="products"
+  >
     <p>Chargement...</p>
   </div>
 
 </section>
 
+
+<!-- FICHE PRODUIT -->
+
+<section
+  class="product-page hidden"
+  id="productPage"
+>
+
+  <button
+    class="back-btn"
+    onclick="showPage('shop')"
+  >
+    ← Retour à la boutique
+  </button>
+
+  <img
+    id="detailMainImage"
+    class="main-image"
+    onclick="openZoom()"
+  >
+
+  <div
+    class="thumbnails"
+    id="detailThumbnails"
+  ></div>
+
+  <h1
+    id="detailName"
+    class="product-detail-title"
+  ></h1>
+
+  <div
+    id="detailPrice"
+    class="product-detail-price"
+  ></div>
+
+  <div
+    id="detailSizes"
+    class="sizes"
+  ></div>
+
+  <p
+    id="detailDescription"
+    class="product-description"
+  ></p>
+
+  <div
+    id="detailSeller"
+    class="seller-profile"
+  ></div>
+
+  <button
+    class="order-large"
+    onclick="orderCurrentProduct()"
+  >
+    Commander sur WhatsApp
+  </button>
+
+</section>
+
+
 <!-- COMPTE -->
 
-<section class="account hidden" id="account">
-
-  <!-- CONNEXION -->
+<section
+  class="account hidden"
+  id="account"
+>
 
   <div id="loginBox">
 
@@ -365,28 +647,60 @@ footer{
       Créer un compte
     </button>
 
-    <p class="message" id="authMessage"></p>
+    <p
+      class="message"
+      id="authMessage"
+    ></p>
 
   </div>
 
 
-  <!-- COMPTE CONNECTÉ -->
+  <!-- PROFIL -->
 
-  <div id="profileBox" class="hidden">
+  <div
+    id="profileBox"
+    class="hidden"
+  >
 
-    <h2>👤 Mon profil</h2>
+    <div class="profile">
 
-    <p style="margin-top:10px;">
-      Connecté avec :
-    </p>
+      <img
+        id="profileAvatar"
+        class="avatar-large"
+        src="https://via.placeholder.com/150"
+      >
 
-    <strong id="userEmail"></strong>
+      <h2 style="margin-top:10px;">
+        👤 Mon profil
+      </h2>
 
-    <br><br>
+      <p
+        id="userEmail"
+        style="color:#666;margin-top:5px;"
+      ></p>
 
-    <p>
-      🛍️ Mes articles
-    </p>
+      <input
+        type="file"
+        id="profileImage"
+        accept="image/*"
+      >
+
+      <button
+        class="account-btn"
+        onclick="updateProfilePhoto()"
+      >
+        Mettre à jour ma photo
+      </button>
+
+      <p
+        class="message"
+        id="profileMessage"
+      ></p>
+
+    </div>
+
+
+    <h3>🛍️ Mes articles</h3>
 
     <div id="myProducts">
       Aucun article publié.
@@ -406,7 +720,10 @@ footer{
 
 <!-- VENDRE -->
 
-<section class="seller hidden" id="sell">
+<section
+  class="seller hidden"
+  id="sell"
+>
 
   <h2>➕ Vendre un article</h2>
 
@@ -422,13 +739,35 @@ footer{
   >
 
   <select id="categorySelect">
-    <option value="">Choisir une catégorie</option>
-    <option>T-shirts</option>
-    <option>Ensembles/Jogging</option>
-    <option>Pantalons</option>
-    <option>Vestes</option>
-    <option>Chaussures</option>
-    <option>Accessoires</option>
+
+    <option value="">
+      Choisir une catégorie
+    </option>
+
+    <option>
+      T-shirts
+    </option>
+
+    <option>
+      Ensembles/Jogging
+    </option>
+
+    <option>
+      Pantalons
+    </option>
+
+    <option>
+      Vestes
+    </option>
+
+    <option>
+      Chaussures
+    </option>
+
+    <option>
+      Accessoires
+    </option>
+
   </select>
 
   <textarea
@@ -437,9 +776,11 @@ footer{
     placeholder="Description"
   ></textarea>
 
+
   <p style="margin-top:8px;font-weight:bold;">
     Tailles disponibles
   </p>
+
 
   <div class="sizes-list">
 
@@ -465,22 +806,39 @@ footer{
     <button class="size" onclick="size(this,'45')">45</button>
     <button class="size" onclick="size(this,'46')">46</button>
 
-    <button class="size" onclick="size(this,'Taille unique')">
+    <button
+      class="size"
+      onclick="size(this,'Taille unique')"
+    >
       Taille unique
     </button>
 
   </div>
 
+
   <label style="display:block;margin:10px 0;">
-    <input type="checkbox" id="delivery">
+
+    <input
+      type="checkbox"
+      id="delivery"
+    >
+
     Livraison +1000 FCFA
+
   </label>
+
+
+  <p style="font-weight:bold;margin-top:12px;">
+    Photos de l'article — maximum 4
+  </p>
 
   <input
     type="file"
-    id="image"
+    id="images"
     accept="image/*"
+    multiple
   >
+
 
   <button
     class="publish"
@@ -489,16 +847,24 @@ footer{
     Publier l'article
   </button>
 
-  <p class="message" id="publishMessage"></p>
+
+  <p
+    class="message"
+    id="publishMessage"
+  ></p>
 
 </section>
 
 
 <footer>
 
-  <p>📍 Retrait : Lycée de Byemassi</p>
+  <p>
+    📍 Retrait : Lycée de Byemassi
+  </p>
 
-  <p>🚚 Livraison : 1000 FCFA à Byemassi et environs</p>
+  <p>
+    🚚 Livraison : 1000 FCFA à Byemassi et environs
+  </p>
 
   <br>
 
@@ -552,6 +918,26 @@ footer{
 </nav>
 
 
+<!-- ZOOM -->
+
+<div
+  id="zoomModal"
+  class="zoom-modal hidden"
+  onclick="closeZoom()"
+>
+
+  <button
+    class="close-zoom"
+    onclick="closeZoom()"
+  >
+    ×
+  </button>
+
+  <img id="zoomImage">
+
+</div>
+
+
 <script>
 
 /* =========================
@@ -564,7 +950,7 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_ZVx9Vqel2vvEylmrQGRT-A_SeAk8K3-";
 
-const supabaseClient =
+j' =
 window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
@@ -576,7 +962,12 @@ VARIABLES
 ========================= */
 
 let currentCategory = "Tous";
+
 let selectedSizes = [];
+
+let currentProduct = null;
+
+let currentImages = [];
 
 
 /* =========================
@@ -597,6 +988,9 @@ function showPage(page){
   document.getElementById("sell")
     .classList.add("hidden");
 
+  document.getElementById("productPage")
+    .classList.add("hidden");
+
 
   document.getElementById(page)
     .classList.remove("hidden");
@@ -609,16 +1003,21 @@ function showPage(page){
 
 
   const index =
-    {
-      home:0,
-      shop:1,
-      account:2,
-      sell:3
-    }[page];
+  {
+    home:0,
+    shop:1,
+    account:2,
+    sell:3
+  }[page];
 
 
-  document.querySelectorAll(".nav")[index]
-    .classList.add("active");
+  if(index !== undefined){
+
+    document
+      .querySelectorAll(".nav")[index]
+      .classList.add("active");
+
+  }
 
 
   window.scrollTo({
@@ -647,7 +1046,8 @@ function category(cat,button){
 
   currentCategory = cat;
 
-  document.querySelectorAll(".categories button")
+  document
+    .querySelectorAll(".categories button")
     .forEach(b =>
       b.classList.remove("active")
     );
@@ -655,6 +1055,7 @@ function category(cat,button){
   button.classList.add("active");
 
   loadProducts();
+
 }
 
 
@@ -676,12 +1077,14 @@ async function loadProducts(){
 
   if(error){
 
-    document.getElementById("products").innerHTML =
+    document.getElementById("products")
+      .innerHTML =
       "<p>Erreur de connexion à Supabase.</p>";
 
     console.error(error);
 
     return;
+
   }
 
 
@@ -719,24 +1122,32 @@ async function loadProducts(){
 
   document.getElementById("count")
     .textContent =
-    products.length + " article(s)";
+    products.length +
+    " article(s)";
 
 
   if(products.length === 0){
 
-    document.getElementById("products").innerHTML =
+    document.getElementById("products")
+      .innerHTML =
       "<p>Aucun article disponible.</p>";
 
     return;
+
   }
 
 
-  document.getElementById("products").innerHTML =
+  document.getElementById("products")
+    .innerHTML =
     products.map(p => {
 
-      const image =
-        p.image_url ||
-        "https://via.placeholder.com/500";
+      const images =
+        Array.isArray(p.image_urls) &&
+        p.image_urls.length
+          ? p.image_urls
+          : p.image_url
+            ? [p.image_url]
+            : ["https://via.placeholder.com/500"];
 
 
       const sizes =
@@ -748,10 +1159,13 @@ async function loadProducts(){
 
       return `
 
-        <article class="product">
+        <article
+          class="product"
+          onclick="openProduct('${p.id}')"
+        >
 
           <img
-            src="${image}"
+            src="${escapeHTML(images[0])}"
             alt="${escapeHTML(p.name)}"
           >
 
@@ -773,13 +1187,9 @@ async function loadProducts(){
 
             <button
               class="buy"
-              onclick="order(
-                '${escapeJS(p.name)}',
-                '${p.price}',
-                '${escapeJS(sizes)}'
-              )"
+              onclick="event.stopPropagation();openProduct('${p.id}')"
             >
-              Commander
+              Voir l'article
             </button>
 
           </div>
@@ -794,16 +1204,222 @@ async function loadProducts(){
 
 
 /* =========================
+OPEN PRODUCT
+========================= */
+
+async function openProduct(id){
+
+  const {data,error} =
+    await supabaseClient
+      .from("products")
+      .select("*")
+      .eq("id",id)
+      .single();
+
+
+  if(error || !data){
+
+    alert("Impossible de charger cet article.");
+
+    return;
+
+  }
+
+
+  currentProduct = data;
+
+
+  const images =
+    Array.isArray(data.image_urls) &&
+    data.image_urls.length
+      ? data.image_urls
+      : data.image_url
+        ? [data.image_url]
+        : ["https://via.placeholder.com/600"];
+
+
+  currentImages = images;
+
+
+  document.getElementById("detailName")
+    .textContent =
+    data.name;
+
+
+  document.getElementById("detailPrice")
+    .textContent =
+    Number(data.price)
+      .toLocaleString("fr-FR") +
+      " FCFA";
+
+
+  const sizes =
+    Array.isArray(data.sizes) &&
+    data.sizes.length
+      ? data.sizes.join(", ")
+      : "Taille unique";
+
+
+  document.getElementById("detailSizes")
+    .textContent =
+    "Tailles : " + sizes;
+
+
+  document.getElementById("detailDescription")
+    .textContent =
+    data.description ||
+    "Aucune description.";
+
+
+  document.getElementById("detailMainImage")
+    .src =
+    images[0];
+
+
+  const thumbs =
+    document.getElementById("detailThumbnails");
+
+
+  thumbs.innerHTML =
+    images.map((img,index) => `
+
+      <img
+        class="thumbnail ${index === 0 ? "active" : ""}"
+        src="${escapeHTML(img)}"
+        onclick="changeDetailImage(${index})"
+      >
+
+    `).join("");
+
+
+  await loadSeller(data.user_id);
+
+
+  showPage("productPage");
+
+}
+
+
+/* =========================
+CHANGE IMAGE
+========================= */
+
+function changeDetailImage(index){
+
+  document.getElementById("detailMainImage")
+    .src =
+    currentImages[index];
+
+
+  document
+    .querySelectorAll(".thumbnail")
+    .forEach((img,i) =>
+      img.classList.toggle(
+        "active",
+        i === index
+      )
+    );
+
+}
+
+
+/* =========================
+ZOOM
+========================= */
+
+function openZoom(){
+
+  const src =
+    document.getElementById("detailMainImage")
+      .src;
+
+
+  document.getElementById("zoomImage")
+    .src =
+    src;
+
+
+  document.getElementById("zoomModal")
+    .classList.remove("hidden");
+
+}
+
+
+function closeZoom(){
+
+  document.getElementById("zoomModal")
+    .classList.add("hidden");
+
+}
+
+
+/* =========================
+SELLER
+========================= */
+
+async function loadSeller(userId){
+
+  const box =
+    document.getElementById("detailSeller");
+
+
+  if(!userId){
+
+    box.innerHTML =
+      "<span>👤 Vendeur</span>";
+
+    return;
+
+  }
+
+
+  const {data} =
+    await supabaseClient.auth.admin
+      ? {data:null}
+      : {data:null};
+
+
+  /*
+   Supabase ne permet pas de lire
+   directement le profil auth d'un autre
+   utilisateur depuis le navigateur.
+
+   On affiche donc le vendeur avec
+   une identité générique pour l'instant.
+  */
+
+  box.innerHTML = `
+
+    <img
+      class="avatar"
+      src="https://via.placeholder.com/100"
+    >
+
+    <div>
+      <strong>Vendeur Zackary sh🛍️p</strong>
+      <br>
+      <small>Article proposé par un vendeur</small>
+    </div>
+
+  `;
+
+}
+
+
+/* =========================
 ACCOUNT
 ========================= */
 
 async function register(){
 
   const email =
-    document.getElementById("email").value.trim();
+    document.getElementById("email")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("password").value;
+    document.getElementById("password")
+      .value;
 
 
   if(!email || !password){
@@ -813,6 +1429,7 @@ async function register(){
       "⚠️ Remplis ton e-mail et ton mot de passe.";
 
     return;
+
   }
 
 
@@ -830,6 +1447,7 @@ async function register(){
       "❌ " + error.message;
 
     return;
+
   }
 
 
@@ -843,17 +1461,21 @@ async function register(){
 async function login(){
 
   const email =
-    document.getElementById("email").value.trim();
+    document.getElementById("email")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("password").value;
+    document.getElementById("password")
+      .value;
 
 
   const {error} =
-    await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+    await supabaseClient.auth
+      .signInWithPassword({
+        email,
+        password
+      });
 
 
   if(error){
@@ -863,6 +1485,7 @@ async function login(){
       "❌ " + error.message;
 
     return;
+
   }
 
 
@@ -870,6 +1493,10 @@ async function login(){
 
 }
 
+
+/* =========================
+LOGOUT
+========================= */
 
 async function logout(){
 
@@ -879,6 +1506,10 @@ async function logout(){
 
 }
 
+
+/* =========================
+CHECK USER
+========================= */
 
 async function checkUser(){
 
@@ -898,9 +1529,20 @@ async function checkUser(){
     document.getElementById("profileBox")
       .classList.remove("hidden");
 
+
     document.getElementById("userEmail")
       .textContent =
       user.email;
+
+
+    const avatar =
+      user.user_metadata?.avatar_url;
+
+
+    document.getElementById("profileAvatar")
+      .src =
+      avatar ||
+      "https://via.placeholder.com/150";
 
 
     loadMyProducts(user.id);
@@ -919,6 +1561,120 @@ async function checkUser(){
 
 
 /* =========================
+PROFILE PHOTO
+========================= */
+
+async function updateProfilePhoto(){
+
+  const {data:userData} =
+    await supabaseClient.auth.getUser();
+
+
+  const user =
+    userData.user;
+
+
+  if(!user){
+
+    alert("Connecte-toi d'abord.");
+
+    return;
+
+  }
+
+
+  const file =
+    document.getElementById("profileImage")
+      .files[0];
+
+
+  const message =
+    document.getElementById("profileMessage");
+
+
+  if(!file){
+
+    message.textContent =
+      "⚠️ Choisis une photo.";
+
+    return;
+
+  }
+
+
+  message.textContent =
+    "Upload de la photo...";
+
+
+  const filename =
+    "profiles/" +
+    user.id +
+    "-" +
+    Date.now() +
+    "-" +
+    file.name.replace(/\s+/g,"-");
+
+
+  const {error} =
+    await supabaseClient.storage
+      .from("product-images")
+      .upload(
+        filename,
+        file
+      );
+
+
+  if(error){
+
+    message.textContent =
+      "❌ " + error.message;
+
+    return;
+
+  }
+
+
+  const {data} =
+    supabaseClient.storage
+      .from("product-images")
+      .getPublicUrl(filename);
+
+
+  const avatarURL =
+    data.publicUrl;
+
+
+  const {error:updateError} =
+    await supabaseClient.auth
+      .updateUser({
+        data:{
+          avatar_url:avatarURL
+        }
+      });
+
+
+  if(updateError){
+
+    message.textContent =
+      "❌ Impossible de sauvegarder la photo.";
+
+    return;
+
+  }
+
+
+  document.getElementById("profileAvatar")
+    .src =
+    avatarURL;
+
+
+  message.textContent =
+    "✅ Photo de profil mise à jour.";
+
+}
+
+
+/* =========================
 MY PRODUCTS
 ========================= */
 
@@ -928,7 +1684,10 @@ async function loadMyProducts(userId){
     await supabaseClient
       .from("products")
       .select("*")
-      .eq("user_id",userId);
+      .eq("user_id",userId)
+      .order("created_at",{
+        ascending:false
+      });
 
 
   if(error){
@@ -938,6 +1697,7 @@ async function loadMyProducts(userId){
       "Impossible de charger tes articles.";
 
     return;
+
   }
 
 
@@ -948,21 +1708,118 @@ async function loadMyProducts(userId){
       "Tu n'as encore publié aucun article.";
 
     return;
+
   }
 
 
-  document.getElementById("myProducts").innerHTML =
-    data.map(p => `
-      <div style="
-        padding:10px 0;
-        border-bottom:1px solid #ddd;
-      ">
-        <strong>${escapeHTML(p.name)}</strong>
-        <br>
-        ${Number(p.price)
-          .toLocaleString("fr-FR")} FCFA
-      </div>
-    `).join("");
+  document.getElementById("myProducts")
+    .innerHTML =
+    data.map(p => {
+
+      const image =
+        Array.isArray(p.image_urls) &&
+        p.image_urls.length
+          ? p.image_urls[0]
+          : p.image_url ||
+            "https://via.placeholder.com/100";
+
+
+      return `
+
+        <div class="my-product">
+
+          <img
+            class="my-product-image"
+            src="${escapeHTML(image)}"
+          >
+
+          <strong>
+            ${escapeHTML(p.name)}
+          </strong>
+
+          <br>
+
+          ${Number(p.price)
+            .toLocaleString("fr-FR")}
+          FCFA
+
+          <button
+            class="delete-btn"
+            onclick="deleteProduct('${p.id}')"
+          >
+            🗑️ Supprimer
+          </button>
+
+          <div class="clear"></div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================
+DELETE PRODUCT
+========================= */
+
+async function deleteProduct(id){
+
+  const confirmation =
+    confirm(
+      "Voulez-vous vraiment supprimer cet article ?"
+    );
+
+
+  if(!confirmation){
+    return;
+  }
+
+
+  const {data:userData} =
+    await supabaseClient.auth.getUser();
+
+
+  const user =
+    userData.user;
+
+
+  if(!user){
+
+    alert("Connecte-toi.");
+
+    return;
+
+  }
+
+
+  const {error} =
+    await supabaseClient
+      .from("products")
+      .delete()
+      .eq("id",id)
+      .eq("user_id",user.id);
+
+
+  if(error){
+
+    alert(
+      "Impossible de supprimer : " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  alert("✅ Article supprimé.");
+
+  loadMyProducts(user.id);
+
+  loadProducts();
 
 }
 
@@ -1038,12 +1895,14 @@ async function publish(){
     showPage("account");
 
     return;
+
   }
 
 
   const name =
     document.getElementById("name")
-      .value.trim();
+      .value
+      .trim();
 
   const price =
     document.getElementById("price")
@@ -1055,15 +1914,18 @@ async function publish(){
 
   const description =
     document.getElementById("description")
-      .value.trim();
+      .value
+      .trim();
 
   const delivery =
     document.getElementById("delivery")
       .checked;
 
-  const file =
-    document.getElementById("image")
-      .files[0];
+  const files =
+    Array.from(
+      document.getElementById("images")
+        .files
+    );
 
 
   const message =
@@ -1076,6 +1938,7 @@ async function publish(){
       "⚠️ Remplis les informations obligatoires.";
 
     return;
+
   }
 
 
@@ -1085,26 +1948,54 @@ async function publish(){
       "⚠️ Choisis au moins une taille.";
 
     return;
+
+  }
+
+
+  if(files.length === 0){
+
+    message.textContent =
+      "⚠️ Ajoute au moins une photo.";
+
+    return;
+
+  }
+
+
+  if(files.length > 4){
+
+    message.textContent =
+      "⚠️ Maximum 4 photos par article.";
+
+    return;
+
   }
 
 
   message.textContent =
-    "Publication en cours...";
+    "📷 Upload des photos...";
 
 
-  let imageURL = "";
+  const imageURLs = [];
 
 
-  if(file){
+  for(const file of files){
 
     const filename =
-      Date.now() + "-" +
+      "products/" +
+      user.id +
+      "/" +
+      Date.now() +
+      "-" +
+      Math.random()
+        .toString(36)
+        .substring(2,8) +
+      "-" +
       file.name.replace(/\s+/g,"-");
 
 
     const {error} =
-      await supabaseClient
-        .storage
+      await supabaseClient.storage
         .from("product-images")
         .upload(
           filename,
@@ -1115,25 +2006,31 @@ async function publish(){
     if(error){
 
       message.textContent =
-        "❌ Erreur avec la photo.";
+        "❌ Erreur photo : " +
+        error.message;
 
       console.error(error);
 
       return;
+
     }
 
 
     const {data} =
-      supabaseClient
-        .storage
+      supabaseClient.storage
         .from("product-images")
         .getPublicUrl(filename);
 
 
-    imageURL =
-      data.publicUrl;
+    imageURLs.push(
+      data.publicUrl
+    );
 
   }
+
+
+  message.textContent =
+    "🛍️ Publication de l'article...";
 
 
   const {error} =
@@ -1149,7 +2046,9 @@ async function publish(){
 
         description:description,
 
-        image_url:imageURL,
+        image_url:imageURLs[0],
+
+        image_urls:imageURLs,
 
         location:"Byemassi",
 
@@ -1172,18 +2071,28 @@ async function publish(){
     console.error(error);
 
     return;
+
   }
 
 
   message.textContent =
-    "✅ Article publié !";
+    "✅ Article publié avec succès !";
 
 
-  document.getElementById("name").value="";
-  document.getElementById("price").value="";
-  document.getElementById("categorySelect").value="";
-  document.getElementById("description").value="";
-  document.getElementById("image").value="";
+  document.getElementById("name")
+    .value="";
+
+  document.getElementById("price")
+    .value="";
+
+  document.getElementById("categorySelect")
+    .value="";
+
+  document.getElementById("description")
+    .value="";
+
+  document.getElementById("images")
+    .value="";
 
 
   selectedSizes=[];
@@ -1204,18 +2113,35 @@ async function publish(){
 WHATSAPP
 ========================= */
 
-function order(name,price,sizes){
+function orderCurrentProduct(){
+
+  if(!currentProduct){
+    return;
+  }
+
+
+  const name =
+    currentProduct.name;
+
+  const price =
+    currentProduct.price;
+
 
   const message =
     `Bonjour, je souhaite commander :%0A%0A` +
-    `🛍️ ${name}%0A` +
+    `🛍️ ${encodeURIComponent(name)}%0A` +
     `💰 ${Number(price)
       .toLocaleString("fr-FR")} FCFA%0A` +
-    `📏 ${sizes}`;
+    `📏 ${encodeURIComponent(
+      Array.isArray(currentProduct.sizes)
+        ? currentProduct.sizes.join(", ")
+        : "Taille unique"
+    )}`;
 
 
   window.open(
-    "https://wa.me/237690847035?text="+message,
+    "https://wa.me/237690847035?text=" +
+    message,
     "_blank"
   );
 
@@ -1234,16 +2160,6 @@ function escapeHTML(text){
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
-
-}
-
-
-function escapeJS(text){
-
-  return String(text)
-    .replace(/\\/g,"\\\\")
-    .replace(/'/g,"\\'")
-    .replace(/"/g,'\\"');
 
 }
 
