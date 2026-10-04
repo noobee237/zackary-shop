@@ -1,967 +1,1262 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zackary sh🛍️p</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      color: #111;
-      padding-bottom: 75px;
-    }
-    header {
-      background: #111;
-      color: white;
-      text-align: center;
-      padding: 24px 15px;
-    }
-    header h1 {
-      font-size: 27px;
-    }
-    header p {
-      color: #ccc;
-      margin-top: 6px;
-      font-size: 14px;
-    }
-    .search {
-      background: white;
-      padding: 15px;
-    }
-    .search input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      font-size: 16px;
-    }
-    .categories {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      background: white;
-      padding: 10px 15px;
-    }
-    .categories button {
-      border: 0;
-      background: #eee;
-      padding: 10px 15px;
-      border-radius: 20px;
-      white-space: nowrap;
-    }
-    .categories button.active {
-      background: #111;
-      color: white;
-    }
-    .hero {
-      margin: 15px;
-      padding: 25px 20px;
-      border-radius: 18px;
-      color: white;
-      background: linear-gradient(135deg, #111, #444);
-    }
-    .hero h2 {
-      margin-bottom: 8px;
-    }
-    .hero p {
-      color: #ddd;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-    .section-title {
-      padding: 5px 15px 12px;
-      font-size: 19px;
-    }
-    .products {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      padding: 0 15px 20px;
-    }
-    .product {
-      background: white;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,.07);
-    }
-    .product img {
-      width: 100%;
-      height: 175px;
-      object-fit: cover;
-    }
-    .product-info {
-      padding: 12px;
-    }
-    .product h3 {
-      font-size: 15px;
-      margin-bottom: 6px;
-    }
-    .category {
-      color: #777;
-      font-size: 11px;
-      margin-bottom: 7px;
-    }
-    .price {
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-    .sizes {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      margin-bottom: 10px;
-    }
-    .size-btn {
-      border: 1px solid #ccc;
-      background: white;
-      padding: 6px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-    }
-    .size-btn.selected {
-      background: #111;
-      color: white;
-    }
-    .order-btn,
-    .sell-btn {
-      width: 100%;
-      border: 0;
-      background: #111;
-      color: white;
-      padding: 11px;
-      border-radius: 9px;
-      font-weight: bold;
-    }
-    .sell-section,
-    .info-box {
-      background: white;
-      margin: 15px;
-      padding: 20px;
-      border-radius: 15px;
-    }
-    .sell-section h2,
-    .info-box h3 {
-      margin-bottom: 10px;
-    }
-    .sell-section p,
-    .info-box p {
-      color: #666;
-      font-size: 13px;
-      line-height: 1.6;
-      margin-bottom: 15px;
-    }
-    .form {
-      display: none;
-      background: white;
-      margin: 15px;
-      padding: 20px;
-      border-radius: 15px;
-    }
-    .form.show {
-      display: block;
-    }
-    .form h2 {
-      margin-bottom: 18px;
-    }
-    .form label {
-      display: block;
-      margin: 13px 0 6px;
-      font-weight: bold;
-      font-size: 13px;
-    }
-    .form input,
-    .form textarea,
-    .form select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 9px;
-      font-size: 14px;
-    }
-    .form textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-    .size-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-    }
-    .size-option {
-      border: 1px solid #ccc;
-      background: white;
-      padding: 9px 11px;
-      border-radius: 8px;
-      font-size: 12px;
-    }
-    .size-option.selected {
-      background: #111;
-      color: white;
-      border-color: #111;
-    }
-    .delivery-box {
-      margin-top: 15px;
-      padding: 13px;
-      background: #f5f5f5;
-      border-radius: 10px;
-    }
-    .form-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 20px;
-    }
-    .form-actions button {
-      flex: 1;
-      padding: 13px;
-      border-radius: 9px;
-      border: 0;
-    }
-    .submit {
-      background: #111;
-      color: white;
-    }
-    .cancel {
-      background: #eee;
-    }
-    .loading {
-      text-align: center;
-      padding: 25px;
-      color: #777;
-      grid-column: 1 / -1;
-    }
-    .empty {
-      text-align: center;
-      padding: 30px;
-      color: #777;
-      grid-column: 1 / -1;
-    }
-    .badge {
-      display: inline-block;
-      background: #eee;
-      padding: 5px 8px;
-      border-radius: 6px;
-      font-size: 10px;
-      margin-bottom: 7px;
-    }
-    footer {
-      background: #111;
-      color: white;
-      text-align: center;
-      padding: 25px 15px;
-      line-height: 1.8;
-      font-size: 13px;
-    }
-    footer strong {
-      display: block;
-      margin-top: 7px;
-    }
-    .bottom-menu {
-      position: fixed;
-      z-index: 1000;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: space-around;
-      background: white;
-      border-top: 1px solid #ddd;
-      padding: 9px 2px;
-    }
-    .bottom-menu button {
-      border: 0;
-      background: none;
-      font-size: 11px;
-      color: #555;
-    }
-    .message {
-      display: none;
-      position: fixed;
-      z-index: 2000;
-      left: 15px;
-      right: 15px;
-      bottom: 85px;
-      background: #111;
-      color: white;
-      padding: 14px;
-      border-radius: 10px;
-      text-align: center;
-    }
-    @media (min-width: 700px) {
-      .products {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Zackary sh🛍️p</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#f5f5f5;
+  color:#111;
+  padding-bottom:80px;
+}
+
+header{
+  background:#111;
+  color:white;
+  padding:18px 15px;
+  text-align:center;
+}
+
+header h1{
+  font-size:25px;
+}
+
+header p{
+  margin-top:5px;
+  color:#ccc;
+  font-size:13px;
+}
+
+.search{
+  padding:14px;
+  background:white;
+}
+
+.search input{
+  width:100%;
+  padding:13px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  font-size:15px;
+}
+
+.categories{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:10px 15px;
+  background:white;
+}
+
+.categories button{
+  border:0;
+  background:#eee;
+  padding:9px 14px;
+  border-radius:20px;
+  white-space:nowrap;
+}
+
+.categories .active{
+  background:#111;
+  color:white;
+}
+
+.hero{
+  margin:15px;
+  padding:25px 18px;
+  border-radius:18px;
+  background:#111;
+  color:white;
+}
+
+.hero h2{
+  margin-bottom:8px;
+}
+
+.hero p{
+  color:#ddd;
+  font-size:14px;
+  line-height:1.5;
+}
+
+.section{
+  padding:0 15px;
+  margin-top:20px;
+}
+
+.section-title{
+  margin-bottom:12px;
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.product{
+  background:white;
+  border-radius:15px;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.product img{
+  width:100%;
+  height:170px;
+  object-fit:cover;
+  background:#eee;
+}
+
+.product-info{
+  padding:12px;
+}
+
+.product-info h3{
+  font-size:15px;
+  margin-bottom:7px;
+}
+
+.price{
+  font-weight:bold;
+  margin-bottom:7px;
+}
+
+.sizes{
+  color:#666;
+  font-size:12px;
+  margin-bottom:10px;
+}
+
+.buy{
+  width:100%;
+  border:0;
+  background:#111;
+  color:white;
+  padding:10px;
+  border-radius:9px;
+}
+
+.seller,
+.account{
+  margin:20px 15px;
+  background:white;
+  padding:18px;
+  border-radius:15px;
+}
+
+.seller input,
+.seller textarea,
+.seller select,
+.account input{
+  width:100%;
+  padding:12px;
+  margin:7px 0;
+  border:1px solid #ddd;
+  border-radius:9px;
+}
+
+.sizes-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:8px 0;
+}
+
+.size{
+  border:1px solid #ccc;
+  background:white;
+  padding:8px 10px;
+  border-radius:8px;
+}
+
+.size.selected{
+  background:#111;
+  color:white;
+}
+
+.publish,
+.account-btn{
+  width:100%;
+  border:0;
+  background:#111;
+  color:white;
+  padding:13px;
+  border-radius:10px;
+  margin-top:8px;
+  font-weight:bold;
+}
+
+.logout{
+  width:100%;
+  border:0;
+  background:#d00;
+  color:white;
+  padding:13px;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.message{
+  font-size:13px;
+  margin-top:10px;
+}
+
+footer{
+  text-align:center;
+  color:#777;
+  font-size:12px;
+  padding:25px 15px;
+}
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:68px;
+  background:white;
+  border-top:1px solid #ddd;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  z-index:9999;
+  box-shadow:0 -3px 12px rgba(0,0,0,.08);
+}
+
+.nav{
+  border:0;
+  background:white;
+  color:#555;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.nav.active{
+  color:#111;
+}
+
+.nav span{
+  display:block;
+  font-size:20px;
+  margin-bottom:3px;
+}
+
+@media(max-width:500px){
+  .products{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
 </head>
+
 <body>
+
 <header>
   <h1>Zackary sh🛍️p</h1>
-  <p>Vêtements mixtes • Streetwear • Lifestyle</p>
+  <p>Ta marketplace de vêtements à Byemassi</p>
 </header>
+
+<!-- RECHERCHE -->
+
 <div class="search">
   <input
-    id="searchInput"
+    id="search"
     type="text"
-    placeholder="🔎 Rechercher un article..."
+    placeholder="Rechercher un article..."
+    oninput="loadProducts()"
   >
 </div>
+
+<!-- CATEGORIES -->
+
 <div class="categories">
-  <button class="active" data-category="Tous">
-    Tous
-  </button>
-  <button data-category="T-shirts">
-    👕 T-shirts
-  </button>
-  <button data-category="Ensembles">
-    🏃 Ensembles
-  </button>
-  <button data-category="Pantalons">
-    👖 Pantalons
-  </button>
-  <button data-category="Vestes">
-    🧥 Vestes
-  </button>
-  <button data-category="Chaussures">
-    👟 Chaussures
-  </button>
-  <button data-category="Accessoires">
-    🧢 Accessoires
-  </button>
+  <button class="active" onclick="category('Tous',this)">Tous</button>
+  <button onclick="category('T-shirts',this)">T-shirts</button>
+  <button onclick="category('Ensembles/Jogging',this)">Ensembles</button>
+  <button onclick="category('Pantalons',this)">Pantalons</button>
+  <button onclick="category('Vestes',this)">Vestes</button>
+  <button onclick="category('Chaussures',this)">Chaussures</button>
+  <button onclick="category('Accessoires',this)">Accessoires</button>
 </div>
-<section class="hero">
-  <h2>Ton style, ton choix.</h2>
-  <p>
-    Découvre des vêtements mixtes, ensembles,
-    joggings, chaussures et accessoires.
-  </p>
-</section>
-<div class="section-title">
-  🔥 Articles disponibles
-</div>
-<main class="products" id="products">
-  <div class="loading">
-    Chargement des articles...
+
+<!-- ACCUEIL -->
+
+<section id="home">
+
+  <div class="hero">
+    <h2>Bienvenue 👋</h2>
+    <p>
+      Découvre les vêtements disponibles sur
+      Zackary sh🛍️p.
+      Livraison possible à Byemassi et environs.
+    </p>
   </div>
-</main>
-<section class="sell-section">
-  <h2>🛍️ Tu veux vendre ?</h2>
-  <p>
-    Publie tes vêtements et indique directement
-    les tailles disponibles.
-  </p>
-  <button class="sell-btn" id="openSell">
-    ➕ Vendre un article
-  </button>
+
 </section>
-<section class="form" id="sellForm">
-  <h2>➕ Publier un article</h2>
 
-Nom de l’article
+<!-- BOUTIQUE -->
 
-<input
-id=“productName”
-type=“text”
-placeholder=“Ex : Ensemble jogging Nike”
+<section class="section" id="shop">
 
-Prix (FCFA)
+  <div class="section-title">
+    <h2>🛍️ Boutique</h2>
+    <small id="count"></small>
+  </div>
 
-<input
-id=“productPrice”
-type=“number”
-placeholder=“Ex : 20000”
+  <div class="products" id="products">
+    <p>Chargement...</p>
+  </div>
 
-Catégorie
+</section>
 
-  <select id="productCategory">
-<option value="">
-  Choisir une catégorie
-</option>
-<option value="T-shirts">
-  👕 T-shirts
-</option>
-<option value="Ensembles">
-  🏃 Ensembles / Jogging
-</option>
-<option value="Pantalons">
-  👖 Pantalons
-</option>
-<option value="Vestes">
-  🧥 Vestes
-</option>
-<option value="Chaussures">
-  👟 Chaussures
-</option>
-<option value="Accessoires">
-  🧢 Accessoires
-</option>
+<!-- COMPTE -->
+
+<section class="account hidden" id="account">
+
+  <!-- CONNEXION -->
+
+  <div id="loginBox">
+
+    <h2>👤 Mon compte</h2>
+
+    <p style="margin:8px 0;color:#666;">
+      Connecte-toi pour gérer tes articles.
+    </p>
+
+    <input
+      id="email"
+      type="email"
+      placeholder="Adresse e-mail"
+    >
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Mot de passe"
+    >
+
+    <button
+      class="account-btn"
+      onclick="login()"
+    >
+      Se connecter
+    </button>
+
+    <button
+      class="account-btn"
+      onclick="register()"
+    >
+      Créer un compte
+    </button>
+
+    <p class="message" id="authMessage"></p>
+
+  </div>
+
+
+  <!-- COMPTE CONNECTÉ -->
+
+  <div id="profileBox" class="hidden">
+
+    <h2>👤 Mon profil</h2>
+
+    <p style="margin-top:10px;">
+      Connecté avec :
+    </p>
+
+    <strong id="userEmail"></strong>
+
+    <br><br>
+
+    <p>
+      🛍️ Mes articles
+    </p>
+
+    <div id="myProducts">
+      Aucun article publié.
+    </div>
+
+    <button
+      class="logout"
+      onclick="logout()"
+    >
+      Se déconnecter
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- VENDRE -->
+
+<section class="seller hidden" id="sell">
+
+  <h2>➕ Vendre un article</h2>
+
+  <input
+    id="name"
+    placeholder="Nom de l'article"
+  >
+
+  <input
+    id="price"
+    type="number"
+    placeholder="Prix en FCFA"
+  >
+
+  <select id="categorySelect">
+    <option value="">Choisir une catégorie</option>
+    <option>T-shirts</option>
+    <option>Ensembles/Jogging</option>
+    <option>Pantalons</option>
+    <option>Vestes</option>
+    <option>Chaussures</option>
+    <option>Accessoires</option>
   </select>
 
-Tailles disponibles
-
-  <div class="size-options">
-<button type="button" class="size-option" data-size="XXS">XXS</button>
-<button type="button" class="size-option" data-size="XS">XS</button>
-<button type="button" class="size-option" data-size="S">S</button>
-<button type="button" class="size-option" data-size="M">M</button>
-<button type="button" class="size-option" data-size="L">L</button>
-<button type="button" class="size-option" data-size="XL">XL</button>
-<button type="button" class="size-option" data-size="XXL">XXL</button>
-<button type="button" class="size-option" data-size="3XL">3XL</button>
-<button type="button" class="size-option" data-size="4XL">4XL</button>
-  </div>
-
-Pointures disponibles
-
-  <div class="size-options">
-<button type="button" class="size-option" data-size="36">36</button>
-<button type="button" class="size-option" data-size="37">37</button>
-<button type="button" class="size-option" data-size="38">38</button>
-<button type="button" class="size-option" data-size="39">39</button>
-<button type="button" class="size-option" data-size="40">40</button>
-<button type="button" class="size-option" data-size="41">41</button>
-<button type="button" class="size-option" data-size="42">42</button>
-<button type="button" class="size-option" data-size="43">43</button>
-<button type="button" class="size-option" data-size="44">44</button>
-<button type="button" class="size-option" data-size="45">45</button>
-<button type="button" class="size-option" data-size="46">46</button>
-  </div>
-
-Description
-
   <textarea
-    id="productDescription"
-    placeholder="Décris ton article..."
+    id="description"
+    rows="4"
+    placeholder="Description"
   ></textarea>
 
-Photo de l’article
+  <p style="margin-top:8px;font-weight:bold;">
+    Tailles disponibles
+  </p>
 
-<input
-id=“productImage”
-type=“file”
-accept=“image/*”
+  <div class="sizes-list">
 
-  <div class="delivery-box">
-<label>
+    <button class="size" onclick="size(this,'XXS')">XXS</button>
+    <button class="size" onclick="size(this,'XS')">XS</button>
+    <button class="size" onclick="size(this,'S')">S</button>
+    <button class="size" onclick="size(this,'M')">M</button>
+    <button class="size" onclick="size(this,'L')">L</button>
+    <button class="size" onclick="size(this,'XL')">XL</button>
+    <button class="size" onclick="size(this,'XXL')">XXL</button>
+    <button class="size" onclick="size(this,'3XL')">3XL</button>
+    <button class="size" onclick="size(this,'4XL')">4XL</button>
+
+    <button class="size" onclick="size(this,'36')">36</button>
+    <button class="size" onclick="size(this,'37')">37</button>
+    <button class="size" onclick="size(this,'38')">38</button>
+    <button class="size" onclick="size(this,'39')">39</button>
+    <button class="size" onclick="size(this,'40')">40</button>
+    <button class="size" onclick="size(this,'41')">41</button>
+    <button class="size" onclick="size(this,'42')">42</button>
+    <button class="size" onclick="size(this,'43')">43</button>
+    <button class="size" onclick="size(this,'44')">44</button>
+    <button class="size" onclick="size(this,'45')">45</button>
+    <button class="size" onclick="size(this,'46')">46</button>
+
+    <button class="size" onclick="size(this,'Taille unique')">
+      Taille unique
+    </button>
+
+  </div>
+
+  <label style="display:block;margin:10px 0;">
+    <input type="checkbox" id="delivery">
+    Livraison +1000 FCFA
+  </label>
+
   <input
-    id="delivery"
-    type="checkbox"
-    checked
+    type="file"
+    id="image"
+    accept="image/*"
   >
-  Livraison disponible — 1 000 FCFA
-</label>
-<p>
-  Retrait sans livraison :
-  Lycée de Byemassi / shop
-</p>
-  </div>
-  <div class="form-actions">
-<button class="cancel" id="cancelSell">
-  Annuler
-</button>
-<button class="submit" id="publishProduct">
-  Publier
-</button>
-  </div>
+
+  <button
+    class="publish"
+    onclick="publish()"
+  >
+    Publier l'article
+  </button>
+
+  <p class="message" id="publishMessage"></p>
+
 </section>
-<section class="info-box">
-  <h3>📏 Tailles</h3>
-  <p>
-    Vêtements :
-    XXS • XS • S • M • L • XL • XXL • 3XL • 4XL
-    <br><br>
-Chaussures :
-36 à 46
-<br><br>
-Les tailles affichées sur chaque article
-correspondent aux tailles disponibles.
-  </p>
-</section>
-<section class="info-box">
-  <h3>🚚 Livraison</h3>
-  <p>
-    Livraison à Byemassi et environs :
-    <strong>1 000 FCFA</strong>.
-    <br><br>
-Retrait :
-<strong>Lycée de Byemassi / shop</strong>.
-  </p>
-</section>
+
+
 <footer>
-  <p>© 2026 Zackary sh🛍️p</p>
-  <p>Marketplace de vêtements mixtes</p>
-  <p>Livraison : 1 000 FCFA</p>
-  <p>Byemassi et environs</p>
-  <p>Retrait : Lycée de Byemassi / shop</p>
-  <strong>
+
+  <p>📍 Retrait : Lycée de Byemassi</p>
+
+  <p>🚚 Livraison : 1000 FCFA à Byemassi et environs</p>
+
+  <br>
+
+  <p>
     Ce site est fait par 𝖓𝖔𝖛𝖎𝖘_𝖋𝖇♛
-  </strong>
+  </p>
+
   <p>
     WhatsApp : +237 690 847 035
   </p>
+
 </footer>
-<nav class="bottom-menu">
 
-🏠Accueil
 
-🛍️Boutique
+<!-- NAVIGATION -->
 
-➕Vendre
+<nav class="bottom-nav">
 
-📦Commandes
+  <button
+    class="nav active"
+    onclick="showPage('home')"
+  >
+    <span>🏠</span>
+    Accueil
+  </button>
 
-👤Compte
+  <button
+    class="nav"
+    onclick="showPage('shop')"
+  >
+    <span>🛍️</span>
+    Boutique
+  </button>
+
+  <button
+    class="nav"
+    onclick="showPage('account')"
+  >
+    <span>👤</span>
+    Compte
+  </button>
+
+  <button
+    class="nav"
+    onclick="showPage('sell')"
+  >
+    <span>➕</span>
+    Vendre
+  </button>
 
 </nav>
-<div class="message" id="message"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script>
-  /* =====================================================
-     SUPABASE
-  ===================================================== */
-  const SUPABASE_URL = "TON_PROJECT_URL";
-  const SUPABASE_KEY = "TA_PUBLISHABLE_KEY";
-  const supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL = "https://leoyfcpkjbvdhalyefcv.supabase.co"
-      SUPABASE_KEY = "sb_publishable_ZVx9Vqel2vvEylmrQGRT-A_SeAk8K3-"
-  /* =====================================================
-     ELEMENTS
-  ===================================================== */
-  const productsContainer =
-    document.getElementById("products");
-  const searchInput =
-    document.getElementById("searchInput");
-  const sellForm =
-    document.getElementById("sellForm");
-  const message =
-    document.getElementById("message");
-  /* =====================================================
-     MESSAGE
-  ===================================================== */
-  function showMessage(text) {
-    message.textContent = text;
-    message.style.display = "block";
-    setTimeout(function() {
-      message.style.display = "none";
-    }, 3000);
-  }
-  /* =====================================================
-     OUVRIR FORMULAIRE
-  ===================================================== */
-  function openSellerForm() {
-    sellForm.classList.add("show");
-    sellForm.scrollIntoView({
-      behavior: "smooth"
-    });
-  }
-  document
-    .getElementById("openSell")
-    .addEventListener("click", openSellerForm);
-  document
-    .getElementById("bottomSell")
-    .addEventListener("click", openSellerForm);
-  document
-    .getElementById("cancelSell")
-    .addEventListener("click", function() {
-      sellForm.classList.remove("show");
-    });
-  /* =====================================================
-     SÉLECTION DES TAILLES
-  ===================================================== */
-  document
-    .querySelectorAll(".size-option")
-    .forEach(function(button) {
-      button.addEventListener("click", function() {
-        this.classList.toggle("selected");
-      });
-    });
-  /* =====================================================
-     CHARGER LES PRODUITS
-  ===================================================== */
-  async function loadProducts() {
-    productsContainer.innerHTML =
-      '<div class="loading">Chargement des articles...</div>';
-    const { data, error } =
-      await supabaseClient
-        .from("products")
-        .select("*")
-        .neq("status", "sold")
-        .order("created_at", {
-          ascending: false
-        });
-    if (error) {
-      console.error(error);
-      productsContainer.innerHTML =
-        '<div class="empty">Impossible de charger les articles.</div>';
-      return;
-    }
-    if (!data || data.length === 0) {
-      productsContainer.innerHTML =
-        '<div class="empty">Aucun article disponible pour le moment.</div>';
-      return;
-    }
-    displayProducts(data);
-  }
-  /* =====================================================
-     AFFICHER LES PRODUITS
-  ===================================================== */
-  function displayProducts(products) {
-    productsContainer.innerHTML = "";
-    products.forEach(function(product) {
-      const sizes =
-        Array.isArray(product.sizes)
-          ? product.sizes
-          : [];
-      const image =
-        product.image_url ||
-        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab";
-      const card =
-        document.createElement("div");
-      card.className = "product";
-      card.dataset.name =
-        product.name || "";
-      card.dataset.category =
-        product.category || "";
-      let sizesHTML = "";
-      if (sizes.length > 0) {
-        sizesHTML =
-          '<div class="sizes">' +
-          sizes.map(function(size) {
-            return `
-              <button
-                class="size-btn"
-                data-size="${size}"
-              >
-                ${size}
-              </button>
-            `;
-          }).join("") +
-          '</div>';
-      } else {
-        sizesHTML =
-          '<p style="font-size:11px;color:#777;margin-bottom:10px;">' +
-          'Taille unique' +
-          '</p>';
-      }
-      card.innerHTML = `
-        <img
-          src="${image}"
-          alt="${product.name || "Article"}"
-        >
-        <div class="product-info">
-          <span class="badge">
-            ${product.category || "Article"}
-          </span>
-          <h3>
-            ${product.name || "Article"}
-          </h3>
-          <p class="price">
-            ${Number(product.price || 0).toLocaleString("fr-FR")} FCFA
-          </p>
-          ${sizesHTML}
-          <button class="order-btn">
-            Commander
-          </button>
-        </div>
-      `;
-      card
-        .querySelectorAll(".size-btn")
-        .forEach(function(button) {
-          button.addEventListener("click", function() {
-            card
-              .querySelectorAll(".size-btn")
-              .forEach(function(btn) {
-                btn.classList.remove("selected");
-              });
-            this.classList.add("selected");
-          });
-        });
-      card
-        .querySelector(".order-btn")
-        .addEventListener("click", function() {
-          const selected =
-            card.querySelector(".size-btn.selected");
-          if (sizes.length > 0 && !selected) {
-            showMessage(
-              "⚠️ Sélectionne d'abord une taille."
-            );
-            return;
-          }
-          const selectedSize =
-            selected
-              ? selected.dataset.size
-              : "Taille unique";
-          const productName =
-            product.name;
-          const price =
-            Number(product.price || 0)
-              .toLocaleString("fr-FR");
-          const whatsappMessage =
-            `Bonjour, je souhaite commander :\n\n` +
-            `🛍️ Article : ${productName}\n` +
-            `💰 Prix : ${price} FCFA\n` +
-            `📏 Taille : ${selectedSize}\n\n` +
-            `Merci.`;
-          const whatsappURL =
-            "https://wa.me/237690847035?text=" +
-            encodeURIComponent(whatsappMessage);
-          window.open(
-            whatsappURL,
-            "_blank"
-          );
-        });
-      productsContainer.appendChild(card);
-    });
-  }
-  /* =====================================================
-     RECHERCHE
-  ===================================================== */
-  searchInput.addEventListener(
-    "input",
-    function() {
-      const value =
-        this.value.toLowerCase().trim();
-      document
-        .querySelectorAll(".product")
-        .forEach(function(product) {
-          const name =
-            product.dataset.name.toLowerCase();
-          const category =
-            product.dataset.category.toLowerCase();
-          product.style.display =
-            (
-              name.includes(value) ||
-              category.includes(value)
-            )
-            ? ""
-            : "none";
-        });
-    }
-  );
-  /* =====================================================
-     CATÉGORIES
-  ===================================================== */
-  document
-    .querySelectorAll(".categories button")
-    .forEach(function(button) {
-      button.addEventListener(
-        "click",
-        function() {
-          document
-            .querySelectorAll(".categories button")
-            .forEach(function(btn) {
-              btn.classList.remove("active");
-            });
-          this.classList.add("active");
-          const category =
-            this.dataset.category;
-          document
-            .querySelectorAll(".product")
-            .forEach(function(product) {
-              if (
-                category === "Tous" ||
-                product.dataset.category === category
-              ) {
-                product.style.display = "";
-              } else {
-                product.style.display = "none";
-              }
-            });
-        }
-      );
-    });
-  /* =====================================================
-     PUBLIER UN ARTICLE
-  ===================================================== */
-  document
-    .getElementById("publishProduct")
-    .addEventListener(
-      "click",
-      async function() {
-        const name =
-          document
-            .getElementById("productName")
-            .value
-            .trim();
-        const price =
-          Number(
-            document
-              .getElementById("productPrice")
-              .value
-          );
-        const category =
-          document
-            .getElementById("productCategory")
-            .value;
-        const description =
-          document
-            .getElementById("productDescription")
-            .value
-            .trim();
-        const delivery =
-          document
-            .getElementById("delivery")
-            .checked;
-        const imageFile =
-          document
-            .getElementById("productImage")
-            .files[0];
-        const selectedSizes =
-          Array.from(
-            document.querySelectorAll(
-              ".size-option.selected"
-            )
-          ).map(function(button) {
-            return button.dataset.size;
-          });
-        if (!name) {
-          showMessage(
-            "⚠️ Entre le nom de l'article."
-          );
-          return;
-        }
-        if (!price || price <= 0) {
-          showMessage(
-            "⚠️ Entre un prix valide."
-          );
-          return;
-        }
-        if (!category) {
-          showMessage(
-            "⚠️ Choisis une catégorie."
-          );
-          return;
-        }
-        if (!imageFile) {
-          showMessage(
-            "⚠️ Ajoute une photo."
-          );
-          return;
-        }
-        if (selectedSizes.length === 0) {
-          showMessage(
-            "⚠️ Sélectionne au moins une taille."
-          );
-          return;
-        }
-        const button = this;
-        button.disabled = true;
-        button.textContent =
-          "Publication...";
-        try {
-          /* =========================
-             NOM UNIQUE DE L'IMAGE
-          ========================= */
-          const fileName =
-            Date.now() +
-            "-" +
-            Math.random()
-              .toString(36)
-              .substring(2) +
-            "-" +
-            imageFile.name;
-          /* =========================
-             UPLOAD IMAGE
-          ========================= */
-          const upload =
-            await supabaseClient
-              .storage
-              .from("product-images")
-              .upload(
-                fileName,
-                imageFile,
-                {
-                  cacheControl: "3600",
-                  upsert: false
-                }
-              );
-          if (upload.error) {
-            throw upload.error;
-          }
-          /* =========================
-             URL IMAGE
-          ========================= */
-          const imageData =
-            supabaseClient
-              .storage
-              .from("product-images")
-              .getPublicUrl(fileName);
-          const imageURL =
-            imageData.data.publicUrl;
-          /* =========================
-             INSERT PRODUIT
-          ========================= */
-          const { error } =
-            await supabaseClient
-              .from("products")
-              .insert({
-                name: name,
-                price: price,
-                category: category,
-                description: description,
-                image_url: imageURL,
-                location:
-                  "Byemassi",
-                delivery:
-                  delivery,
-                sizes:
-                  selectedSizes,
-                status:
-                  "available"
-              });
-          if (error) {
-            throw error;
-          }
-          showMessage(
-            "✅ Article publié avec succès !"
-          );
-          /* =========================
-             RESET FORM
-          ========================= */
-          document
-            .getElementById("productName")
-            .value = "";
-          document
-            .getElementById("productPrice")
-            .value = "";
-          document
-            .getElementById("productCategory")
-            .value = "";
-          document
-            .getElementById("productDescription")
-            .value = "";
-          document
-            .getElementById("productImage")
-            .value = "";
-          document
-            .querySelectorAll(".size-option")
-            .forEach(function(btn) {
-              btn.classList.remove("selected");
-            });
-          sellForm.classList.remove("show");
-          await loadProducts();
-        } catch (error) {
-          console.error(error);
-          showMessage(
-            "❌ Erreur lors de la publication."
-          );
-        }
-        button.disabled = false;
-        button.textContent =
-          "Publier";
-      }
+
+/* =========================
+SUPABASE
+========================= */
+
+const SUPABASE_URL =
+"https://leoyfcpkjbvdhalyefcv.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_ZVx9Vqel2vvEylmrQGRT-A_SeAk8K3-";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+/* =========================
+VARIABLES
+========================= */
+
+let currentCategory = "Tous";
+let selectedSizes = [];
+
+
+/* =========================
+NAVIGATION
+========================= */
+
+function showPage(page){
+
+  document.getElementById("home")
+    .classList.add("hidden");
+
+  document.getElementById("shop")
+    .classList.add("hidden");
+
+  document.getElementById("account")
+    .classList.add("hidden");
+
+  document.getElementById("sell")
+    .classList.add("hidden");
+
+
+  document.getElementById(page)
+    .classList.remove("hidden");
+
+
+  document.querySelectorAll(".nav")
+    .forEach(btn =>
+      btn.classList.remove("active")
     );
-  /* =====================================================
-     DÉMARRAGE
-  ===================================================== */
+
+
+  const index =
+    {
+      home:0,
+      shop:1,
+      account:2,
+      sell:3
+    }[page];
+
+
+  document.querySelectorAll(".nav")[index]
+    .classList.add("active");
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+
+  if(page === "account"){
+    checkUser();
+  }
+
+
+  if(page === "sell"){
+    checkSeller();
+  }
+
+}
+
+
+/* =========================
+CATEGORY
+========================= */
+
+function category(cat,button){
+
+  currentCategory = cat;
+
+  document.querySelectorAll(".categories button")
+    .forEach(b =>
+      b.classList.remove("active")
+    );
+
+  button.classList.add("active");
+
   loadProducts();
+}
+
+
+/* =========================
+LOAD PRODUCTS
+========================= */
+
+async function loadProducts(){
+
+  const {data,error} =
+    await supabaseClient
+      .from("products")
+      .select("*")
+      .neq("status","sold")
+      .order("created_at",{
+        ascending:false
+      });
+
+
+  if(error){
+
+    document.getElementById("products").innerHTML =
+      "<p>Erreur de connexion à Supabase.</p>";
+
+    console.error(error);
+
+    return;
+  }
+
+
+  let products = data || [];
+
+
+  if(currentCategory !== "Tous"){
+
+    products =
+      products.filter(p =>
+        p.category === currentCategory
+      );
+
+  }
+
+
+  const search =
+    document.getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  if(search){
+
+    products =
+      products.filter(p =>
+        (p.name || "")
+          .toLowerCase()
+          .includes(search)
+      );
+
+  }
+
+
+  document.getElementById("count")
+    .textContent =
+    products.length + " article(s)";
+
+
+  if(products.length === 0){
+
+    document.getElementById("products").innerHTML =
+      "<p>Aucun article disponible.</p>";
+
+    return;
+  }
+
+
+  document.getElementById("products").innerHTML =
+    products.map(p => {
+
+      const image =
+        p.image_url ||
+        "https://via.placeholder.com/500";
+
+
+      const sizes =
+        Array.isArray(p.sizes) &&
+        p.sizes.length
+          ? p.sizes.join(", ")
+          : "Taille unique";
+
+
+      return `
+
+        <article class="product">
+
+          <img
+            src="${image}"
+            alt="${escapeHTML(p.name)}"
+          >
+
+          <div class="product-info">
+
+            <h3>
+              ${escapeHTML(p.name)}
+            </h3>
+
+            <div class="price">
+              ${Number(p.price)
+                .toLocaleString("fr-FR")}
+              FCFA
+            </div>
+
+            <div class="sizes">
+              Tailles : ${escapeHTML(sizes)}
+            </div>
+
+            <button
+              class="buy"
+              onclick="order(
+                '${escapeJS(p.name)}',
+                '${p.price}',
+                '${escapeJS(sizes)}'
+              )"
+            >
+              Commander
+            </button>
+
+          </div>
+
+        </article>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================
+ACCOUNT
+========================= */
+
+async function register(){
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+
+  if(!email || !password){
+
+    document.getElementById("authMessage")
+      .textContent =
+      "⚠️ Remplis ton e-mail et ton mot de passe.";
+
+    return;
+  }
+
+
+  const {error} =
+    await supabaseClient.auth.signUp({
+      email,
+      password
+    });
+
+
+  if(error){
+
+    document.getElementById("authMessage")
+      .textContent =
+      "❌ " + error.message;
+
+    return;
+  }
+
+
+  document.getElementById("authMessage")
+    .textContent =
+    "✅ Compte créé. Vérifie ton e-mail si nécessaire.";
+
+}
+
+
+async function login(){
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+
+  const {error} =
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+
+  if(error){
+
+    document.getElementById("authMessage")
+      .textContent =
+      "❌ " + error.message;
+
+    return;
+  }
+
+
+  checkUser();
+
+}
+
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  checkUser();
+
+}
+
+
+async function checkUser(){
+
+  const {data} =
+    await supabaseClient.auth.getUser();
+
+
+  const user =
+    data.user;
+
+
+  if(user){
+
+    document.getElementById("loginBox")
+      .classList.add("hidden");
+
+    document.getElementById("profileBox")
+      .classList.remove("hidden");
+
+    document.getElementById("userEmail")
+      .textContent =
+      user.email;
+
+
+    loadMyProducts(user.id);
+
+  }else{
+
+    document.getElementById("loginBox")
+      .classList.remove("hidden");
+
+    document.getElementById("profileBox")
+      .classList.add("hidden");
+
+  }
+
+}
+
+
+/* =========================
+MY PRODUCTS
+========================= */
+
+async function loadMyProducts(userId){
+
+  const {data,error} =
+    await supabaseClient
+      .from("products")
+      .select("*")
+      .eq("user_id",userId);
+
+
+  if(error){
+
+    document.getElementById("myProducts")
+      .textContent =
+      "Impossible de charger tes articles.";
+
+    return;
+  }
+
+
+  if(!data || data.length === 0){
+
+    document.getElementById("myProducts")
+      .textContent =
+      "Tu n'as encore publié aucun article.";
+
+    return;
+  }
+
+
+  document.getElementById("myProducts").innerHTML =
+    data.map(p => `
+      <div style="
+        padding:10px 0;
+        border-bottom:1px solid #ddd;
+      ">
+        <strong>${escapeHTML(p.name)}</strong>
+        <br>
+        ${Number(p.price)
+          .toLocaleString("fr-FR")} FCFA
+      </div>
+    `).join("");
+
+}
+
+
+/* =========================
+CHECK SELLER
+========================= */
+
+async function checkSeller(){
+
+  const {data} =
+    await supabaseClient.auth.getUser();
+
+
+  if(!data.user){
+
+    alert(
+      "Tu dois créer un compte ou te connecter pour vendre un article."
+    );
+
+    showPage("account");
+
+  }
+
+}
+
+
+/* =========================
+SIZES
+========================= */
+
+function size(button,value){
+
+  button.classList.toggle("selected");
+
+
+  if(selectedSizes.includes(value)){
+
+    selectedSizes =
+      selectedSizes.filter(
+        s => s !== value
+      );
+
+  }else{
+
+    selectedSizes.push(value);
+
+  }
+
+}
+
+
+/* =========================
+PUBLISH
+========================= */
+
+async function publish(){
+
+  const {data:userData} =
+    await supabaseClient.auth.getUser();
+
+
+  const user =
+    userData.user;
+
+
+  if(!user){
+
+    alert(
+      "Connecte-toi à ton compte avant de publier."
+    );
+
+    showPage("account");
+
+    return;
+  }
+
+
+  const name =
+    document.getElementById("name")
+      .value.trim();
+
+  const price =
+    document.getElementById("price")
+      .value;
+
+  const category =
+    document.getElementById("categorySelect")
+      .value;
+
+  const description =
+    document.getElementById("description")
+      .value.trim();
+
+  const delivery =
+    document.getElementById("delivery")
+      .checked;
+
+  const file =
+    document.getElementById("image")
+      .files[0];
+
+
+  const message =
+    document.getElementById("publishMessage");
+
+
+  if(!name || !price || !category){
+
+    message.textContent =
+      "⚠️ Remplis les informations obligatoires.";
+
+    return;
+  }
+
+
+  if(selectedSizes.length === 0){
+
+    message.textContent =
+      "⚠️ Choisis au moins une taille.";
+
+    return;
+  }
+
+
+  message.textContent =
+    "Publication en cours...";
+
+
+  let imageURL = "";
+
+
+  if(file){
+
+    const filename =
+      Date.now() + "-" +
+      file.name.replace(/\s+/g,"-");
+
+
+    const {error} =
+      await supabaseClient
+        .storage
+        .from("product-images")
+        .upload(
+          filename,
+          file
+        );
+
+
+    if(error){
+
+      message.textContent =
+        "❌ Erreur avec la photo.";
+
+      console.error(error);
+
+      return;
+    }
+
+
+    const {data} =
+      supabaseClient
+        .storage
+        .from("product-images")
+        .getPublicUrl(filename);
+
+
+    imageURL =
+      data.publicUrl;
+
+  }
+
+
+  const {error} =
+    await supabaseClient
+      .from("products")
+      .insert({
+
+        name:name,
+
+        price:Number(price),
+
+        category:category,
+
+        description:description,
+
+        image_url:imageURL,
+
+        location:"Byemassi",
+
+        delivery:delivery,
+
+        sizes:selectedSizes,
+
+        status:"available",
+
+        user_id:user.id
+
+      });
+
+
+  if(error){
+
+    message.textContent =
+      "❌ " + error.message;
+
+    console.error(error);
+
+    return;
+  }
+
+
+  message.textContent =
+    "✅ Article publié !";
+
+
+  document.getElementById("name").value="";
+  document.getElementById("price").value="";
+  document.getElementById("categorySelect").value="";
+  document.getElementById("description").value="";
+  document.getElementById("image").value="";
+
+
+  selectedSizes=[];
+
+
+  document.querySelectorAll(".size")
+    .forEach(b =>
+      b.classList.remove("selected")
+    );
+
+
+  loadProducts();
+
+}
+
+
+/* =========================
+WHATSAPP
+========================= */
+
+function order(name,price,sizes){
+
+  const message =
+    `Bonjour, je souhaite commander :%0A%0A` +
+    `🛍️ ${name}%0A` +
+    `💰 ${Number(price)
+      .toLocaleString("fr-FR")} FCFA%0A` +
+    `📏 ${sizes}`;
+
+
+  window.open(
+    "https://wa.me/237690847035?text="+message,
+    "_blank"
+  );
+
+}
+
+
+/* =========================
+HELPERS
+========================= */
+
+function escapeHTML(text){
+
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeJS(text){
+
+  return String(text)
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'")
+    .replace(/"/g,'\\"');
+
+}
+
+
+/* =========================
+START
+========================= */
+
+loadProducts();
+
+checkUser();
+
 </script>
+
 </body>
 </html>
