@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
   box-sizing:border-box;
   margin:0;
@@ -431,12 +432,58 @@ ZOOM
 }
 
 /* =========================
+PHOTO PROFIL
+========================= */
+
+.profile-photo-label{
+  display:block;
+  margin-top:12px;
+  padding:12px;
+  background:#eee;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+  text-align:center;
+}
+
+.profile-photo-label:active{
+  transform:scale(.98);
+}
+
+/* =========================
+BADGE VÉRIFIÉ
+========================= */
+
+.verified-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:20px;
+  height:20px;
+  margin-left:5px;
+  border-radius:50%;
+  background:#1877f2;
+  color:white;
+  font-size:12px;
+  font-weight:bold;
+  vertical-align:middle;
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+
+.verified-name{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+}
+
+/* =========================
 PROFIL CRÉATEUR
 ========================= */
 
 .creator-profile{
   margin-top:20px;
-  padding:18px 15px;
+  padding:20px 15px;
   background:#111;
   color:white;
   border-radius:17px;
@@ -444,8 +491,8 @@ PROFIL CRÉATEUR
 }
 
 .creator-avatar{
-  width:72px;
-  height:72px;
+  width:76px;
+  height:76px;
   border-radius:50%;
   background:#292929;
   display:flex;
@@ -468,12 +515,14 @@ PROFIL CRÉATEUR
 }
 
 .creator-badge{
-  display:inline-block;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
   margin-top:8px;
   padding:6px 11px;
   border-radius:20px;
-  background:white;
-  color:#111;
+  background:#1877f2;
+  color:white;
   font-size:11px;
   font-weight:bold;
 }
@@ -493,6 +542,7 @@ PROFIL CRÉATEUR
   }
 
 }
+
 </style>
 </head>
 
@@ -506,12 +556,14 @@ PROFIL CRÉATEUR
 <!-- RECHERCHE -->
 
 <div class="search">
+
   <input
     id="search"
     type="text"
     placeholder="Rechercher un article..."
     oninput="loadProducts()"
   >
+
 </div>
 
 <!-- CATEGORIES -->
@@ -728,10 +780,24 @@ PROFIL CRÉATEUR
         style="color:#666;margin-top:5px;"
       ></p>
 
+      <!--
+        Le vrai input est caché.
+        L'utilisateur ne voit donc jamais
+        le nom du fichier sélectionné.
+      -->
+
+      <label
+        for="profileImage"
+        class="profile-photo-label"
+      >
+        📷 Choisir une photo
+      </label>
+
       <input
         type="file"
         id="profileImage"
         accept="image/*"
+        style="display:none;"
       >
 
       <button
@@ -759,8 +825,17 @@ PROFIL CRÉATEUR
         👑
       </div>
 
-      <h3>
+      <h3 class="verified-name">
+
         novis_fb
+
+        <span
+          class="verified-badge"
+          title="Compte créateur certifié"
+        >
+          ✓
+        </span>
+
       </h3>
 
       <p>
@@ -768,7 +843,7 @@ PROFIL CRÉATEUR
       </p>
 
       <span class="creator-badge">
-        ✓ CRÉATEUR VÉRIFIÉ
+        ✓ CRÉATEUR CERTIFIÉ
       </span>
 
       <p>
@@ -1424,12 +1499,23 @@ async function loadSeller(userId){
     return;
   }
 
-  /*
-   * Pour l'instant on garde
-   * l'affichage générique du vendeur.
-   * Le vrai profil vendeur pourra être
-   * connecté à la table profiles ensuite.
-   */
+  const {data:profile} =
+    await supabaseClient
+      .from("profiles")
+      .select("username,verified,role")
+      .eq("id",userId)
+      .maybeSingle();
+
+  const username =
+    profile?.username ||
+    "Vendeur Zackary sh🛍️p";
+
+  const isCreator =
+    profile?.role === "creator_admin";
+
+  const verified =
+    profile?.verified === true ||
+    isCreator;
 
   box.innerHTML = `
 
@@ -1442,7 +1528,22 @@ async function loadSeller(userId){
     <div>
 
       <strong>
-        Vendeur Zackary sh🛍️p
+
+        ${escapeHTML(username)}
+
+        ${
+          verified
+            ? `
+              <span
+                class="verified-badge"
+                title="Compte certifié"
+              >
+                ✓
+              </span>
+            `
+            : ""
+        }
+
       </strong>
 
       <br>
@@ -1507,12 +1608,6 @@ async function register(){
 
     return;
   }
-
-  /*
-   * Si Supabase confirme automatiquement
-   * l'inscription, on affiche directement
-   * le profil.
-   */
 
   if(data && data.user){
 
@@ -1648,11 +1743,6 @@ async function checkUser(){
       "creatorProfile"
     );
 
-  const authMessage =
-    document.getElementById(
-      "authMessage"
-    );
-
   try{
 
     const {data,error} =
@@ -1674,10 +1764,6 @@ async function checkUser(){
     const user =
       data.user;
 
-    /*
-     * Aucun utilisateur connecté
-     */
-
     if(!user){
 
       loginBox.classList.remove("hidden");
@@ -1687,10 +1773,6 @@ async function checkUser(){
 
       return;
     }
-
-    /*
-     * UTILISATEUR CONNECTÉ
-     */
 
     loginBox.classList.add("hidden");
     profileBox.classList.remove("hidden");
@@ -1708,10 +1790,6 @@ async function checkUser(){
     ).src =
       avatar ||
       "https://via.placeholder.com/150";
-
-    /*
-     * RÉCUPÉRATION DU PROFIL
-     */
 
     const {data:profile,error:profileError} =
       await supabaseClient
@@ -1737,12 +1815,6 @@ async function checkUser(){
         profileError
       );
 
-      /*
-       * IMPORTANT :
-       * Une erreur dans profiles ne doit
-       * plus empêcher l'affichage du compte.
-       */
-
       creatorProfile.classList.add(
         "hidden"
       );
@@ -1764,17 +1836,7 @@ async function checkUser(){
 
     }
 
-    /*
-     * Chargement des articles
-     */
-
     await loadMyProducts(user.id);
-
-    if(authMessage){
-
-      authMessage.textContent = "";
-
-    }
 
   }catch(error){
 
@@ -1782,12 +1844,6 @@ async function checkUser(){
       "Erreur checkUser :",
       error
     );
-
-    /*
-     * Même si profiles rencontre
-     * un problème, l'utilisateur
-     * connecté garde accès à son compte.
-     */
 
     loginBox.classList.add("hidden");
     profileBox.classList.remove("hidden");
@@ -1835,26 +1891,48 @@ async function updateProfilePhoto(){
     return;
   }
 
+  if(!file.type.startsWith("image/")){
+
+    message.textContent =
+      "⚠️ Choisis uniquement une image.";
+
+    return;
+  }
+
   message.textContent =
-    "Upload de la photo...";
+    "📷 Mise à jour de la photo...";
+
+  /*
+   * Le nom original du fichier
+   * n'est jamais utilisé.
+   */
+
+  const extension =
+    file.type === "image/png"
+      ? "png"
+      : file.type === "image/webp"
+        ? "webp"
+        : "jpg";
 
   const filename =
     "profiles/" +
     user.id +
-    "-" +
+    "/avatar-" +
     Date.now() +
-    "-" +
-    file.name.replace(
-      /\s+/g,
-      "-"
-    );
+    "." +
+    extension;
 
   const {error} =
     await supabaseClient.storage
       .from("product-images")
       .upload(
         filename,
-        file
+        file,
+        {
+          upsert:true,
+          contentType:file.type,
+          cacheControl:"3600"
+        }
       );
 
   if(error){
@@ -1862,12 +1940,15 @@ async function updateProfilePhoto(){
     message.textContent =
       "❌ " + error.message;
 
-    console.error(error);
+    console.error(
+      "Erreur upload photo :",
+      error
+    );
 
     return;
   }
 
-  const {data} =
+  const {data:urlData} =
     supabaseClient.storage
       .from("product-images")
       .getPublicUrl(
@@ -1875,7 +1956,7 @@ async function updateProfilePhoto(){
       );
 
   const avatarURL =
-    data.publicUrl;
+    urlData.publicUrl;
 
   const {error:updateError} =
     await supabaseClient.auth
@@ -1891,6 +1972,7 @@ async function updateProfilePhoto(){
       "❌ Impossible de sauvegarder la photo.";
 
     console.error(
+      "Erreur sauvegarde photo :",
       updateError
     );
 
@@ -1901,6 +1983,16 @@ async function updateProfilePhoto(){
     "profileAvatar"
   ).src =
     avatarURL;
+
+  /*
+   * Efface le fichier sélectionné.
+   * Le nom du fichier ne reste donc
+   * jamais visible dans l'interface.
+   */
+
+  document.getElementById(
+    "profileImage"
+  ).value = "";
 
   message.textContent =
     "✅ Photo de profil mise à jour.";
@@ -2398,6 +2490,19 @@ function escapeHTML(text){
     );
 
 }
+
+/* =========================
+AUTH STATE
+========================= */
+
+supabaseClient.auth.onAuthStateChange(
+  () => {
+    setTimeout(
+      checkUser,
+      0
+    );
+  }
+);
 
 /* =========================
 START
