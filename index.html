@@ -1,6154 +1,1232 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
->
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Zackary sh🛍️p</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
-/* =========================================================
-   BASE
-========================================================= */
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
 body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
-  "SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;
-
-  background:
-    radial-gradient(
-      circle at 20% 0%,
-      rgba(255,255,255,.95),
-      transparent 35%
-    ),
-    linear-gradient(
-      180deg,
-      #f7f7f8 0%,
-      #eeeeef 100%
-    );
-
-  color:#111;
-
-  min-height:100vh;
-
-  padding-bottom:
-    calc(100px + env(safe-area-inset-bottom));
-
-  overflow-x:hidden;
+margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
+"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;
+background:radial-gradient(circle at 20% 0%,rgba(255,255,255,.95),transparent 35%),
+linear-gradient(180deg,#f7f7f8,#eeeeef);
+color:#111;min-height:100vh;
+padding-bottom:calc(100px + env(safe-area-inset-bottom));overflow-x:hidden
 }
-
-button,
-input,
-select,
-textarea{
-  font:inherit;
+button,input,select,textarea{font:inherit}button{cursor:pointer}img{max-width:100%}
+.glass,.glass-card{
+background:rgba(255,255,255,.5);
+backdrop-filter:blur(25px) saturate(180%);
+-webkit-backdrop-filter:blur(25px) saturate(180%);
+border:1px solid rgba(255,255,255,.72);
+box-shadow:0 12px 35px rgba(0,0,0,.08),inset 0 1px 1px rgba(255,255,255,.85)
 }
-
-button{
-  cursor:pointer;
-}
-
-img{
-  max-width:100%;
-}
-
-
-/* =========================================================
-   LIQUID GLASS
-========================================================= */
-
-.glass{
-  background:rgba(255,255,255,.48);
-
-  backdrop-filter:
-    blur(25px)
-    saturate(180%);
-
-  -webkit-backdrop-filter:
-    blur(25px)
-    saturate(180%);
-
-  border:
-    1px solid rgba(255,255,255,.68);
-
-  box-shadow:
-    0 12px 35px rgba(0,0,0,.08),
-    inset 0 1px 1px rgba(255,255,255,.85);
-}
-
-.glass-card{
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.65),
-      rgba(255,255,255,.30)
-    );
-
-  backdrop-filter:
-    blur(24px)
-    saturate(180%);
-
-  -webkit-backdrop-filter:
-    blur(24px)
-    saturate(180%);
-
-  border:
-    1px solid rgba(255,255,255,.72);
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.07),
-    inset 0 1px 1px rgba(255,255,255,.85);
-
-  border-radius:26px;
-}
-
-
-/* =========================================================
-   HEADER
-========================================================= */
-
+.glass-card{border-radius:26px}
 header{
-  position:sticky;
-  top:0;
-  z-index:100;
-
-  padding:
-    calc(10px + env(safe-area-inset-top))
-    14px
-    10px;
-
-  background:rgba(247,247,248,.70);
-
-  backdrop-filter:
-    blur(25px)
-    saturate(180%);
-
-  -webkit-backdrop-filter:
-    blur(25px)
-    saturate(180%);
-
-  border-bottom:
-    1px solid rgba(255,255,255,.55);
+position:sticky;top:0;z-index:100;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;
+background:rgba(247,247,248,.7);backdrop-filter:blur(25px) saturate(180%);
+-webkit-backdrop-filter:blur(25px) saturate(180%);border-bottom:1px solid rgba(255,255,255,.55)
 }
-
-.header-inner{
-  max-width:1100px;
-  margin:auto;
-
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.logo{
-  font-size:21px;
-  font-weight:800;
-  white-space:nowrap;
-}
-
-.header-spacer{
-  flex:1;
-}
-
+.header-inner{max-width:1100px;margin:auto;display:flex;align-items:center;gap:10px}
+.logo{font-size:21px;font-weight:800;white-space:nowrap}.header-spacer{flex:1}
 .account-button{
-  width:42px;
-  height:42px;
-
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.75);
-
-  background:rgba(255,255,255,.50);
-
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  box-shadow:
-    0 5px 20px rgba(0,0,0,.08),
-    inset 0 1px 1px white;
-
-  transition:.2s ease;
+width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.75);
+background:rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;
+box-shadow:0 5px 20px rgba(0,0,0,.08),inset 0 1px 1px white
 }
-
-.account-button:active{
-  transform:scale(.9);
-}
-
-.account-button img{
-  width:34px;
-  height:34px;
-  border-radius:50%;
-  object-fit:cover;
-}
-
-
-/* =========================================================
-   SEARCH
-========================================================= */
-
-.search-wrap{
-  max-width:1100px;
-  margin:10px auto 0;
-}
-
+.account-button img{width:34px;height:34px;border-radius:50%;object-fit:cover}
+.search-wrap{max-width:1100px;margin:10px auto 0}
 .search-box{
-  width:100%;
-
-  border:0;
-  outline:none;
-
-  padding:13px 17px;
-
-  border-radius:18px;
-
-  background:rgba(255,255,255,.65);
-
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.70),
-    0 5px 18px rgba(0,0,0,.04);
-
-  transition:.25s ease;
+width:100%;border:0;outline:0;padding:13px 17px;border-radius:18px;
+background:rgba(255,255,255,.65);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)
 }
-
-.search-box:focus{
-  box-shadow:
-    inset 0 0 0 2px rgba(0,0,0,.12),
-    0 7px 25px rgba(0,0,0,.08);
-}
-
-
-/* =========================================================
-   PAGES
-========================================================= */
-
-.page{
-  display:none;
-
-  max-width:1100px;
-  margin:0 auto;
-
-  padding:
-    18px
-    16px
-    115px;
-
-  min-height:calc(100vh - 100px);
-}
-
-.page.active{
-  display:block;
-  animation:pageIn .35s cubic-bezier(.22,.61,.36,1);
-}
-
-@keyframes pageIn{
-  from{
-    opacity:0;
-    transform:translateY(12px) scale(.985);
-  }
-
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
-}
-
-@keyframes pageOut{
-  from{
-    opacity:1;
-    transform:translateY(0);
-  }
-
-  to{
-    opacity:0;
-    transform:translateY(-8px);
-  }
-}
-
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
-
-.dashboard-hero{
-  position:relative;
-
-  padding:20px;
-
-  margin-bottom:18px;
-
-  overflow:hidden;
-}
-
-.dashboard-hero::before{
-  content:"";
-
-  position:absolute;
-
-  width:180px;
-  height:180px;
-
-  right:-80px;
-  top:-80px;
-
-  border-radius:50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(255,255,255,.9),
-      rgba(255,255,255,0)
-    );
-
-  pointer-events:none;
-}
-
-.dashboard-welcome{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  width:100%;
-
-  gap:12px;
-}
-
-.dashboard-welcome > div{
-  min-width:0;
-}
-
-.dashboard-welcome small{
-  display:block;
-  color:#666;
-  margin-bottom:4px;
-}
-
-.dashboard-welcome strong{
-  display:block;
-  font-size:21px;
-
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
+.page{display:none;max-width:1100px;margin:auto;padding:18px 16px 115px;min-height:calc(100vh - 100px)}
+.page.active{display:block;animation:pageIn .3s ease}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.dashboard-hero{padding:20px;margin-bottom:18px;overflow:hidden}
+.dashboard-welcome{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.dashboard-welcome>div{min-width:0}.dashboard-welcome small{display:block;color:#666;margin-bottom:4px}
+.dashboard-welcome strong{display:block;font-size:21px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dashboard-profile-button{
-  flex-shrink:0;
-
-  width:48px;
-  height:48px;
-
-  padding:0;
-
-  border-radius:50%;
-
-  border:
-    1px solid rgba(255,255,255,.75);
-
-  background:rgba(255,255,255,.42);
-
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-
-  box-shadow:
-    0 5px 20px rgba(0,0,0,.08),
-    inset 0 1px 2px rgba(255,255,255,.9);
-
-  overflow:hidden;
-
-  transition:
-    transform .2s ease,
-    box-shadow .2s ease;
+width:48px;height:48px;flex-shrink:0;padding:0;border-radius:50%;
+border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.42);overflow:hidden
 }
-
-.dashboard-profile-button:active{
-  transform:scale(.88);
-}
-
-.dashboard-profile-button .dashboard-avatar{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
-
+.dashboard-avatar{width:100%;height:100%;object-fit:cover}
 .dashboard-role{
-  display:inline-flex;
-
-  margin-top:15px;
-
-  padding:7px 12px;
-
-  border-radius:999px;
-
-  background:rgba(255,255,255,.48);
-
-  border:1px solid rgba(255,255,255,.7);
-
-  font-size:12px;
-  font-weight:700;
-
-  color:#555;
+display:inline-flex;margin-top:15px;padding:7px 12px;border-radius:999px;
+background:rgba(255,255,255,.48);border:1px solid rgba(255,255,255,.7);
+font-size:12px;font-weight:700;color:#555
 }
-
-
-/* =========================================================
-   QUICK ACTIONS
-========================================================= */
-
-.quick-actions{
-  display:grid;
-
-  grid-template-columns:
-    repeat(2,minmax(0,1fr));
-
-  gap:12px;
-
-  margin-bottom:24px;
-}
-
+.quick-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:24px}
 .quick-action{
-  border:0;
-
-  text-align:left;
-
-  padding:17px;
-
-  min-height:125px;
-
-  transition:
-    transform .22s ease,
-    box-shadow .22s ease;
+border:0;text-align:left;padding:17px;min-height:125px
 }
-
-.quick-action:active{
-  transform:scale(.96);
-}
-
 .quick-action-icon{
-  width:42px;
-  height:42px;
-
-  border-radius:15px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  background:rgba(255,255,255,.58);
-
-  margin-bottom:12px;
-
-  font-size:20px;
-
-  box-shadow:
-    inset 0 1px 1px rgba(255,255,255,.9);
+width:42px;height:42px;border-radius:15px;display:flex;align-items:center;justify-content:center;
+background:rgba(255,255,255,.58);margin-bottom:12px;font-size:20px
 }
-
-.quick-action strong{
-  display:block;
-  font-size:15px;
-}
-
-.quick-action span{
-  display:block;
-
-  margin-top:4px;
-
-  font-size:12px;
-  color:#777;
-}
-
-
-/* =========================================================
-   SECTION TITLES
-========================================================= */
-
-.dashboard-section-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  margin:20px 2px 12px;
-}
-
-.dashboard-section-title h2{
-  margin:0;
-  font-size:20px;
-}
-
-.dashboard-section-title span{
-  font-size:13px;
-  color:#777;
-}
-
-
-/* =========================================================
-   CATEGORIES
-========================================================= */
-
-.categories{
-  display:flex;
-  gap:9px;
-
-  overflow-x:auto;
-
-  padding:
-    2px
-    2px
-    12px;
-
-  scrollbar-width:none;
-}
-
-.categories::-webkit-scrollbar{
-  display:none;
-}
-
+.quick-action strong{display:block;font-size:15px}.quick-action span{display:block;margin-top:4px;font-size:12px;color:#777}
+.dashboard-section-title{display:flex;align-items:center;justify-content:space-between;margin:20px 2px 12px}
+.dashboard-section-title h2{margin:0;font-size:20px}.dashboard-section-title span{font-size:13px;color:#777}
+.categories{display:flex;gap:9px;overflow-x:auto;padding:2px 2px 12px;scrollbar-width:none}
+.categories::-webkit-scrollbar{display:none}
 .category-btn{
-  flex-shrink:0;
-
-  border:0;
-
-  padding:10px 14px;
-
-  border-radius:999px;
-
-  background:rgba(255,255,255,.60);
-
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-
-  border:
-    1px solid rgba(255,255,255,.7);
-
-  color:#333;
-
-  transition:.2s ease;
+flex-shrink:0;border:0;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.6);
+border:1px solid rgba(255,255,255,.7);color:#333
 }
-
-.category-btn.active{
-  background:#111;
-  color:white;
-}
-
-.category-btn:active{
-  transform:scale(.94);
-}
-
-
-/* =========================================================
-   PRODUCTS
-========================================================= */
-
-.products-grid{
-  display:grid;
-
-  grid-template-columns:
-    repeat(2,minmax(0,1fr));
-
-  gap:13px;
-}
-
+.category-btn.active{background:#111;color:#fff}
+.products-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
 .product-card{
-  overflow:hidden;
-
-  border-radius:23px;
-
-  background:rgba(255,255,255,.62);
-
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-
-  border:
-    1px solid rgba(255,255,255,.75);
-
-  box-shadow:
-    0 8px 25px rgba(0,0,0,.06);
-
-  cursor:pointer;
-
-  animation:
-    cardIn .4s cubic-bezier(.22,.61,.36,1);
-
-  transition:
-    transform .22s ease,
-    box-shadow .22s ease;
+overflow:hidden;border-radius:23px;background:rgba(255,255,255,.62);
+border:1px solid rgba(255,255,255,.75);box-shadow:0 8px 25px rgba(0,0,0,.06);cursor:pointer
 }
-
-.product-card:active{
-  transform:scale(.965);
+.product-image{width:100%;aspect-ratio:1;object-fit:cover;background:#eee}
+.product-info{padding:12px}.product-name{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-price{margin-top:5px;font-weight:800;font-size:15px}.product-seller{margin-top:5px;font-size:11px;color:#777}
+.verified-badge{
+display:inline-flex;align-items:center;justify-content:center;
+width:18px;height:18px;margin-left:4px;border-radius:50%;
+background:#1683ff;color:white;font-size:11px;font-weight:900;
+vertical-align:middle;box-shadow:0 2px 7px rgba(22,131,255,.3)
 }
-
-@keyframes cardIn{
-  from{
-    opacity:0;
-    transform:translateY(10px);
-  }
-
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+.verified-label{font-size:11px;color:#1683ff;font-weight:700;margin-left:4px}
+.back-button,.secondary-button{
+border:0;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.62)
 }
-
-.product-image{
-  width:100%;
-  aspect-ratio:1/1;
-
-  object-fit:cover;
-
-  background:#eee;
-}
-
-.product-info{
-  padding:12px;
-}
-
-.product-name{
-  font-weight:700;
-  font-size:14px;
-
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.product-price{
-  margin-top:5px;
-
-  font-weight:800;
-  font-size:15px;
-}
-
-.product-seller{
-  margin-top:5px;
-
-  font-size:11px;
-  color:#777;
-}
-
-
-/* =========================================================
-   PRODUCT PAGE
-========================================================= */
-
-.back-button{
-  border:0;
-
-  padding:10px 14px;
-
-  border-radius:999px;
-
-  background:rgba(255,255,255,.62);
-
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-
-  margin-bottom:14px;
-}
-
 .product-detail{
-  overflow:hidden;
-
-  border-radius:28px;
-
-  background:rgba(255,255,255,.60);
-
-  border:
-    1px solid rgba(255,255,255,.75);
-
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-
-  box-shadow:
-    0 12px 35px rgba(0,0,0,.07);
+overflow:hidden;border-radius:28px;background:rgba(255,255,255,.6);
+border:1px solid rgba(255,255,255,.75);box-shadow:0 12px 35px rgba(0,0,0,.07)
 }
-
-.product-main-image{
-  width:100%;
-
-  max-height:500px;
-
-  object-fit:contain;
-
-  background:#eee;
-
-  cursor:zoom-in;
-}
-
-.product-thumbnails{
-  display:flex;
-  gap:8px;
-
-  padding:12px;
-
-  overflow-x:auto;
-}
-
-.product-thumbnail{
-  width:70px;
-  height:70px;
-
-  object-fit:cover;
-
-  border-radius:14px;
-
-  border:2px solid transparent;
-
-  cursor:pointer;
-}
-
-.product-thumbnail.active{
-  border-color:#111;
-}
-
-.product-detail-content{
-  padding:18px;
-}
-
-.product-detail-content h1{
-  margin:0;
-  font-size:24px;
-}
-
-.detail-price{
-  margin-top:8px;
-
-  font-size:21px;
-  font-weight:800;
-}
-
-.detail-description{
-  margin-top:15px;
-
-  line-height:1.55;
-  color:#555;
-}
-
-.seller-box{
-  display:flex;
-  align-items:center;
-
-  gap:10px;
-
-  padding:13px;
-
-  margin-top:18px;
-
-  border-radius:19px;
-
-  background:rgba(255,255,255,.5);
-}
-
-.seller-avatar{
-  width:43px;
-  height:43px;
-
-  border-radius:50%;
-
-  object-fit:cover;
-}
-
-
-/* =========================================================
-   DELIVERY / PICKUP
-========================================================= */
-
+.product-main-image{width:100%;max-height:500px;object-fit:contain;background:#eee;cursor:zoom-in}
+.product-thumbnails{display:flex;gap:8px;padding:12px;overflow-x:auto}
+.product-thumbnail{width:70px;height:70px;object-fit:cover;border-radius:14px;border:2px solid transparent}
+.product-thumbnail.active{border-color:#111}
+.product-detail-content{padding:18px}.product-detail-content h1{margin:0;font-size:24px}
+.detail-price{margin-top:8px;font-size:21px;font-weight:800}.detail-description{margin-top:15px;line-height:1.55;color:#555}
+.seller-box{display:flex;align-items:center;gap:10px;padding:13px;margin-top:18px;border-radius:19px;background:rgba(255,255,255,.5)}
+.seller-avatar{width:43px;height:43px;border-radius:50%;object-fit:cover}
 .delivery-choice{
-  padding:15px;
-  margin-top:18px;
-
-  border-radius:20px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.62),
-      rgba(255,255,255,.32)
-    );
-
-  border:
-    1px solid rgba(255,255,255,.72);
-
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-
-  box-shadow:
-    0 8px 25px rgba(0,0,0,.05);
+padding:15px;margin-top:18px;border-radius:20px;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.72)
 }
-
-.delivery-title{
-  font-size:14px;
-  font-weight:800;
+.delivery-title{font-size:14px;font-weight:800}.delivery-option{
+display:flex;align-items:center;gap:10px;margin-top:10px;padding:12px;border-radius:15px;background:rgba(255,255,255,.48)
 }
-
-.delivery-option{
-  display:flex;
-  align-items:center;
-  gap:10px;
-
-  margin-top:10px;
-
-  padding:12px;
-
-  border-radius:15px;
-
-  background:rgba(255,255,255,.48);
-
-  border:
-    1px solid rgba(255,255,255,.65);
-
-  cursor:pointer;
-
-  transition:.2s ease;
-}
-
-.delivery-option:active{
-  transform:scale(.98);
-}
-
-.delivery-option input{
-  width:18px;
-  height:18px;
-  accent-color:#111;
-}
-
+.delivery-option input{width:18px;height:18px;accent-color:#111}
 .pickup-location-box{
-  display:none;
-
-  margin-top:10px;
-
-  padding:12px 14px;
-
-  border-radius:15px;
-
-  background:rgba(255,255,255,.58);
-
-  border:1px solid rgba(255,255,255,.7);
-
-  color:#444;
-
-  font-size:13px;
-
-  line-height:1.45;
+display:none;margin-top:10px;padding:12px 14px;border-radius:15px;background:rgba(255,255,255,.58)
 }
-
-.pickup-location-box.visible{
-  display:block;
+.pickup-location-box.visible{display:block}
+.whatsapp-button,.buy-button,.cart-checkout,.primary-button{
+width:100%;border:0;margin-top:10px;padding:15px;border-radius:18px;font-weight:800
 }
-
-.whatsapp-button{
-  width:100%;
-
-  border:0;
-
-  margin-top:10px;
-
-  padding:15px;
-
-  border-radius:18px;
-
-  background:#25D366;
-
-  color:white;
-
-  font-weight:800;
-
-  box-shadow:
-    0 8px 22px rgba(37,211,102,.22);
-
-  transition:.2s ease;
+.whatsapp-button{background:#25d366;color:#fff}.buy-button,.cart-checkout,.primary-button{background:#111;color:#fff}
+.cart-empty{text-align:center;padding:50px 20px;border-radius:28px}.cart-icon-large{font-size:50px}
+.cart-item{display:flex;gap:12px;padding:13px;margin-bottom:10px;align-items:center}
+.cart-item-image{width:70px;height:70px;object-fit:cover;border-radius:16px}.cart-item-info{flex:1}
+.cart-item-name{font-weight:700}.cart-item-price{margin-top:4px;font-weight:700}
+.cart-remove{border:0;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.06)}
+.cart-total{margin-top:15px;padding:18px;display:flex;justify-content:space-between;border-radius:22px}
+.account-card,.seller-section,.admin-card{padding:20px;border-radius:28px;margin-bottom:15px}
+.profile-center{text-align:center}.profile-large-avatar{
+width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid rgba(255,255,255,.75)
 }
-
-.whatsapp-button:active{
-  transform:scale(.97);
-}
-
-.buy-button{
-  width:100%;
-
-  border:0;
-
-  margin-top:16px;
-
-  padding:15px;
-
-  border-radius:18px;
-
-  background:#111;
-  color:white;
-
-  font-weight:700;
-
-  transition:.2s ease;
-}
-
-.buy-button:active{
-  transform:scale(.97);
-}
-
-
-/* =========================================================
-   CART
-========================================================= */
-
-.cart-empty{
-  text-align:center;
-
-  padding:50px 20px;
-
-  border-radius:28px;
-}
-
-.cart-icon-large{
-  font-size:50px;
-  margin-bottom:10px;
-}
-
-.cart-item{
-  display:flex;
-  gap:12px;
-
-  padding:13px;
-
-  margin-bottom:10px;
-
-  align-items:center;
-}
-
-.cart-item-image{
-  width:70px;
-  height:70px;
-
-  object-fit:cover;
-
-  border-radius:16px;
-}
-
-.cart-item-info{
-  flex:1;
-}
-
-.cart-item-name{
-  font-weight:700;
-}
-
-.cart-item-price{
-  margin-top:4px;
-
-  font-weight:700;
-}
-
-.cart-remove{
-  border:0;
-
-  width:36px;
-  height:36px;
-
-  border-radius:50%;
-
-  background:rgba(0,0,0,.06);
-}
-
-.cart-total{
-  margin-top:15px;
-
-  padding:18px;
-
-  display:flex;
-  justify-content:space-between;
-
-  border-radius:22px;
-}
-
-.cart-checkout{
-  width:100%;
-
-  margin-top:12px;
-
-  padding:15px;
-
-  border:0;
-
-  border-radius:18px;
-
-  background:#111;
-  color:white;
-
-  font-weight:700;
-}
-
-
-/* =========================================================
-   ACCOUNT
-========================================================= */
-
-.account-card{
-  padding:20px;
-
-  border-radius:28px;
-
-  margin-bottom:15px;
-}
-
-.profile-center{
-  text-align:center;
-}
-
-.profile-large-avatar{
-  width:100px;
-  height:100px;
-
-  border-radius:50%;
-
-  object-fit:cover;
-
-  border:
-    4px solid rgba(255,255,255,.75);
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.12);
-}
-
 .profile-upload{
-  margin-top:12px;
-
-  display:inline-block;
-
-  padding:9px 14px;
-
-  border-radius:999px;
-
-  background:#111;
-  color:white;
-
-  font-size:13px;
-
-  cursor:pointer;
-}
-
-.profile-upload input{
-  display:none;
-}
-
-
-/* =========================================================
-   FORMS
-========================================================= */
-
-.form-group{
-  margin-bottom:13px;
-}
-
-.form-group label{
-  display:block;
-
-  margin-bottom:6px;
-
-  font-size:13px;
-  font-weight:600;
-}
-
+margin-top:12px;display:inline-block;padding:9px 14px;border-radius:999px;background:#111;color:#fff;font-size:13px
+}.profile-upload input{display:none}
+.form-group{margin-bottom:13px}.form-group label{display:block;margin-bottom:6px;font-size:13px;font-weight:600}
 .form-control{
-  width:100%;
-
-  border:0;
-  outline:none;
-
-  padding:13px 14px;
-
-  border-radius:16px;
-
-  background:rgba(255,255,255,.68);
-
-  box-shadow:
-    inset 0 0 0 1px rgba(0,0,0,.05);
+width:100%;border:0;outline:0;padding:13px 14px;border-radius:16px;background:rgba(255,255,255,.68);
+box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)
 }
-
-textarea.form-control{
-  min-height:100px;
-  resize:vertical;
-}
-
-.primary-button{
-  width:100%;
-
-  padding:14px;
-
-  border:0;
-
-  border-radius:17px;
-
-  background:#111;
-  color:white;
-
-  font-weight:700;
-
-  transition:.2s ease;
-}
-
-.primary-button:active{
-  transform:scale(.97);
-}
-
-.secondary-button{
-  padding:11px 15px;
-
-  border:0;
-
-  border-radius:15px;
-
-  background:rgba(0,0,0,.07);
-}
-
-.danger-button{
-  padding:10px 13px;
-
-  border:0;
-
-  border-radius:14px;
-
-  background:#ff3b30;
-  color:white;
-}
-
-
-/* =========================================================
-   AUTH
-========================================================= */
-
-.auth-tabs{
-  display:flex;
-
-  gap:8px;
-
-  margin-bottom:15px;
-}
-
-.auth-tab{
-  flex:1;
-
-  border:0;
-
-  padding:11px;
-
-  border-radius:15px;
-
-  background:rgba(0,0,0,.05);
-}
-
-.auth-tab.active{
-  background:#111;
-  color:white;
-}
-
-.auth-form{
-  padding:20px;
-
-  border-radius:26px;
-}
-
-
-/* =========================================================
-   SELLER
-========================================================= */
-
-.seller-section{
-  padding:18px;
-
-  margin-bottom:15px;
-
-  border-radius:26px;
-}
-
-.seller-product{
-  display:flex;
-
-  align-items:center;
-
-  gap:12px;
-
-  padding:12px;
-
-  margin-bottom:9px;
-}
-
-.seller-product img{
-  width:65px;
-  height:65px;
-
-  border-radius:15px;
-
-  object-fit:cover;
-}
-
-.seller-product-info{
-  flex:1;
-}
-
-.sales-card{
-  padding:16px;
-
-  margin-bottom:10px;
-
-  border-radius:20px;
-}
-
-
-/* =========================================================
-   ADMIN
-========================================================= */
-
-.admin-card{
-  padding:18px;
-
-  margin-bottom:12px;
-
-  border-radius:23px;
-}
-
-.admin-seller{
-  padding:14px;
-
-  margin-top:10px;
-
-  border-radius:18px;
-
-  background:rgba(255,255,255,.5);
-}
-
-.admin-actions{
-  display:flex;
-
-  gap:7px;
-
-  flex-wrap:wrap;
-
-  margin-top:10px;
-}
-
-
-/* =========================================================
-   MODAL ZOOM
-========================================================= */
-
+textarea.form-control{min-height:100px;resize:vertical}
+.auth-tabs{display:flex;gap:8px;margin-bottom:15px}.auth-tab{flex:1;border:0;padding:11px;border-radius:15px;background:rgba(0,0,0,.05)}
+.auth-tab.active{background:#111;color:#fff}.auth-form{padding:20px;border-radius:26px}
+.danger-button{padding:10px 13px;border:0;border-radius:14px;background:#ff3b30;color:#fff}
+.seller-product{display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:9px}
+.seller-product img{width:65px;height:65px;border-radius:15px;object-fit:cover}.seller-product-info{flex:1}
+.sales-card{padding:16px;margin-bottom:10px;border-radius:20px}
+.admin-seller{padding:14px;margin-top:10px;border-radius:18px;background:rgba(255,255,255,.5)}
+.admin-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
 .zoom-modal{
-  position:fixed;
-
-  inset:0;
-
-  z-index:1000;
-
-  display:none;
-
-  align-items:center;
-  justify-content:center;
-
-  padding:20px;
-
-  background:rgba(0,0,0,.72);
-
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
+position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;
+background:rgba(0,0,0,.72);backdrop-filter:blur(20px)
 }
-
-.zoom-modal.active{
-  display:flex;
-
-  animation:modalIn .25s ease;
-}
-
-@keyframes modalIn{
-  from{
-    opacity:0;
-  }
-
-  to{
-    opacity:1;
-  }
-}
-
-.zoom-modal img{
-  max-width:100%;
-  max-height:90vh;
-
-  object-fit:contain;
-
-  border-radius:22px;
-}
-
+.zoom-modal.active{display:flex}.zoom-modal img{max-width:100%;max-height:90vh;object-fit:contain;border-radius:22px}
 .zoom-close{
-  position:absolute;
-
-  top:calc(15px + env(safe-area-inset-top));
-  right:15px;
-
-  width:44px;
-  height:44px;
-
-  border:0;
-
-  border-radius:50%;
-
-  background:rgba(255,255,255,.18);
-
-  color:white;
-
-  font-size:25px;
+position:absolute;top:calc(15px + env(safe-area-inset-top));right:15px;width:44px;height:44px;
+border:0;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:25px
 }
-
-
-/* =========================================================
-   BOTTOM NAVIGATION
-========================================================= */
-
 .bottom-nav{
-  position:fixed;
-
-  z-index:500;
-
-  left:50%;
-  bottom:
-    calc(10px + env(safe-area-inset-bottom));
-
-  transform:translateX(-50%);
-
-  width:
-    min(94%,560px);
-
-  height:70px;
-
-  padding:7px;
-
-  display:grid;
-
-  grid-template-columns:
-    repeat(5,1fr);
-
-  align-items:center;
-
-  border-radius:28px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.72),
-      rgba(255,255,255,.35)
-    );
-
-  border:
-    1px solid rgba(255,255,255,.85);
-
-  backdrop-filter:
-    blur(30px)
-    saturate(190%);
-
-  -webkit-backdrop-filter:
-    blur(30px)
-    saturate(190%);
-
-  box-shadow:
-    0 15px 45px rgba(0,0,0,.14),
-    inset 0 1px 1px rgba(255,255,255,.95);
-
+position:fixed;z-index:500;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);
+width:min(94%,560px);height:70px;padding:7px;display:grid;grid-template-columns:repeat(5,1fr);
+border-radius:28px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.85);
+backdrop-filter:blur(30px) saturate(190%);box-shadow:0 15px 45px rgba(0,0,0,.14)
 }
-
 .nav-btn{
-  position:relative;
-
-  height:55px;
-
-  border:0;
-
-  background:transparent;
-
-  border-radius:20px;
-
-  display:flex;
-
-  flex-direction:column;
-
-  align-items:center;
-  justify-content:center;
-
-  gap:2px;
-
-  color:#777;
-
-  transition:
-    transform .22s ease,
-    background .22s ease,
-    color .22s ease;
+position:relative;height:55px;border:0;background:transparent;border-radius:20px;display:flex;
+flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#777
 }
-
-.nav-btn span:first-child{
-  font-size:20px;
-  line-height:20px;
-}
-
-.nav-btn span:last-child{
-  font-size:10px;
-  font-weight:600;
-}
-
-.nav-btn.active{
-  color:#111;
-
-  background:
-    rgba(255,255,255,.52);
-
-  box-shadow:
-    inset 0 1px 1px rgba(255,255,255,.9);
-}
-
-.nav-btn:active{
-  transform:scale(.88);
-}
-
+.nav-btn span:first-child{font-size:20px}.nav-btn span:last-child{font-size:10px;font-weight:600}
+.nav-btn.active{color:#111;background:rgba(255,255,255,.52)}
 .nav-cart{
-  width:61px;
-  height:61px;
-
-  margin:auto;
-
-  transform:translateY(-15px);
-
-  border-radius:50% !important;
-
-  background:#111 !important;
-
-  color:white !important;
-
-  border:
-    4px solid rgba(255,255,255,.80) !important;
-
-  box-shadow:
-    0 9px 25px rgba(0,0,0,.20),
-    0 0 0 5px rgba(255,255,255,.22),
-    inset 0 1px 2px rgba(255,255,255,.25);
-
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
+width:61px;height:61px;margin:auto;transform:translateY(-15px);border-radius:50%!important;
+background:#111!important;color:#fff!important;border:4px solid rgba(255,255,255,.8)!important
 }
-
-.nav-cart span:first-child{
-  font-size:22px !important;
-}
-
-.nav-cart span:last-child{
-  font-size:9px;
-}
-
-.nav-cart:active{
-  transform:translateY(-15px) scale(.88);
-}
-
 .cart-badge{
-  position:absolute;
-
-  top:2px;
-  right:1px;
-
-  min-width:18px;
-  height:18px;
-
-  padding:0 5px;
-
-  border-radius:999px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  background:#ff3b30;
-  color:white;
-
-  font-size:10px;
-  font-weight:800;
-
-  border:2px solid rgba(255,255,255,.9);
+position:absolute;top:2px;right:1px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;
+display:flex;align-items:center;justify-content:center;background:#ff3b30;color:#fff;font-size:10px;font-weight:800
 }
-
-
-/* =========================================================
-   LOADING / EMPTY
-========================================================= */
-
-.loading,
-.empty{
-  padding:35px 20px;
-
-  text-align:center;
-
-  color:#777;
+.loading,.empty{padding:35px 20px;text-align:center;color:#777}
+.support-box{
+margin-top:15px;padding:15px;border-radius:20px;background:rgba(255,255,255,.55);
+border:1px solid rgba(255,255,255,.75)
 }
-
-
-/* =========================================================
-   DESKTOP
-========================================================= */
-
+.support-button{
+display:block;width:100%;margin-top:10px;padding:13px;border:0;border-radius:16px;
+background:#1683ff;color:#fff;font-weight:700;text-align:center;text-decoration:none
+}
+.verified-card{
+display:flex;align-items:center;gap:8px;margin-top:10px;padding:9px 12px;
+border-radius:15px;background:rgba(22,131,255,.08);color:#1683ff;font-size:13px;font-weight:700
+}
 @media(min-width:700px){
-
-  .products-grid{
-    grid-template-columns:
-      repeat(4,minmax(0,1fr));
-  }
-
-  .quick-actions{
-    grid-template-columns:
-      repeat(4,minmax(0,1fr));
-  }
-
-  .dashboard-hero{
-    padding:26px;
-  }
-
+.products-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.quick-actions{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:420px){
-
-  .page{
-    padding-left:12px;
-    padding-right:12px;
-  }
-
-  .quick-actions{
-    gap:9px;
-  }
-
-  .quick-action{
-    padding:14px;
-    min-height:115px;
-  }
-
-  .bottom-nav{
-    width:96%;
-  }
-
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media(prefers-reduced-motion:reduce){
-
-  *,
-  *::before,
-  *::after{
-    animation-duration:.01ms !important;
-    animation-iteration-count:1 !important;
-    transition-duration:.01ms !important;
-  }
-
-}
-
+@media(max-width:420px){.page{padding-left:12px;padding-right:12px}.bottom-nav{width:96%}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
-
 </head>
 
 <body>
 
 <header>
-
-  <div class="header-inner">
-
-    <div class="logo">
-      Zackary sh🛍️p
-    </div>
-
-    <div class="header-spacer"></div>
-
-    <button
-      class="account-button"
-      onclick="showPage('accountPage')"
-      aria-label="Mon compte"
-    >
-
-      <img
-        id="headerAvatar"
-        src="https://ui-avatars.com/api/?name=User&background=eeeeee&color=111111"
-        alt="Compte"
-      >
-
-    </button>
-
-  </div>
-
-  <div class="search-wrap">
-
-    <input
-      id="searchInput"
-      class="search-box"
-      type="search"
-      placeholder="🔎 Rechercher un article..."
-      oninput="handleSearch(this.value)"
-    >
-
-  </div>
-
+<div class="header-inner">
+<div class="logo">Zackary sh🛍️p</div>
+<div class="header-spacer"></div>
+<button class="account-button" onclick="showPage('accountPage')" aria-label="Mon compte">
+<img id="headerAvatar" src="https://ui-avatars.com/api/?name=User&background=eeeeee&color=111111" alt="Compte">
+</button>
+</div>
+<div class="search-wrap">
+<input id="searchInput" class="search-box" type="search" placeholder="🔎 Rechercher un article..." oninput="handleSearch(this.value)">
+</div>
 </header>
 
-
 <main id="homePage" class="page active">
-
-  <div id="dashboardHome"></div>
-
-  <div class="dashboard-section-title">
-
-    <h2>
-      Découvrir
-    </h2>
-
-    <span>
-      Tout voir
-    </span>
-
-  </div>
-
-  <div
-    id="categories"
-    class="categories"
-  ></div>
-
-  <div
-    id="productsGrid"
-    class="products-grid"
-  >
-
-    <div class="loading">
-      Chargement...
-    </div>
-
-  </div>
-
+<div id="dashboardHome"></div>
+<div class="dashboard-section-title"><h2>Découvrir</h2><span>Tout voir</span></div>
+<div id="categories" class="categories"></div>
+<div id="productsGrid" class="products-grid"><div class="loading">Chargement...</div></div>
 </main>
-
 
 <main id="productPage" class="page">
-
-  <button
-    class="back-button"
-    onclick="showPage('homePage')"
-  >
-    ← Retour
-  </button>
-
-  <div id="productDetail"></div>
-
+<button class="back-button" onclick="showPage('homePage')">← Retour</button>
+<div id="productDetail"></div>
 </main>
-
 
 <main id="cartPage" class="page">
-
-  <div class="dashboard-section-title">
-
-    <h2>
-      Mon panier 🛒
-    </h2>
-
-    <span id="cartCountText">
-      0 article
-    </span>
-
-  </div>
-
-  <div id="cartContent"></div>
-
+<div class="dashboard-section-title"><h2>Mon panier 🛒</h2><span id="cartCountText">0 article</span></div>
+<div id="cartContent"></div>
 </main>
-
 
 <main id="sellPage" class="page">
-
-  <div class="dashboard-section-title">
-
-    <h2>
-      Espace vendeur
-    </h2>
-
-  </div>
-
-  <div id="sellerContent"></div>
-
+<div class="dashboard-section-title"><h2>Espace vendeur</h2></div>
+<div id="sellerContent"></div>
 </main>
-
 
 <main id="accountPage" class="page">
-
-  <div class="dashboard-section-title">
-
-    <h2>
-      Mon compte
-    </h2>
-
-  </div>
-
-  <div id="accountContent"></div>
-
+<div class="dashboard-section-title"><h2>Mon compte</h2></div>
+<div id="accountContent"></div>
 </main>
-
 
 <main id="adminPage" class="page">
-
-  <div class="dashboard-section-title">
-
-    <h2>
-      Administration
-    </h2>
-
-  </div>
-
-  <div id="adminContent"></div>
-
+<div class="dashboard-section-title"><h2>Administration</h2></div>
+<div id="adminContent"></div>
 </main>
 
-
-<div
-  id="zoomModal"
-  class="zoom-modal"
-  onclick="closeZoom(event)"
->
-
-  <button
-    class="zoom-close"
-    onclick="closeZoom()"
-  >
-    ×
-  </button>
-
-  <img
-    id="zoomImage"
-    src=""
-    alt="Image produit"
-  >
-
+<div id="zoomModal" class="zoom-modal" onclick="closeZoom(event)">
+<button class="zoom-close" onclick="closeZoom()">×</button>
+<img id="zoomImage" src="" alt="Image produit">
 </div>
 
-
 <nav class="bottom-nav">
-
-  <button
-    id="navHome"
-    class="nav-btn active"
-    onclick="showPage('homePage')"
-  >
-    <span>⌂</span>
-    <span>Accueil</span>
-  </button>
-
-  <button
-    id="navShop"
-    class="nav-btn"
-    onclick="showPage('homePage')"
-  >
-    <span>🛍️</span>
-    <span>Boutique</span>
-  </button>
-
-  <button
-    id="navCart"
-    class="nav-btn nav-cart"
-    onclick="openCart()"
-  >
-    <span>🛒</span>
-    <span>Panier</span>
-
-    <span
-      id="cartBadge"
-      class="cart-badge"
-      style="display:none"
-    >
-      0
-    </span>
-  </button>
-
-  <button
-    id="navSell"
-    class="nav-btn"
-    onclick="showSellPage()"
-  >
-    <span>＋</span>
-    <span>Vendre</span>
-  </button>
-
-  <button
-    id="navAccount"
-    class="nav-btn"
-    onclick="showPage('accountPage')"
-  >
-    <span>●</span>
-    <span>Profil</span>
-  </button>
-
+<button id="navHome" class="nav-btn active" onclick="showPage('homePage')"><span>⌂</span><span>Accueil</span></button>
+<button id="navShop" class="nav-btn" onclick="showPage('homePage')"><span>🛍️</span><span>Boutique</span></button>
+<button id="navCart" class="nav-btn nav-cart" onclick="openCart()"><span>🛒</span><span>Panier</span><span id="cartBadge" class="cart-badge" style="display:none">0</span></button>
+<button id="navSell" class="nav-btn" onclick="showSellPage()"><span>＋</span><span>Vendre</span></button>
+<button id="navAccount" class="nav-btn" onclick="showPage('accountPage')"><span>●</span><span>Profil</span></button>
 </nav>
 
-
 <script>
+const SUPABASE_URL="https://leoyfcpkjbvdhalyefcv.supabase.co";
+const SUPABASE_KEY="sb_publishable_ZVx9Vqel2vvEylmrQGRT-A_SeAk8K3-";
+const SUPPORT_EMAIL="novisfb512@gmail.com";
 
-/* =========================================================
-   SUPABASE
-========================================================= */
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const SUPABASE_URL =
-  "https://leoyfcpkjbvdhalyefcv.supabase.co";
+let currentUser=null,currentProfile=null,currentProducts=[];
+let selectedCategory="Tous",selectedProduct=null,currentProductImages=[];
+let selectedDeliveryChoice="delivery";
 
-const SUPABASE_KEY =
-  "sb_publishable_ZVx9Vqel2vvEylmrQGRT-A_SeAk8K3-";
+let cart=JSON.parse(localStorage.getItem("zackary_cart")||"[]");
 
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-
-/* =========================================================
-   VARIABLES
-========================================================= */
-
-let currentUser = null;
-let currentProfile = null;
-let currentProducts = [];
-let selectedCategory = "Tous";
-let selectedProduct = null;
-let currentProductImages = [];
-
-let selectedDeliveryChoice = "delivery";
-
-let cart =
-  JSON.parse(
-    localStorage.getItem("zackary_cart") || "[]"
-  );
-
-
-const categoriesList = [
-
-  "Tous",
-  "T-shirts",
-  "Ensembles/Jogging",
-  "Pantalons",
-  "Vestes",
-  "Chaussures",
-  "Accessoires"
-
+const categoriesList=[
+"Tous","T-shirts","Ensembles/Jogging","Pantalons","Vestes","Chaussures","Accessoires"
 ];
 
-
-/* =========================================================
-   UTILITIES
-========================================================= */
-
-function escapeHtml(value){
-
-  if(value === null || value === undefined){
-    return "";
-  }
-
-  return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+function escapeHtml(v){
+if(v===null||v===undefined)return"";
+return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+.replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
 
-
-function formatPrice(value){
-
-  const number =
-    Number(value || 0);
-
-  return number.toLocaleString("fr-FR") + " XAF";
+function formatPrice(v){
+return Number(v||0).toLocaleString("fr-FR")+" XAF";
 }
 
-
-function getAvatarUrl(profile){
-
-  if(
-    profile &&
-    profile.avatar_url
-  ){
-    return profile.avatar_url;
-  }
-
-  const name =
-    profile?.username ||
-    "User";
-
-  return (
-    "https://ui-avatars.com/api/?name=" +
-    encodeURIComponent(name) +
-    "&background=eeeeee&color=111111"
-  );
+function getAvatarUrl(p){
+if(p?.avatar_url)return p.avatar_url;
+return"https://ui-avatars.com/api/?name="+encodeURIComponent(p?.username||"User")+"&background=eeeeee&color=111111";
 }
 
+/* =========================
+   BADGE DE CERTIFICATION
+========================= */
 
-/* =========================================================
-   PAGE NAVIGATION
-========================================================= */
-
-function showPage(pageId){
-
-  const currentPage =
-    document.querySelector(".page.active");
-
-  const nextPage =
-    document.getElementById(pageId);
-
-  if(!nextPage){
-    return;
-  }
-
-  if(currentPage === nextPage){
-
-    window.scrollTo({
-      top:0,
-      behavior:"smooth"
-    });
-
-    return;
-  }
-
-  if(currentPage){
-
-    currentPage.style.animation =
-      "pageOut .18s ease forwards";
-
-    setTimeout(() => {
-
-      currentPage.classList.remove("active");
-
-      currentPage.style.animation = "";
-
-      nextPage.classList.add("active");
-
-    },180);
-
-  }else{
-
-    nextPage.classList.add("active");
-
-  }
-
-  document
-    .querySelectorAll(".nav-btn")
-    .forEach(btn => {
-
-      btn.classList.remove("active");
-
-    });
-
-  if(
-    pageId === "homePage" ||
-    pageId === "productPage"
-  ){
-
-    document
-      .getElementById("navHome")
-      ?.classList.add("active");
-
-  }
-
-  if(pageId === "cartPage"){
-
-    document
-      .getElementById("navCart")
-      ?.classList.add("active");
-
-  }
-
-  if(pageId === "sellPage"){
-
-    document
-      .getElementById("navSell")
-      ?.classList.add("active");
-
-  }
-
-  if(pageId === "accountPage"){
-
-    document
-      .getElementById("navAccount")
-      ?.classList.add("active");
-
-  }
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
+function isVerifiedProfile(profile){
+return profile?.role==="creator_admin";
 }
 
+function verifiedBadge(profile){
+if(!isVerifiedProfile(profile))return"";
+return`<span class="verified-badge" title="Compte certifié">✓</span>`;
+}
 
-/* =========================================================
+function verifiedLabel(profile){
+if(!isVerifiedProfile(profile))return"";
+return`<span class="verified-label">Certifié</span>`;
+}
+
+/* =========================
+   SUPPORT
+========================= */
+
+function supportBox(){
+return`
+<div class="support-box">
+<strong>🛠️ Support technique</strong>
+<div style="margin-top:5px;color:#666;font-size:13px;line-height:1.4">
+Un problème avec ton compte, une photo, un article ou Zackary sh🛍️p ?
+</div>
+<a class="support-button" href="mailto:${SUPPORT_EMAIL}?subject=Support%20technique%20Zackary%20sh">
+📧 Contacter le support
+</a>
+<div style="text-align:center;margin-top:7px;font-size:12px;color:#777">
+${escapeHtml(SUPPORT_EMAIL)}
+</div>
+</div>`;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function showPage(id){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id)?.classList.add("active");
+document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+
+if(id==="homePage"||id==="productPage")document.getElementById("navHome")?.classList.add("active");
+if(id==="cartPage")document.getElementById("navCart")?.classList.add("active");
+if(id==="sellPage")document.getElementById("navSell")?.classList.add("active");
+if(id==="accountPage")document.getElementById("navAccount")?.classList.add("active");
+
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* =========================
    DASHBOARD
-========================================================= */
+========================= */
 
 function renderDashboard(){
-
-  const container =
-    document.getElementById("dashboardHome");
-
-  if(!container){
-    return;
-  }
-
-  if(!currentUser){
-
-    container.innerHTML = `
-
-      <div class="dashboard-hero glass-card">
-
-        <div class="dashboard-welcome">
-
-          <div>
-
-            <small>
-              Bienvenue sur
-            </small>
-
-            <strong>
-              Zackary sh🛍️p
-            </strong>
-
-          </div>
-
-          <button
-            class="dashboard-profile-button"
-            onclick="showPage('accountPage')"
-            aria-label="Mon profil"
-          >
-
-            <img
-              class="dashboard-avatar"
-              src="https://ui-avatars.com/api/?name=Zackary&background=eeeeee&color=111111"
-              alt="Zackary"
-            >
-
-          </button>
-
-        </div>
-
-        <div class="dashboard-role">
-          Mode visiteur
-        </div>
-
-      </div>
-
-
-      <div class="quick-actions">
-
-        <button
-          class="quick-action glass-card"
-          onclick="showPage('accountPage')"
-        >
-
-          <div class="quick-action-icon">
-            👤
-          </div>
-
-          <strong>
-            Se connecter
-          </strong>
-
-          <span>
-            Accéder à mon compte
-          </span>
-
-        </button>
-
-
-        <button
-          class="quick-action glass-card"
-          onclick="showPage('homePage')"
-        >
-
-          <div class="quick-action-icon">
-            🛍️
-          </div>
-
-          <strong>
-            Boutique
-          </strong>
-
-          <span>
-            Découvrir les articles
-          </span>
-
-        </button>
-
-
-        <button
-          class="quick-action glass-card"
-          onclick="openCart()"
-        >
-
-          <div class="quick-action-icon">
-            🛒
-          </div>
-
-          <strong>
-            Mon panier
-          </strong>
-
-          <span>
-            Voir mes achats
-          </span>
-
-        </button>
-
-      </div>
-
-    `;
-
-    return;
-  }
-
-
-  const profile =
-    currentProfile || {};
-
-  const avatar =
-    getAvatarUrl(profile);
-
-  let role = "Client";
-
-  if(profile.role === "seller"){
-    role = "Vendeur";
-  }
-
-  if(profile.role === "creator_admin"){
-    role = "Administrateur";
-  }
-
-
-  let quickActions = `
-
-    <button
-      class="quick-action glass-card"
-      onclick="showPage('homePage')"
-    >
-
-      <div class="quick-action-icon">
-        🛍️
-      </div>
-
-      <strong>
-        Boutique
-      </strong>
-
-      <span>
-        Explorer les articles
-      </span>
-
-    </button>
-
-
-    <button
-      class="quick-action glass-card"
-      onclick="openCart()"
-    >
-
-      <div class="quick-action-icon">
-        🛒
-      </div>
-
-      <strong>
-        Mon panier
-      </strong>
-
-      <span>
-        Voir mes articles
-      </span>
-
-    </button>
-
-
-    <button
-      class="quick-action glass-card"
-      onclick="showPage('accountPage')"
-    >
-
-      <div class="quick-action-icon">
-        👤
-      </div>
-
-      <strong>
-        Mon profil
-      </strong>
-
-      <span>
-        Gérer mon compte
-      </span>
-
-    </button>
-
-  `;
-
-
-  if(profile.role === "seller"){
-
-    quickActions += `
-
-      <button
-        class="quick-action glass-card"
-        onclick="showSellPage()"
-      >
-
-        <div class="quick-action-icon">
-          ➕
-        </div>
-
-        <strong>
-          Ajouter
-        </strong>
-
-        <span>
-          Publier un article
-        </span>
-
-      </button>
-
-
-      <button
-        class="quick-action glass-card"
-        onclick="showSellPage()"
-      >
-
-        <div class="quick-action-icon">
-          📊
-        </div>
-
-        <strong>
-          Mes ventes
-        </strong>
-
-        <span>
-          Voir mon activité
-        </span>
-
-      </button>
-
-    `;
-
-  }
-
-
-  if(profile.role === "creator_admin"){
-
-    quickActions += `
-
-      <button
-        class="quick-action glass-card"
-        onclick="showAdminPage()"
-      >
-
-        <div class="quick-action-icon">
-          ⚙️
-        </div>
-
-        <strong>
-          Administration
-        </strong>
-
-        <span>
-          Gérer Zackary sh🛍️p
-        </span>
-
-      </button>
-
-    `;
-
-  }
-
-
-  container.innerHTML = `
-
-    <div class="dashboard-hero glass-card">
-
-      <div class="dashboard-welcome">
-
-        <div>
-
-          <small>
-            Bonjour 👋
-          </small>
-
-          <strong>
-            ${escapeHtml(
-              profile.username ||
-              "Utilisateur"
-            )}
-          </strong>
-
-        </div>
-
-
-        <button
-          class="dashboard-profile-button"
-          onclick="showPage('accountPage')"
-          aria-label="Mon profil"
-        >
-
-          <img
-            class="dashboard-avatar"
-            src="${escapeHtml(avatar)}"
-            alt="Photo de profil"
-          >
-
-        </button>
-
-      </div>
-
-
-      <div class="dashboard-role">
-        ${escapeHtml(role)}
-      </div>
-
-    </div>
-
-
-    <div class="quick-actions">
-
-      ${quickActions}
-
-    </div>
-
-  `;
-
+const c=document.getElementById("dashboardHome");
+if(!c)return;
+
+if(!currentUser){
+c.innerHTML=`
+<div class="dashboard-hero glass-card">
+<div class="dashboard-welcome">
+<div><small>Bienvenue sur</small><strong>Zackary sh🛍️p</strong></div>
+<button class="dashboard-profile-button" onclick="showPage('accountPage')">
+<img class="dashboard-avatar" src="https://ui-avatars.com/api/?name=Zackary&background=eeeeee&color=111111">
+</button>
+</div>
+<div class="dashboard-role">Mode visiteur</div>
+</div>
+<div class="quick-actions">
+<button class="quick-action glass-card" onclick="showPage('accountPage')"><div class="quick-action-icon">👤</div><strong>Se connecter</strong><span>Accéder à mon compte</span></button>
+<button class="quick-action glass-card" onclick="showPage('homePage')"><div class="quick-action-icon">🛍️</div><strong>Boutique</strong><span>Découvrir les articles</span></button>
+<button class="quick-action glass-card" onclick="openCart()"><div class="quick-action-icon">🛒</div><strong>Mon panier</strong><span>Voir mes achats</span></button>
+</div>`;
+return;
 }
 
+const p=currentProfile||{};
+let role=p.role==="seller"?"Vendeur":p.role==="creator_admin"?"Administrateur":"Client";
 
-/* =========================================================
+let actions=`
+<button class="quick-action glass-card" onclick="showPage('homePage')"><div class="quick-action-icon">🛍️</div><strong>Boutique</strong><span>Explorer les articles</span></button>
+<button class="quick-action glass-card" onclick="openCart()"><div class="quick-action-icon">🛒</div><strong>Mon panier</strong><span>Voir mes articles</span></button>
+<button class="quick-action glass-card" onclick="showPage('accountPage')"><div class="quick-action-icon">👤</div><strong>Mon profil</strong><span>Gérer mon compte</span></button>`;
+
+if(p.role==="seller")actions+=`
+<button class="quick-action glass-card" onclick="showSellPage()"><div class="quick-action-icon">➕</div><strong>Ajouter</strong><span>Publier un article</span></button>
+<button class="quick-action glass-card" onclick="showSellPage()"><div class="quick-action-icon">📊</div><strong>Mes ventes</strong><span>Voir mon activité</span></button>`;
+
+if(p.role==="creator_admin")actions+=`
+<button class="quick-action glass-card" onclick="showAdminPage()"><div class="quick-action-icon">⚙️</div><strong>Administration</strong><span>Gérer Zackary sh🛍️p</span></button>`;
+
+c.innerHTML=`
+<div class="dashboard-hero glass-card">
+<div class="dashboard-welcome">
+<div><small>Bonjour 👋</small><strong>${escapeHtml(p.username||"Utilisateur")} ${verifiedBadge(p)} </strong></div>
+<button class="dashboard-profile-button" onclick="showPage('accountPage')">
+<img class="dashboard-avatar" src="${escapeHtml(getAvatarUrl(p))}">
+</button>
+</div>
+<div class="dashboard-role">${escapeHtml(role)} ${verifiedLabel(p)}</div>
+</div>
+<div class="quick-actions">${actions}</div>`;
+}
+
+/* =========================
    CATEGORIES
-========================================================= */
+========================= */
 
 function renderCategories(){
-
-  const container =
-    document.getElementById("categories");
-
-  if(!container){
-    return;
-  }
-
-  container.innerHTML =
-    categoriesList.map(category => `
-
-      <button
-        class="category-btn ${
-          selectedCategory === category
-          ? "active"
-          : ""
-        }"
-        onclick="selectCategory('${escapeHtml(category)}')"
-      >
-
-        ${escapeHtml(category)}
-
-      </button>
-
-    `).join("");
-
+const c=document.getElementById("categories");
+if(!c)return;
+c.innerHTML=categoriesList.map(x=>`
+<button class="category-btn ${selectedCategory===x?"active":""}" onclick="selectCategory('${escapeHtml(x)}')">${escapeHtml(x)}</button>`).join("");
 }
 
-
-function selectCategory(category){
-
-  selectedCategory = category;
-
-  renderCategories();
-
-  renderProducts();
-
+function selectCategory(x){
+selectedCategory=x;renderCategories();renderProducts();
 }
 
-
-/* =========================================================
+/* =========================
    PRODUCTS
-========================================================= */
+========================= */
+
+function getProductImages(p){
+let a=[];
+["image_url","image_url_2","image_url_3","image_url_4"].forEach(k=>{if(p[k])a.push(p[k])});
+if(Array.isArray(p.images))p.images.forEach(x=>{if(x&&!a.includes(x))a.push(x)});
+return a;
+}
 
 async function loadProducts(){
+const grid=document.getElementById("productsGrid");
+if(grid)grid.innerHTML='<div class="loading">Chargement des articles...</div>';
 
-  const grid =
-    document.getElementById("productsGrid");
-
-  if(grid){
-
-    grid.innerHTML = `
-      <div class="loading">
-        Chargement des articles...
-      </div>
-    `;
-
-  }
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("products")
-      .select("*")
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-
-  if(error){
-
-    console.error(error);
-
-    if(grid){
-
-      grid.innerHTML = `
-        <div class="empty">
-          Impossible de charger les articles.
-        </div>
-      `;
-
-    }
-
-    return;
-  }
-
-
-  currentProducts =
-    data || [];
-
-
-  await disableExpiredSellers();
-
-  renderProducts();
-
+const {data,error}=await supabaseClient.from("products").select("*").order("created_at",{ascending:false});
+if(error){
+if(grid)grid.innerHTML='<div class="empty">Impossible de charger les articles.</div>';
+console.error(error);return;
 }
 
-
-function getProductImages(product){
-
-  const images = [];
-
-  if(product.image_url){
-    images.push(product.image_url);
-  }
-
-  if(product.image_url_2){
-    images.push(product.image_url_2);
-  }
-
-  if(product.image_url_3){
-    images.push(product.image_url_3);
-  }
-
-  if(product.image_url_4){
-    images.push(product.image_url_4);
-  }
-
-
-  if(
-    Array.isArray(product.images)
-  ){
-
-    product.images.forEach(img => {
-
-      if(
-        img &&
-        !images.includes(img)
-      ){
-
-        images.push(img);
-
-      }
-
-    });
-
-  }
-
-
-  return images;
+currentProducts=data||[];
+await disableExpiredSellers();
+renderProducts();
 }
 
+async function getSellerProfile(id){
+if(!id)return null;
+const {data}=await supabaseClient.from("profiles")
+.select("id,username,avatar_url,phone,whatsapp,pickup_location,role,seller_expires_at")
+.eq("id",id).maybeSingle();
+return data||null;
+}
 
 function renderProducts(){
+const grid=document.getElementById("productsGrid");
+if(!grid)return;
 
-  const grid =
-    document.getElementById("productsGrid");
+let products=[...currentProducts];
 
-  if(!grid){
-    return;
-  }
+if(selectedCategory!=="Tous")products=products.filter(p=>p.category===selectedCategory);
 
+const search=(document.getElementById("searchInput")?.value||"").trim().toLowerCase();
+if(search)products=products.filter(p=>
+String(p.name||"").toLowerCase().includes(search)||
+String(p.description||"").toLowerCase().includes(search)||
+String(p.category||"").toLowerCase().includes(search)
+);
 
-  let products =
-    [...currentProducts];
-
-
-  if(selectedCategory !== "Tous"){
-
-    products =
-      products.filter(product => {
-
-        return (
-          product.category ===
-          selectedCategory
-        );
-
-      });
-
-  }
-
-
-  const search =
-    (
-      document.getElementById(
-        "searchInput"
-      )?.value || ""
-    )
-      .trim()
-      .toLowerCase();
-
-
-  if(search){
-
-    products =
-      products.filter(product => {
-
-        return (
-
-          String(
-            product.name || ""
-          )
-          .toLowerCase()
-          .includes(search)
-
-          ||
-
-          String(
-            product.description || ""
-          )
-          .toLowerCase()
-          .includes(search)
-
-          ||
-
-          String(
-            product.category || ""
-          )
-          .toLowerCase()
-          .includes(search)
-
-        );
-
-      });
-
-  }
-
-
-  if(!products.length){
-
-    grid.innerHTML = `
-
-      <div
-        class="empty"
-        style="grid-column:1/-1"
-      >
-
-        Aucun article trouvé.
-
-      </div>
-
-    `;
-
-    return;
-  }
-
-
-  grid.innerHTML =
-    products.map(product => {
-
-      const images =
-        getProductImages(product);
-
-      const image =
-        images[0] ||
-        "https://via.placeholder.com/600x600?text=Produit";
-
-
-      return `
-
-        <article
-          class="product-card"
-          onclick="openProduct('${escapeHtml(product.id)}')"
-        >
-
-          <img
-            class="product-image"
-            src="${escapeHtml(image)}"
-            alt="${escapeHtml(product.name || "Produit")}"
-            loading="lazy"
-          >
-
-
-          <div class="product-info">
-
-            <div class="product-name">
-
-              ${escapeHtml(
-                product.name ||
-                "Article"
-              )}
-
-            </div>
-
-
-            <div class="product-price">
-
-              ${formatPrice(
-                product.price
-              )}
-
-            </div>
-
-
-            <div class="product-seller">
-
-              ${escapeHtml(
-                product.category ||
-                "Article"
-              )}
-
-            </div>
-
-          </div>
-
-        </article>
-
-      `;
-
-    }).join("");
-
+if(!products.length){
+grid.innerHTML='<div class="empty" style="grid-column:1/-1">Aucun article trouvé.</div>';
+return;
 }
 
-
-function handleSearch(value){
-
-  renderProducts();
-
+grid.innerHTML=products.map(p=>{
+const image=getProductImages(p)[0]||"https://via.placeholder.com/600x600?text=Produit";
+const verified=p.seller_id===currentUser?.id&&currentProfile?.role==="creator_admin";
+return`
+<article class="product-card" onclick="openProduct('${escapeHtml(p.id)}')">
+<img class="product-image" src="${escapeHtml(image)}" alt="${escapeHtml(p.name||"Produit")}" loading="lazy">
+<div class="product-info">
+<div class="product-name">${escapeHtml(p.name||"Article")}</div>
+<div class="product-price">${formatPrice(p.price)}</div>
+<div class="product-seller">${escapeHtml(p.seller_name||p.category||"Article")}${verifiedBadge({role:verified?"creator_admin":""})}</div>
+</div>
+</article>`;
+}).join("");
 }
 
+function handleSearch(){renderProducts()}
 
-/* =========================================================
+/* =========================
    PRODUCT DETAIL
-========================================================= */
+========================= */
 
-function openProduct(productId){
-
-  const product =
-    currentProducts.find(
-      item =>
-        String(item.id) ===
-        String(productId)
-    );
-
-
-  if(!product){
-    return;
-  }
-
-
-  selectedProduct =
-    product;
-
-
-  currentProductImages =
-    getProductImages(product);
-
-
-  if(!currentProductImages.length){
-
-    currentProductImages = [
-      "https://via.placeholder.com/800x800?text=Produit"
-    ];
-
-  }
-
-
-  selectedDeliveryChoice = "delivery";
-
-  renderProductDetail();
-
-  showPage("productPage");
-
+async function openProduct(id){
+const p=currentProducts.find(x=>String(x.id)===String(id));
+if(!p)return;
+selectedProduct=p;
+currentProductImages=getProductImages(p);
+if(!currentProductImages.length)currentProductImages=["https://via.placeholder.com/800x800?text=Produit"];
+selectedDeliveryChoice="delivery";
+renderProductDetail();
+showPage("productPage");
 }
 
-
-function renderProductDetail(){
-
-  const container =
-    document.getElementById(
-      "productDetail"
-    );
-
-  if(
-    !container ||
-    !selectedProduct
-  ){
-    return;
-  }
-
-
-  const product =
-    selectedProduct;
-
-
-  const images =
-    currentProductImages;
-
-
-  const mainImage =
-    images[0];
-
-
-  container.innerHTML = `
-
-    <div class="product-detail">
-
-      <img
-        id="mainProductImage"
-        class="product-main-image"
-        src="${escapeHtml(mainImage)}"
-        alt="${escapeHtml(product.name || "Produit")}"
-        onclick="openZoom('${escapeHtml(mainImage)}')"
-      >
-
-
-      <div class="product-thumbnails">
-
-        ${images.map(
-          (image,index) => `
-
-            <img
-              class="product-thumbnail ${
-                index === 0
-                ? "active"
-                : ""
-              }"
-              src="${escapeHtml(image)}"
-              onclick="changeMainProductImage(
-                '${escapeHtml(image)}',
-                this
-              )"
-              alt="Photo ${index + 1}"
-            >
-
-          `
-        ).join("")}
-
-      </div>
-
-
-      <div class="product-detail-content">
-
-        <h1>
-          ${escapeHtml(
-            product.name ||
-            "Article"
-          )}
-        </h1>
-
-
-        <div class="detail-price">
-
-          ${formatPrice(
-            product.price
-          )}
-
-        </div>
-
-
-        <div class="detail-description">
-
-          ${escapeHtml(
-            product.description ||
-            "Aucune description."
-          )}
-
-        </div>
-
-
-        <div class="seller-box">
-
-          <img
-            id="productSellerAvatar"
-            class="seller-avatar"
-            src="https://ui-avatars.com/api/?name=Vendeur&background=eeeeee&color=111111"
-            alt="Vendeur"
-          >
-
-          <div>
-
-            <strong id="productSellerName">
-              ${escapeHtml(
-                product.seller_name ||
-                "Vendeur Zackary sh🛍️p"
-              )}
-            </strong>
-
-            <div
-              style="
-                font-size:12px;
-                color:#777;
-                margin-top:3px;
-              "
-            >
-              ${escapeHtml(
-                product.category ||
-                ""
-              )}
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- MODE DE RÉCEPTION -->
-
-        <div class="delivery-choice">
-
-          <div class="delivery-title">
-            🚚 Mode de réception
-          </div>
-
-
-          <label class="delivery-option">
-
-            <input
-              type="radio"
-              name="deliveryChoice"
-              value="delivery"
-              checked
-              onchange="changeDeliveryChoice('delivery')"
-            >
-
-            <span>
-              🚚 Livraison
-            </span>
-
-          </label>
-
-
-          <label class="delivery-option">
-
-            <input
-              type="radio"
-              name="deliveryChoice"
-              value="pickup"
-              onchange="changeDeliveryChoice('pickup')"
-            >
-
-            <span>
-              📍 Retrait chez le vendeur
-            </span>
-
-          </label>
-
-
-          <div
-            id="pickupLocationBox"
-            class="pickup-location-box"
-          >
-
-            Chargement du lieu de réception...
-
-          </div>
-
-        </div>
-
-
-        <!-- WHATSAPP -->
-
-        <button
-          class="whatsapp-button"
-          onclick="contactSellerWhatsApp()"
-        >
-
-          💬 Contacter le vendeur sur WhatsApp
-
-        </button>
-
-
-        <button
-          class="buy-button"
-          onclick="addToCart('${escapeHtml(product.id)}')"
-        >
-
-          🛒 Ajouter au panier
-
-        </button>
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  loadProductSeller(product);
-
+async function renderProductDetail(){
+const c=document.getElementById("productDetail");
+if(!c||!selectedProduct)return;
+
+const p=selectedProduct,images=currentProductImages;
+
+c.innerHTML=`
+<div class="product-detail">
+<img id="mainProductImage" class="product-main-image" src="${escapeHtml(images[0])}" onclick="openZoom('${escapeHtml(images[0])}')">
+<div class="product-thumbnails">
+${images.map((x,i)=>`<img class="product-thumbnail ${i===0?"active":""}" src="${escapeHtml(x)}" onclick="changeMainProductImage('${escapeHtml(x)}',this)">`).join("")}
+</div>
+<div class="product-detail-content">
+<h1>${escapeHtml(p.name||"Article")}</h1>
+<div class="detail-price">${formatPrice(p.price)}</div>
+<div class="detail-description">${escapeHtml(p.description||"Aucune description.")}</div>
+
+<div class="seller-box">
+<img id="productSellerAvatar" class="seller-avatar" src="https://ui-avatars.com/api/?name=Vendeur&background=eeeeee&color=111111">
+<div>
+<strong id="productSellerName">${escapeHtml(p.seller_name||"Vendeur Zackary sh🛍️p")}</strong>
+<span id="productSellerBadge"></span>
+<div style="font-size:12px;color:#777;margin-top:3px">${escapeHtml(p.category||"")}</div>
+</div>
+</div>
+
+<div class="delivery-choice">
+<div class="delivery-title">🚚 Mode de réception</div>
+<label class="delivery-option"><input type="radio" name="deliveryChoice" value="delivery" checked onchange="changeDeliveryChoice('delivery')"><span>🚚 Livraison</span></label>
+<label class="delivery-option"><input type="radio" name="deliveryChoice" value="pickup" onchange="changeDeliveryChoice('pickup')"><span>📍 Retrait chez le vendeur</span></label>
+<div id="pickupLocationBox" class="pickup-location-box">Chargement du lieu...</div>
+</div>
+
+<button class="whatsapp-button" onclick="contactSellerWhatsApp()">💬 Contacter le vendeur sur WhatsApp</button>
+<button class="buy-button" onclick="addToCart('${escapeHtml(p.id)}')">🛒 Ajouter au panier</button>
+</div>
+</div>`;
+
+loadProductSeller(p);
 }
 
+async function loadProductSeller(p){
+const seller=await getSellerProfile(p.seller_id);
+if(!seller)return;
 
-/* =========================================================
-   SELLER PRODUCT INFORMATION
-========================================================= */
+const a=document.getElementById("productSellerAvatar");
+if(a)a.src=getAvatarUrl(seller);
 
-async function loadProductSeller(product){
+const n=document.getElementById("productSellerName");
+if(n)n.textContent=seller.username||p.seller_name||"Vendeur";
 
-  if(!product.seller_id){
-    return;
-  }
+const b=document.getElementById("productSellerBadge");
+if(b)b.innerHTML=verifiedBadge(seller)+verifiedLabel(seller);
 
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("profiles")
-      .select(
-        "username,avatar_url,phone,whatsapp,pickup_location"
-      )
-      .eq(
-        "id",
-        product.seller_id
-      )
-      .maybeSingle();
-
-
-  if(error){
-
-    console.error(
-      "Erreur vendeur:",
-      error
-    );
-
-    return;
-
-  }
-
-
-  if(!data){
-    return;
-  }
-
-
-  const avatar =
-    document.getElementById(
-      "productSellerAvatar"
-    );
-
-  if(avatar){
-
-    avatar.src =
-      getAvatarUrl(data);
-
-  }
-
-
-  const sellerName =
-    document.getElementById(
-      "productSellerName"
-    );
-
-  if(sellerName){
-
-    sellerName.textContent =
-      data.username ||
-      product.seller_name ||
-      "Vendeur";
-
-  }
-
-
-  updatePickupLocationDisplay(
-    data.pickup_location
-  );
-
+updatePickupLocationDisplay(seller.pickup_location);
 }
-
-
-/* =========================================================
-   DELIVERY CHOICE
-========================================================= */
 
 function changeDeliveryChoice(choice){
-
-  selectedDeliveryChoice =
-    choice;
-
-
-  const box =
-    document.getElementById(
-      "pickupLocationBox"
-    );
-
-
-  if(!box){
-    return;
-  }
-
-
-  if(choice === "delivery"){
-
-    box.classList.remove(
-      "visible"
-    );
-
-    return;
-
-  }
-
-
-  box.classList.add(
-    "visible"
-  );
-
-
-  box.innerHTML = `
-    Chargement du lieu de réception...
-  `;
-
-
-  loadPickupLocation();
-
+selectedDeliveryChoice=choice;
+const b=document.getElementById("pickupLocationBox");
+if(!b)return;
+if(choice==="delivery"){b.classList.remove("visible");return}
+b.classList.add("visible");loadPickupLocation();
 }
-
 
 async function loadPickupLocation(){
-
-  if(
-    !selectedProduct ||
-    !selectedProduct.seller_id
-  ){
-    return;
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("profiles")
-      .select(
-        "pickup_location"
-      )
-      .eq(
-        "id",
-        selectedProduct.seller_id
-      )
-      .maybeSingle();
-
-
-  const box =
-    document.getElementById(
-      "pickupLocationBox"
-    );
-
-
-  if(!box){
-    return;
-  }
-
-
-  if(error){
-
-    box.innerHTML = `
-      Impossible de récupérer le lieu de retrait.
-    `;
-
-    return;
-
-  }
-
-
-  updatePickupLocationDisplay(
-    data?.pickup_location
-  );
-
+const s=await getSellerProfile(selectedProduct?.seller_id);
+updatePickupLocationDisplay(s?.pickup_location);
 }
 
-
-function updatePickupLocationDisplay(
-  location
-){
-
-  const box =
-    document.getElementById(
-      "pickupLocationBox"
-    );
-
-
-  if(!box){
-    return;
-  }
-
-
-  if(!location){
-
-    box.innerHTML = `
-
-      📍
-
-      <strong>
-        Lieu de réception non renseigné
-      </strong>
-
-      <div style="
-        margin-top:5px;
-        color:#777;
-      ">
-
-        Le vendeur doit renseigner son lieu
-        de retrait dans son profil.
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  box.innerHTML = `
-
-    📍
-
-    <strong>
-      Lieu de réception
-    </strong>
-
-    <div style="
-      margin-top:5px;
-      color:#555;
-    ">
-
-      ${escapeHtml(location)}
-
-    </div>
-
-  `;
-
+function updatePickupLocationDisplay(location){
+const b=document.getElementById("pickupLocationBox");
+if(!b)return;
+if(!location){
+b.innerHTML="<strong>📍 Lieu non renseigné</strong><div style='margin-top:5px;color:#777'>Le vendeur doit renseigner son lieu de retrait.</div>";
+return;
 }
-
-
-/* =========================================================
-   WHATSAPP SELLER CONTACT
-========================================================= */
+b.innerHTML=`<strong>📍 Lieu de réception</strong><div style="margin-top:5px;color:#555">${escapeHtml(location)}</div>`;
+}
 
 async function contactSellerWhatsApp(){
+if(!selectedProduct)return alert("Article introuvable.");
 
-  if(!selectedProduct){
+const seller=await getSellerProfile(selectedProduct.seller_id);
+if(!seller)return alert("Vendeur introuvable.");
 
-    alert(
-      "Article introuvable."
-    );
+const choice=document.querySelector('input[name="deliveryChoice"]:checked')?.value||"delivery";
+const whatsapp=seller.whatsapp||seller.phone;
+if(!whatsapp)return alert("Le vendeur n'a pas renseigné son numéro WhatsApp.");
+if(choice==="pickup"&&!seller.pickup_location)return alert("Le vendeur doit renseigner son lieu de retrait.");
 
-    return;
+let phone=String(whatsapp).replace(/\D/g,"");
+if(phone.length===9&&phone.startsWith("6"))phone="237"+phone;
+if(phone.startsWith("00237"))phone=phone.substring(2);
 
-  }
-
-
-  const choice =
-    document.querySelector(
-      'input[name="deliveryChoice"]:checked'
-    )?.value ||
-    selectedDeliveryChoice;
-
-
-  if(!choice){
-
-    alert(
-      "Choisis un mode de réception."
-    );
-
-    return;
-
-  }
-
-
-  if(!selectedProduct.seller_id){
-
-    alert(
-      "Ce vendeur n'est pas correctement configuré."
-    );
-
-    return;
-
-  }
-
-
-  const {
-    data:seller,
-    error
-  } =
-    await supabaseClient
-      .from("profiles")
-      .select(
-        "username,phone,whatsapp,pickup_location"
-      )
-      .eq(
-        "id",
-        selectedProduct.seller_id
-      )
-      .maybeSingle();
-
-
-  if(error){
-
-    console.error(error);
-
-    alert(
-      "Impossible de récupérer les informations du vendeur."
-    );
-
-    return;
-
-  }
-
-
-  if(!seller){
-
-    alert(
-      "Vendeur introuvable."
-    );
-
-    return;
-
-  }
-
-
-  const whatsapp =
-    seller.whatsapp ||
-    seller.phone;
-
-
-  if(!whatsapp){
-
-    alert(
-      "Le vendeur n'a pas encore renseigné son numéro WhatsApp."
-    );
-
-    return;
-
-  }
-
-
-  if(
-    choice === "pickup" &&
-    !seller.pickup_location
-  ){
-
-    alert(
-      "Le vendeur doit renseigner son lieu de réception/retrait avant de proposer cette option."
-    );
-
-    return;
-
-  }
-
-
-  let phone =
-    String(whatsapp)
-      .replace(/\D/g,"");
-
-
-  /*
-    Numéro camerounais :
-    6XXXXXXXX → 2376XXXXXXXX
-  */
-
-  if(
-    phone.length === 9 &&
-    phone.startsWith("6")
-  ){
-
-    phone =
-      "237" + phone;
-
-  }
-
-
-  /*
-    Si l'utilisateur a mis
-    002376XXXXXXXX
-  */
-
-  if(
-    phone.startsWith("00237")
-  ){
-
-    phone =
-      phone.substring(2);
-
-  }
-
-
-  const productName =
-    selectedProduct.name ||
-    "Article";
-
-
-  const price =
-    formatPrice(
-      selectedProduct.price
-    );
-
-
-  let message =
-`Bonjour ${seller.username || "vendeur"} 👋
+let msg=`Bonjour ${seller.username||"vendeur"} 👋
 
 Je suis intéressé(e) par votre article sur Zackary sh🛍️p.
 
-🛍️ Article : ${productName}
-💰 Prix : ${price}
+🛍️ Article : ${selectedProduct.name}
+💰 Prix : ${formatPrice(selectedProduct.price)}
 `;
 
-
-  if(choice === "delivery"){
-
-    message += `
-
-🚚 Mode de réception : Livraison
-
-Je souhaite connaître les conditions et les frais de livraison.
-
-Merci.`;
-
-  }else{
-
-    message += `
-
-📍 Mode de réception : Retrait chez le vendeur
-
-📍 Lieu de réception :
-${seller.pickup_location}
-
-Je souhaite confirmer la disponibilité de l'article et les modalités de retrait.
-
-Merci.`;
-
-  }
-
-
-  const url =
-    "https://wa.me/" +
-    phone +
-    "?text=" +
-    encodeURIComponent(
-      message
-    );
-
-
-  window.open(
-    url,
-    "_blank"
-  );
-
+if(choice==="delivery"){
+msg+=`\n🚚 Mode de réception : Livraison\n\nJe souhaite connaître les conditions et les frais de livraison.\n\nMerci.`;
+}else{
+msg+=`\n📍 Mode de réception : Retrait chez le vendeur\n\n📍 Lieu : ${seller.pickup_location}\n\nJe souhaite confirmer la disponibilité et les modalités de retrait.\n\nMerci.`;
 }
 
-
-/* =========================================================
-   IMAGE
-========================================================= */
-
-function changeMainProductImage(
-  image,
-  element
-){
-
-  const main =
-    document.getElementById(
-      "mainProductImage"
-    );
-
-  if(main){
-
-    main.src =
-      image;
-
-    main.onclick =
-      () => openZoom(image);
-
-  }
-
-
-  document
-    .querySelectorAll(
-      ".product-thumbnail"
-    )
-    .forEach(
-      thumb =>
-        thumb.classList.remove(
-          "active"
-        )
-    );
-
-
-  element.classList.add(
-    "active"
-  );
-
+window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(msg),"_blank");
 }
 
+function changeMainProductImage(image,el){
+const m=document.getElementById("mainProductImage");
+if(m){m.src=image;m.onclick=()=>openZoom(image)}
+document.querySelectorAll(".product-thumbnail").forEach(x=>x.classList.remove("active"));
+el.classList.add("active");
+}
 
-/* =========================================================
+/* =========================
    ZOOM
-========================================================= */
+========================= */
 
 function openZoom(image){
-
-  const modal =
-    document.getElementById(
-      "zoomModal"
-    );
-
-  const img =
-    document.getElementById(
-      "zoomImage"
-    );
-
-
-  if(!modal || !img){
-    return;
-  }
-
-
-  img.src =
-    image;
-
-
-  modal.classList.add(
-    "active"
-  );
-
+document.getElementById("zoomImage").src=image;
+document.getElementById("zoomModal").classList.add("active");
+}
+function closeZoom(e){
+if(e&&e.target.id!=="zoomModal")return;
+document.getElementById("zoomModal").classList.remove("active");
 }
 
-
-function closeZoom(event){
-
-  if(
-    event &&
-    event.target &&
-    event.target.id !==
-      "zoomModal"
-  ){
-
-    return;
-
-  }
-
-
-  document
-    .getElementById(
-      "zoomModal"
-    )
-    ?.classList.remove(
-      "active"
-    );
-
-}
-
-
-/* =========================================================
+/* =========================
    CART
-========================================================= */
+========================= */
 
 function saveCart(){
-
-  localStorage.setItem(
-    "zackary_cart",
-    JSON.stringify(cart)
-  );
-
-  updateCartBadge();
-
+localStorage.setItem("zackary_cart",JSON.stringify(cart));
+updateCartBadge();
 }
 
+function addToCart(id){
+const p=currentProducts.find(x=>String(x.id)===String(id));
+if(!p)return;
 
-function addToCart(productId){
+const e=cart.find(x=>String(x.id)===String(p.id));
+if(e)e.quantity=Number(e.quantity||1)+1;
+else cart.push({
+id:p.id,name:p.name,price:Number(p.price||0),
+image:getProductImages(p)[0]||"",quantity:1
+});
 
-  const product =
-    currentProducts.find(
-      item =>
-        String(item.id) ===
-        String(productId)
-    );
-
-
-  if(!product){
-    return;
-  }
-
-
-  const existing =
-    cart.find(
-      item =>
-        String(item.id) ===
-        String(product.id)
-    );
-
-
-  if(existing){
-
-    existing.quantity =
-      Number(
-        existing.quantity || 1
-      ) + 1;
-
-  }else{
-
-    cart.push({
-
-      id:product.id,
-
-      name:product.name,
-
-      price:Number(
-        product.price || 0
-      ),
-
-      image:
-        getProductImages(
-          product
-        )[0] || "",
-
-      quantity:1
-
-    });
-
-  }
-
-
-  saveCart();
-
-  renderCart();
-
-  showCartToast();
-
+saveCart();renderCart();
+alert("✓ Article ajouté au panier");
 }
 
-
-function removeFromCart(productId){
-
-  cart =
-    cart.filter(
-      item =>
-        String(item.id) !==
-        String(productId)
-    );
-
-
-  saveCart();
-
-  renderCart();
-
+function removeFromCart(id){
+cart=cart.filter(x=>String(x.id)!==String(id));
+saveCart();renderCart();
 }
-
 
 function clearCart(){
-
-  cart = [];
-
-  saveCart();
-
-  renderCart();
-
+cart=[];saveCart();renderCart();
 }
-
 
 function updateCartBadge(){
-
-  const count =
-    cart.reduce(
-      (total,item) =>
-        total +
-        Number(
-          item.quantity || 1
-        ),
-      0
-    );
-
-
-  const badge =
-    document.getElementById(
-      "cartBadge"
-    );
-
-
-  if(!badge){
-    return;
-  }
-
-
-  if(count > 0){
-
-    badge.style.display =
-      "flex";
-
-    badge.textContent =
-      count > 99
-      ? "99+"
-      : count;
-
-  }else{
-
-    badge.style.display =
-      "none";
-
-  }
-
-
-  const text =
-    document.getElementById(
-      "cartCountText"
-    );
-
-
-  if(text){
-
-    text.textContent =
-      `${count} ${
-        count > 1
-        ? "articles"
-        : "article"
-      }`;
-
-  }
-
+const count=cart.reduce((a,x)=>a+Number(x.quantity||1),0);
+const b=document.getElementById("cartBadge");
+if(b){
+b.style.display=count?"flex":"none";
+b.textContent=count>99?"99+":count;
+}
+const t=document.getElementById("cartCountText");
+if(t)t.textContent=`${count} ${count>1?"articles":"article"}`;
 }
 
-
-function openCart(){
-
-  renderCart();
-
-  showPage("cartPage");
-
-}
-
+function openCart(){renderCart();showPage("cartPage")}
 
 function renderCart(){
+const c=document.getElementById("cartContent");
+if(!c)return;
+updateCartBadge();
 
-  const container =
-    document.getElementById(
-      "cartContent"
-    );
-
-  if(!container){
-    return;
-  }
-
-
-  updateCartBadge();
-
-
-  if(!cart.length){
-
-    container.innerHTML = `
-
-      <div class="cart-empty glass-card">
-
-        <div class="cart-icon-large">
-          🛒
-        </div>
-
-        <h3>
-          Ton panier est vide
-        </h3>
-
-        <p style="color:#777">
-          Ajoute des articles pour les retrouver ici.
-        </p>
-
-        <button
-          class="primary-button"
-          onclick="showPage('homePage')"
-        >
-          Découvrir la boutique
-        </button>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  let total = 0;
-
-
-  const items =
-    cart.map(item => {
-
-      const quantity =
-        Number(
-          item.quantity || 1
-        );
-
-
-      const subtotal =
-        Number(item.price || 0) *
-        quantity;
-
-
-      total += subtotal;
-
-
-      return `
-
-        <div class="cart-item glass-card">
-
-          <img
-            class="cart-item-image"
-            src="${escapeHtml(item.image)}"
-            alt="${escapeHtml(item.name)}"
-          >
-
-          <div class="cart-item-info">
-
-            <div class="cart-item-name">
-              ${escapeHtml(item.name)}
-            </div>
-
-            <div
-              style="
-                color:#777;
-                font-size:12px;
-                margin-top:3px;
-              "
-            >
-              Quantité : ${quantity}
-            </div>
-
-            <div class="cart-item-price">
-              ${formatPrice(subtotal)}
-            </div>
-
-          </div>
-
-
-          <button
-            class="cart-remove"
-            onclick="removeFromCart('${escapeHtml(item.id)}')"
-          >
-            ×
-          </button>
-
-        </div>
-
-      `;
-
-    }).join("");
-
-
-  container.innerHTML = `
-
-    ${items}
-
-
-    <div class="cart-total glass-card">
-
-      <strong>
-        Total
-      </strong>
-
-      <strong>
-        ${formatPrice(total)}
-      </strong>
-
-    </div>
-
-
-    <button
-      class="cart-checkout"
-      onclick="checkoutCart()"
-    >
-
-      Commander
-
-    </button>
-
-
-    <button
-      class="secondary-button"
-      style="
-        width:100%;
-        margin-top:9px;
-      "
-      onclick="clearCart()"
-    >
-
-      Vider le panier
-
-    </button>
-
-  `;
-
+if(!cart.length){
+c.innerHTML=`
+<div class="cart-empty glass-card">
+<div class="cart-icon-large">🛒</div>
+<h3>Ton panier est vide</h3>
+<p style="color:#777">Ajoute des articles pour les retrouver ici.</p>
+<button class="primary-button" onclick="showPage('homePage')">Découvrir la boutique</button>
+</div>`;
+return;
 }
 
+let total=0;
+const items=cart.map(x=>{
+const q=Number(x.quantity||1),sub=Number(x.price||0)*q;total+=sub;
+return`
+<div class="cart-item glass-card">
+<img class="cart-item-image" src="${escapeHtml(x.image)}">
+<div class="cart-item-info">
+<div class="cart-item-name">${escapeHtml(x.name)}</div>
+<div style="color:#777;font-size:12px">Quantité : ${q}</div>
+<div class="cart-item-price">${formatPrice(sub)}</div>
+</div>
+<button class="cart-remove" onclick="removeFromCart('${escapeHtml(x.id)}')">×</button>
+</div>`;
+}).join("");
 
-function showCartToast(){
-
-  const toast =
-    document.createElement(
-      "div"
-    );
-
-
-  toast.textContent =
-    "✓ Article ajouté au panier";
-
-
-  toast.style.cssText = `
-
-    position:fixed;
-    left:50%;
-    bottom:105px;
-    transform:translateX(-50%);
-    z-index:9999;
-
-    padding:12px 18px;
-
-    border-radius:999px;
-
-    background:rgba(20,20,20,.88);
-    color:white;
-
-    backdrop-filter:blur(20px);
-    -webkit-backdrop-filter:blur(20px);
-
-    font-size:13px;
-    font-weight:600;
-
-    box-shadow:0 10px 30px rgba(0,0,0,.2);
-
-    animation:pageIn .25s ease;
-
-  `;
-
-
-  document.body.appendChild(toast);
-
-
-  setTimeout(() => {
-
-    toast.remove();
-
-  },1800);
-
+c.innerHTML=`
+${items}
+<div class="cart-total glass-card"><strong>Total</strong><strong>${formatPrice(total)}</strong></div>
+<button class="cart-checkout" onclick="checkoutCart()">Commander</button>
+<button class="secondary-button" style="width:100%;margin-top:9px" onclick="clearCart()">Vider le panier</button>`;
 }
-
 
 function checkoutCart(){
-
-  if(!currentUser){
-
-    alert(
-      "Connecte-toi à ton compte pour continuer la commande."
-    );
-
-    showPage("accountPage");
-
-    return;
-  }
-
-
-  alert(
-    "Le panier est prêt. Le système de paiement/commande peut être connecté ensuite."
-  );
-
+if(!currentUser){
+alert("Connecte-toi à ton compte pour continuer.");
+showPage("accountPage");return;
+}
+alert("Le panier est prêt. Le système de paiement/commande peut être connecté ensuite.");
 }
 
-
-/* =========================================================
+/* =========================
    ACCOUNT
-========================================================= */
+========================= */
 
 async function renderAccount(){
-
-  const container =
-    document.getElementById(
-      "accountContent"
-    );
-
-  if(!container){
-    return;
-  }
-
-
-  if(!currentUser){
-
-    renderLoggedOutAccount();
-
-    return;
-
-  }
-
-
-  const profile =
-    currentProfile || {};
-
-
-  container.innerHTML = `
-
-    <div class="account-card glass-card">
-
-      <div class="profile-center">
-
-        <img
-          id="profileAvatar"
-          class="profile-large-avatar"
-          src="${escapeHtml(
-            getAvatarUrl(profile)
-          )}"
-          alt="Photo de profil"
-        >
-
-        <br>
-
-        <label class="profile-upload">
-
-          📷 Modifier la photo
-
-          <input
-            type="file"
-            accept="image/*"
-            onchange="uploadAvatar(this.files[0])"
-          >
-
-        </label>
-
-
-        <h2>
-          ${escapeHtml(
-            profile.username ||
-            "Utilisateur"
-          )}
-        </h2>
-
-
-        <p style="color:#777">
-          ${escapeHtml(
-            profile.role ||
-            "client"
-          )}
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <div class="account-card glass-card">
-
-      <div class="form-group">
-
-        <label>
-          Nom d'utilisateur
-        </label>
-
-        <input
-          id="profileUsername"
-          class="form-control"
-          value="${escapeHtml(
-            profile.username || ""
-          )}"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          Téléphone
-        </label>
-
-        <input
-          id="profilePhone"
-          class="form-control"
-          type="tel"
-          value="${escapeHtml(
-            profile.phone || ""
-          )}"
-          placeholder="Ex : 690000000"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          📱 Numéro WhatsApp
-        </label>
-
-        <input
-          id="profileWhatsapp"
-          class="form-control"
-          type="tel"
-          value="${escapeHtml(
-            profile.whatsapp || ""
-          )}"
-          placeholder="Ex : 690000000"
-        >
-
-        <small style="
-          display:block;
-          margin-top:6px;
-          color:#777;
-          line-height:1.4;
-        ">
-
-          Ce numéro sera utilisé par les clients
-          pour te contacter directement depuis tes articles.
-
-        </small>
-
-      </div>
-
-
-      ${
-        profile.role === "seller" ||
-        profile.role === "creator_admin"
-
-        ? `
-
-          <div class="form-group">
-
-            <label>
-              📍 Lieu de réception / retrait
-            </label>
-
-            <input
-              id="profilePickupLocation"
-              class="form-control"
-              value="${escapeHtml(
-                profile.pickup_location || ""
-              )}"
-              placeholder="Ex : Carrefour Bastos, Yaoundé"
-            >
-
-            <small style="
-              display:block;
-              margin-top:6px;
-              color:#777;
-              line-height:1.4;
-            ">
-
-              Indique ici le lieu où les clients
-              peuvent récupérer leurs commandes
-              s'ils choisissent le retrait au lieu
-              de la livraison.
-
-            </small>
-
-          </div>
-
-        `
-        : ""
-      }
-
-
-      <button
-        class="primary-button"
-        onclick="saveProfile()"
-      >
-
-        Enregistrer
-
-      </button>
-
-    </div>
-
-
-    <button
-      class="danger-button"
-      style="
-        width:100%;
-        padding:14px;
-      "
-      onclick="logout()"
-    >
-
-      Se déconnecter
-
-    </button>
-
-  `;
-
+const c=document.getElementById("accountContent");
+if(!c)return;
+
+if(!currentUser){renderLoggedOutAccount();return}
+
+const p=currentProfile||{};
+
+c.innerHTML=`
+<div class="account-card glass-card">
+<div class="profile-center">
+<img id="profileAvatar" class="profile-large-avatar" src="${escapeHtml(getAvatarUrl(p))}">
+<br>
+<label class="profile-upload">📷 Modifier la photo
+<input type="file" accept="image/*" onchange="uploadAvatar(this.files[0])">
+</label>
+<h2>${escapeHtml(p.username||"Utilisateur")} ${verifiedBadge(p)}</h2>
+<p style="color:#777">${escapeHtml(p.role||"client")} ${verifiedLabel(p)}</p>
+${p.role==="creator_admin"?`
+<div class="verified-card">🔵 ✓ Compte administrateur certifié Zackary sh🛍️p</div>`:""}
+</div>
+</div>
+
+<div class="account-card glass-card">
+<div class="form-group"><label>Nom d'utilisateur</label><input id="profileUsername" class="form-control" value="${escapeHtml(p.username||"")}"></div>
+<div class="form-group"><label>Téléphone</label><input id="profilePhone" class="form-control" type="tel" value="${escapeHtml(p.phone||"")}"></div>
+<div class="form-group"><label>📱 Numéro WhatsApp</label><input id="profileWhatsapp" class="form-control" type="tel" value="${escapeHtml(p.whatsapp||"")}"></div>
+
+${p.role==="seller"||p.role==="creator_admin"?`
+<div class="form-group">
+<label>📍 Lieu de réception / retrait</label>
+<input id="profilePickupLocation" class="form-control" value="${escapeHtml(p.pickup_location||"")}" placeholder="Ex : Carrefour Bastos, Yaoundé">
+</div>`:""}
+
+<button class="primary-button" onclick="saveProfile()">Enregistrer</button>
+</div>
+
+${supportBox()}
+
+<button class="danger-button" style="width:100%;padding:14px;margin-top:15px" onclick="logout()">Se déconnecter</button>`;
 }
-
 
 function renderLoggedOutAccount(){
-
-  const container =
-    document.getElementById(
-      "accountContent"
-    );
-
-  if(!container){
-    return;
-  }
-
-
-  container.innerHTML = `
-
-    <div class="auth-form glass-card">
-
-      <div class="auth-tabs">
-
-        <button
-          id="loginTab"
-          class="auth-tab active"
-          onclick="showLoginForm()"
-        >
-          Connexion
-        </button>
-
-        <button
-          id="registerTab"
-          class="auth-tab"
-          onclick="showRegisterForm()"
-        >
-          Inscription
-        </button>
-
-      </div>
-
-
-      <div id="authFormContent"></div>
-
-    </div>
-
-  `;
-
-
-  showLoginForm();
-
+const c=document.getElementById("accountContent");
+if(!c)return;
+c.innerHTML=`
+<div class="auth-form glass-card">
+<div class="auth-tabs">
+<button id="loginTab" class="auth-tab active" onclick="showLoginForm()">Connexion</button>
+<button id="registerTab" class="auth-tab" onclick="showRegisterForm()">Inscription</button>
+</div>
+<div id="authFormContent"></div>
+</div>
+${supportBox()}`;
+showLoginForm();
 }
-
 
 function showLoginForm(){
-
-  document
-    .getElementById("loginTab")
-    ?.classList.add("active");
-
-  document
-    .getElementById("registerTab")
-    ?.classList.remove("active");
-
-
-  const content =
-    document.getElementById(
-      "authFormContent"
-    );
-
-
-  if(!content){
-    return;
-  }
-
-
-  content.innerHTML = `
-
-    <div class="form-group">
-
-      <label>
-        Email
-      </label>
-
-      <input
-        id="loginEmail"
-        class="form-control"
-        type="email"
-        placeholder="email@example.com"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Mot de passe
-      </label>
-
-      <input
-        id="loginPassword"
-        class="form-control"
-        type="password"
-        placeholder="••••••••"
-      >
-
-    </div>
-
-
-    <button
-      class="primary-button"
-      onclick="login()"
-    >
-
-      Se connecter
-
-    </button>
-
-  `;
-
+document.getElementById("loginTab")?.classList.add("active");
+document.getElementById("registerTab")?.classList.remove("active");
+document.getElementById("authFormContent").innerHTML=`
+<div class="form-group"><label>Email</label><input id="loginEmail" class="form-control" type="email" placeholder="email@example.com"></div>
+<div class="form-group"><label>Mot de passe</label><input id="loginPassword" class="form-control" type="password"></div>
+<button class="primary-button" onclick="login()">Se connecter</button>`;
 }
-
 
 function showRegisterForm(){
-
-  document
-    .getElementById("loginTab")
-    ?.classList.remove("active");
-
-  document
-    .getElementById("registerTab")
-    ?.classList.add("active");
-
-
-  const content =
-    document.getElementById(
-      "authFormContent"
-    );
-
-
-  if(!content){
-    return;
-  }
-
-
-  content.innerHTML = `
-
-    <div class="form-group">
-
-      <label>
-        Nom d'utilisateur
-      </label>
-
-      <input
-        id="registerUsername"
-        class="form-control"
-        placeholder="Votre nom"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Email
-      </label>
-
-      <input
-        id="registerEmail"
-        class="form-control"
-        type="email"
-        placeholder="email@example.com"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Mot de passe
-      </label>
-
-      <input
-        id="registerPassword"
-        class="form-control"
-        type="password"
-        placeholder="Minimum 6 caractères"
-      >
-
-    </div>
-
-
-    <button
-      class="primary-button"
-      onclick="register()"
-    >
-
-      Créer mon compte
-
-    </button>
-
-  `;
-
+document.getElementById("loginTab")?.classList.remove("active");
+document.getElementById("registerTab")?.classList.add("active");
+document.getElementById("authFormContent").innerHTML=`
+<div class="form-group"><label>Nom d'utilisateur</label><input id="registerUsername" class="form-control"></div>
+<div class="form-group"><label>Email</label><input id="registerEmail" class="form-control" type="email"></div>
+<div class="form-group"><label>Mot de passe</label><input id="registerPassword" class="form-control" type="password" placeholder="Minimum 6 caractères"></div>
+<button class="primary-button" onclick="register()">Créer mon compte</button>`;
 }
 
-
-/* =========================================================
+/* =========================
    AUTH
-========================================================= */
+========================= */
 
 async function login(){
+const email=document.getElementById("loginEmail")?.value.trim();
+const password=document.getElementById("loginPassword")?.value;
+if(!email||!password)return alert("Remplis tous les champs.");
 
-  const email =
-    document.getElementById(
-      "loginEmail"
-    )?.value.trim();
+const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+if(error)return alert(error.message);
 
-  const password =
-    document.getElementById(
-      "loginPassword"
-    )?.value;
-
-
-  if(!email || !password){
-
-    alert(
-      "Remplis tous les champs."
-    );
-
-    return;
-
-  }
-
-
-  const {
-    error
-  } =
-    await supabaseClient.auth.signInWithPassword({
-
-      email,
-      password
-
-    });
-
-
-  if(error){
-
-    alert(
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  await checkUser();
-
-  showPage("homePage");
-
+await checkUser();showPage("homePage");
 }
-
 
 async function register(){
+const username=document.getElementById("registerUsername")?.value.trim();
+const email=document.getElementById("registerEmail")?.value.trim();
+const password=document.getElementById("registerPassword")?.value;
 
-  const username =
-    document.getElementById(
-      "registerUsername"
-    )?.value.trim();
+if(!username||!email||!password)return alert("Remplis tous les champs.");
+if(password.length<6)return alert("Le mot de passe doit contenir au moins 6 caractères.");
 
-  const email =
-    document.getElementById(
-      "registerEmail"
-    )?.value.trim();
+const {data,error}=await supabaseClient.auth.signUp({email,password});
+if(error)return alert(error.message);
 
-  const password =
-    document.getElementById(
-      "registerPassword"
-    )?.value;
-
-
-  if(
-    !username ||
-    !email ||
-    !password
-  ){
-
-    alert(
-      "Remplis tous les champs."
-    );
-
-    return;
-
-  }
-
-
-  if(password.length < 6){
-
-    alert(
-      "Le mot de passe doit contenir au moins 6 caractères."
-    );
-
-    return;
-
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth.signUp({
-
-      email,
-      password
-
-    });
-
-
-  if(error){
-
-    alert(
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  if(data.user){
-
-    await supabaseClient
-      .from("profiles")
-      .upsert({
-
-        id:data.user.id,
-
-        username,
-
-        role:"client"
-
-      });
-
-  }
-
-
-  alert(
-    "Compte créé avec succès."
-  );
-
-
-  await checkUser();
-
-  showPage("homePage");
-
+if(data.user){
+await supabaseClient.from("profiles").upsert({
+id:data.user.id,username,role:"client"
+});
 }
 
+alert("Compte créé avec succès.");
+await checkUser();
+showPage("homePage");
+}
 
 async function logout(){
-
-  await supabaseClient.auth.signOut();
-
-  currentUser = null;
-
-  currentProfile = null;
-
-  renderDashboard();
-
-  renderLoggedOutAccount();
-
-  updateHeaderAvatar();
-
-  showPage("homePage");
-
+await supabaseClient.auth.signOut();
+currentUser=null;currentProfile=null;
+renderDashboard();renderLoggedOutAccount();updateHeaderAvatar();showPage("homePage");
 }
 
-
-/* =========================================================
+/* =========================
    USER
-========================================================= */
+========================= */
 
 async function checkUser(){
+const {data}=await supabaseClient.auth.getUser();
+currentUser=data?.user||null;
 
-  const {
-    data
-  } =
-    await supabaseClient.auth.getUser();
+if(currentUser){
+const {data:profile}=await supabaseClient.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
+currentProfile=profile||null;
 
+if(currentProfile?.role==="seller")await checkSellerExpiration();
+}else currentProfile=null;
 
-  currentUser =
-    data?.user || null;
-
-
-  if(currentUser){
-
-    const {
-      data:profile
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq(
-          "id",
-          currentUser.id
-        )
-        .maybeSingle();
-
-
-    currentProfile =
-      profile || null;
-
-
-    if(
-      currentProfile &&
-      currentProfile.role ===
-      "seller"
-    ){
-
-      await checkSellerExpiration();
-
-    }
-
-  }else{
-
-    currentProfile = null;
-
-  }
-
-
-  renderDashboard();
-
-  renderAccount();
-
-  updateHeaderAvatar();
-
-  updateCartBadge();
-
+renderDashboard();renderAccount();updateHeaderAvatar();updateCartBadge();
 }
-
 
 function updateHeaderAvatar(){
-
-  const avatar =
-    document.getElementById(
-      "headerAvatar"
-    );
-
-  if(!avatar){
-    return;
-  }
-
-
-  if(currentProfile){
-
-    avatar.src =
-      getAvatarUrl(
-        currentProfile
-      );
-
-  }else{
-
-    avatar.src =
-      "https://ui-avatars.com/api/?name=User&background=eeeeee&color=111111";
-
-  }
-
+const a=document.getElementById("headerAvatar");
+if(a)a.src=currentProfile?getAvatarUrl(currentProfile):
+"https://ui-avatars.com/api/?name=User&background=eeeeee&color=111111";
 }
 
-
-/* =========================================================
+/* =========================
    PROFILE
-========================================================= */
+========================= */
 
 async function saveProfile(){
+if(!currentUser)return;
 
-  if(!currentUser){
-    return;
-  }
+const username=document.getElementById("profileUsername")?.value.trim();
+const phone=document.getElementById("profilePhone")?.value.trim();
+const whatsapp=document.getElementById("profileWhatsapp")?.value.trim();
+const pickup=document.getElementById("profilePickupLocation")?.value.trim()||null;
 
+const {error}=await supabaseClient.from("profiles").update({
+username,phone,whatsapp,pickup_location:pickup
+}).eq("id",currentUser.id);
 
-  const username =
-    document.getElementById(
-      "profileUsername"
-    )?.value.trim();
+if(error)return alert(error.message);
 
-  const phone =
-    document.getElementById(
-      "profilePhone"
-    )?.value.trim();
-
-  const whatsapp =
-    document.getElementById(
-      "profileWhatsapp"
-    )?.value.trim();
-
-  const pickupLocation =
-    document.getElementById(
-      "profilePickupLocation"
-    )?.value.trim() || null;
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .from("profiles")
-      .update({
-
-        username,
-
-        phone,
-
-        whatsapp,
-
-        pickup_location:
-          pickupLocation
-
-      })
-      .eq(
-        "id",
-        currentUser.id
-      );
-
-
-  if(error){
-
-    alert(
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  currentProfile = {
-
-    ...currentProfile,
-
-    username,
-
-    phone,
-
-    whatsapp,
-
-    pickup_location:
-      pickupLocation
-
-  };
-
-
-  renderDashboard();
-
-  renderAccount();
-
-  updateHeaderAvatar();
-
-
-  alert(
-    "Profil enregistré."
-  );
-
+currentProfile={...currentProfile,username,phone,whatsapp,pickup_location:pickup};
+renderDashboard();renderAccount();updateHeaderAvatar();
+alert("Profil enregistré.");
 }
 
-
-/* =========================================================
+/* =========================
    AVATAR
-========================================================= */
+========================= */
 
 async function uploadAvatar(file){
+if(!currentUser)return alert("Connecte-toi d'abord.");
+if(!file||!file.type.startsWith("image/"))return alert("Sélectionne une image.");
 
-  if(!currentUser){
+const path=`${currentUser.id}/avatar.jpg`;
 
-    alert(
-      "Connecte-toi d'abord."
-    );
+const {error}=await supabaseClient.storage.from("avatars").upload(path,file,{
+cacheControl:"3600",upsert:true,contentType:file.type
+});
 
-    return;
+if(error)return alert(error.message);
 
-  }
+const {data}=supabaseClient.storage.from("avatars").getPublicUrl(path);
+const url=data.publicUrl+"?v="+Date.now();
 
+const {error:profileError}=await supabaseClient.from("profiles").update({avatar_url:url}).eq("id",currentUser.id);
+if(profileError)return alert(profileError.message);
 
-  if(!file){
-    return;
-  }
-
-
-  if(
-    !file.type.startsWith("image/")
-  ){
-
-    alert(
-      "Sélectionne une image."
-    );
-
-    return;
-
-  }
-
-
-  try{
-
-    const path =
-      `${currentUser.id}/avatar.jpg`;
-
-
-    const {
-      error:uploadError
-    } =
-      await supabaseClient
-        .storage
-        .from("avatars")
-        .upload(
-          path,
-          file,
-          {
-            cacheControl:"3600",
-            upsert:true,
-            contentType:file.type
-          }
-        );
-
-
-    if(uploadError){
-
-      alert(
-        uploadError.message
-      );
-
-      return;
-
-    }
-
-
-    const {
-      data:publicData
-    } =
-      supabaseClient
-        .storage
-        .from("avatars")
-        .getPublicUrl(
-          path
-        );
-
-
-    const avatarUrl =
-      publicData.publicUrl +
-      "?v=" +
-      Date.now();
-
-
-    const {
-      error:profileError
-    } =
-      await supabaseClient
-        .from("profiles")
-        .update({
-
-          avatar_url:
-            avatarUrl
-
-        })
-        .eq(
-          "id",
-          currentUser.id
-        );
-
-
-    if(profileError){
-
-      alert(
-        profileError.message
-      );
-
-      return;
-
-    }
-
-
-    currentProfile = {
-
-      ...currentProfile,
-
-      avatar_url:
-        avatarUrl
-
-    };
-
-
-    renderDashboard();
-
-    renderAccount();
-
-    updateHeaderAvatar();
-
-
-    alert(
-      "Photo de profil enregistrée."
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      "Erreur pendant l'envoi de la photo."
-    );
-
-  }
-
+currentProfile={...currentProfile,avatar_url:url};
+renderDashboard();renderAccount();updateHeaderAvatar();
+alert("Photo de profil enregistrée.");
 }
 
-
-/* =========================================================
+/* =========================
    SELLER
-========================================================= */
+========================= */
 
 async function showSellPage(){
-
-  if(!currentUser){
-
-    alert(
-      "Connecte-toi pour accéder à cet espace."
-    );
-
-    showPage("accountPage");
-
-    return;
-
-  }
-
-
-  if(
-    currentProfile?.role !== "seller" &&
-    currentProfile?.role !== "creator_admin"
-  ){
-
-    alert(
-      "Cet espace est réservé aux vendeurs."
-    );
-
-    return;
-
-  }
-
-
-  await renderSellerPage();
-
-  showPage("sellPage");
-
+if(!currentUser){
+alert("Connecte-toi pour accéder à cet espace.");showPage("accountPage");return;
 }
-
+if(currentProfile?.role!=="seller"&&currentProfile?.role!=="creator_admin"){
+alert("Cet espace est réservé aux vendeurs.");return;
+}
+await renderSellerPage();showPage("sellPage");
+}
 
 async function renderSellerPage(){
-
-  const container =
-    document.getElementById(
-      "sellerContent"
-    );
-
-  if(!container){
-    return;
-  }
-
-
-  const isAdmin =
-    currentProfile?.role ===
-    "creator_admin";
-
-
-  let productsQuery =
-    supabaseClient
-      .from("products")
-      .select("*")
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-
-  if(!isAdmin){
-
-    productsQuery =
-      productsQuery.eq(
-        "seller_id",
-        currentUser.id
-      );
-
-  }
-
-
-  const {
-    data:products
-  } =
-    await productsQuery;
-
-
-  const myProducts =
-    products || [];
-
-
-  container.innerHTML = `
-
-    <div class="seller-section glass-card">
-
-      <h3>
-        Publier un article
-      </h3>
-
-
-      <div class="form-group">
-
-        <label>
-          Nom du produit
-        </label>
-
-        <input
-          id="productName"
-          class="form-control"
-          placeholder="Ex : T-shirt Oversize"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          Prix XAF
-        </label>
-
-        <input
-          id="productPrice"
-          class="form-control"
-          type="number"
-          placeholder="15000"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          Catégorie
-        </label>
-
-        <select
-          id="productCategory"
-          class="form-control"
-        >
-
-          ${categoriesList
-            .filter(
-              category =>
-                category !== "Tous"
-            )
-            .map(
-              category => `
-                <option>
-                  ${escapeHtml(category)}
-                </option>
-              `
-            )
-            .join("")}
-
-        </select>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          Description
-        </label>
-
-        <textarea
-          id="productDescription"
-          class="form-control"
-          placeholder="Décris ton article..."
-        ></textarea>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          Photos — jusqu'à 4
-        </label>
-
-        <input
-          id="productImages"
-          class="form-control"
-          type="file"
-          accept="image/*"
-          multiple
-        >
-
-      </div>
-
-
-      <div class="glass-card" style="
-        padding:14px;
-        margin-bottom:15px;
-        border-radius:19px;
-      ">
-
-        <strong>
-          📍 Ton lieu de retrait
-        </strong>
-
-        <p style="
-          color:#777;
-          font-size:13px;
-          line-height:1.45;
-          margin-bottom:10px;
-        ">
-
-          Le lieu enregistré dans ton profil sera
-          automatiquement communiqué aux clients
-          qui choisissent le retrait.
-
-        </p>
-
-        <div style="
-          font-weight:700;
-          font-size:13px;
-        ">
-
-          ${
-            currentProfile?.pickup_location
-            ? escapeHtml(
-                currentProfile.pickup_location
-              )
-            : "⚠️ Aucun lieu renseigné"
-          }
-
-        </div>
-
-        <button
-          class="secondary-button"
-          style="
-            margin-top:10px;
-          "
-          onclick="showPage('accountPage')"
-        >
-
-          Modifier mon lieu
-
-        </button>
-
-      </div>
-
-
-      <button
-        class="primary-button"
-        onclick="publishProduct()"
-      >
-
-        Publier l'article
-
-      </button>
-
-    </div>
-
-
-    <div class="seller-section glass-card">
-
-      <h3>
-        ${isAdmin
-          ? "Tous les articles"
-          : "Mes articles"}
-      </h3>
-
-
-      <div id="sellerProductsList">
-
-        ${
-          myProducts.length
-          ? myProducts.map(
-              product =>
-                renderSellerProduct(
-                  product
-                )
-            ).join("")
-          : `
-            <div class="empty">
-              Aucun article.
-            </div>
-          `
-        }
-
-      </div>
-
-    </div>
-
-
-    <div class="seller-section glass-card">
-
-      <h3>
-        Mes ventes
-      </h3>
-
-      <div id="sellerSales">
-        Chargement...
-      </div>
-
-    </div>
-
-  `;
-
-
-  await renderSellerSales();
-
+const c=document.getElementById("sellerContent");
+if(!c)return;
+
+const admin=currentProfile?.role==="creator_admin";
+let q=supabaseClient.from("products").select("*").order("created_at",{ascending:false});
+if(!admin)q=q.eq("seller_id",currentUser.id);
+
+const {data}=await q;
+const products=data||[];
+
+c.innerHTML=`
+<div class="seller-section glass-card">
+<h3>Publier un article</h3>
+
+<div class="form-group"><label>Nom du produit</label><input id="productName" class="form-control" placeholder="Ex : T-shirt Oversize"></div>
+<div class="form-group"><label>Prix XAF</label><input id="productPrice" class="form-control" type="number"></div>
+<div class="form-group"><label>Catégorie</label>
+<select id="productCategory" class="form-control">
+${categoriesList.filter(x=>x!=="Tous").map(x=>`<option>${escapeHtml(x)}</option>`).join("")}
+</select></div>
+
+<div class="form-group"><label>Description</label><textarea id="productDescription" class="form-control"></textarea></div>
+<div class="form-group"><label>Photos — jusqu'à 4</label><input id="productImages" class="form-control" type="file" accept="image/*" multiple></div>
+
+<div class="glass-card" style="padding:14px;margin-bottom:15px;border-radius:19px">
+<strong>📍 Ton lieu de retrait</strong>
+<div style="margin-top:7px;font-weight:700;font-size:13px">
+${currentProfile?.pickup_location?escapeHtml(currentProfile.pickup_location):"⚠️ Aucun lieu renseigné"}
+</div>
+<button class="secondary-button" style="margin-top:10px" onclick="showPage('accountPage')">Modifier mon lieu</button>
+</div>
+
+<button class="primary-button" onclick="publishProduct()">Publier l'article</button>
+</div>
+
+<div class="seller-section glass-card">
+<h3>${admin?"Tous les articles":"Mes articles"}</h3>
+<div>${products.length?products.map(renderSellerProduct).join(""):'<div class="empty">Aucun article.</div>'}</div>
+</div>
+
+<div class="seller-section glass-card">
+<h3>Mes ventes</h3>
+<div id="sellerSales">Chargement...</div>
+</div>`;
+
+await renderSellerSales();
 }
 
-
-function renderSellerProduct(product){
-
-  const images =
-    getProductImages(product);
-
-
-  const image =
-    images[0] ||
-    "https://via.placeholder.com/300";
-
-
-  return `
-
-    <div class="seller-product glass-card">
-
-      <img
-        src="${escapeHtml(image)}"
-        alt="${escapeHtml(product.name)}"
-      >
-
-
-      <div class="seller-product-info">
-
-        <strong>
-          ${escapeHtml(
-            product.name ||
-            "Article"
-          )}
-        </strong>
-
-        <div
-          style="
-            color:#777;
-            font-size:12px;
-            margin-top:3px;
-          "
-        >
-
-          ${formatPrice(
-            product.price
-          )}
-
-        </div>
-
-      </div>
-
-
-      <button
-        class="danger-button"
-        onclick="deleteProduct('${escapeHtml(product.id)}')"
-      >
-
-        Supprimer
-
-      </button>
-
-    </div>
-
-  `;
-
+function renderSellerProduct(p){
+const image=getProductImages(p)[0]||"https://via.placeholder.com/300";
+const verified=p.seller_id===currentUser?.id&&currentProfile?.role==="creator_admin";
+return`
+<div class="seller-product glass-card">
+<img src="${escapeHtml(image)}">
+<div class="seller-product-info">
+<strong>${escapeHtml(p.name||"Article")}</strong>
+<div style="color:#777;font-size:12px">${formatPrice(p.price)}</div>
+</div>
+<button class="danger-button" onclick="deleteProduct('${escapeHtml(p.id)}')">Supprimer</button>
+${verifiedBadge({role:verified?"creator_admin":""})}
+</div>`;
 }
 
-
-/* =========================================================
-   PUBLISH PRODUCT
-========================================================= */
+/* =========================
+   PUBLISH
+========================= */
 
 async function publishProduct(){
+if(!currentUser)return;
 
-  if(!currentUser){
-    return;
-  }
-
-
-  const name =
-    document.getElementById(
-      "productName"
-    )?.value.trim();
-
-  const price =
-    Number(
-      document.getElementById(
-        "productPrice"
-      )?.value
-    );
-
-  const category =
-    document.getElementById(
-      "productCategory"
-    )?.value;
-
-  const description =
-    document.getElementById(
-      "productDescription"
-    )?.value.trim();
-
-
-  const files =
-    Array.from(
-      document.getElementById(
-        "productImages"
-      )?.files || []
-    );
-
-
-  if(
-    !name ||
-    !price ||
-    !category
-  ){
-
-    alert(
-      "Remplis les informations principales."
-    );
-
-    return;
-
-  }
-
-
-  if(files.length > 4){
-
-    alert(
-      "Maximum 4 photos."
-    );
-
-    return;
-
-  }
-
-
-  const uploadedImages = [];
-
-
-  for(
-    let i = 0;
-    i < files.length;
-    i++
-  ){
-
-    const file =
-      files[i];
-
-
-    const extension =
-      file.name
-        .split(".")
-        .pop()
-        .toLowerCase();
-
-
-    const path =
-      `${currentUser.id}/${Date.now()}-${i}.${extension}`;
-
-
-    const {
-      error
-    } =
-    await supabaseClient
-      .storage
-      .from("product-images")
-      .upload(
-        path,
-        file,
-        {
-          upsert:false,
-          contentType:file.type
-        }
-      );
-
-
-    if(error){
-
-      alert(
-        error.message
-      );
-
-      return;
-
-    }
-
-
-    const {
-      data
-    } =
-      supabaseClient
-        .storage
-        .from("product-images")
-        .getPublicUrl(
-          path
-        );
-
-
-    uploadedImages.push(
-      data.publicUrl
-    );
-
-  }
-
-
-  const productData = {
-
-    seller_id:
-      currentUser.id,
-
-    seller_name:
-      currentProfile?.username ||
-      "Vendeur",
-
-    name,
-
-    price,
-
-    category,
-
-    description
-
-  };
-
-
-  if(uploadedImages[0]){
-    productData.image_url =
-      uploadedImages[0];
-  }
-
-  if(uploadedImages[1]){
-    productData.image_url_2 =
-      uploadedImages[1];
-  }
-
-  if(uploadedImages[2]){
-    productData.image_url_3 =
-      uploadedImages[2];
-  }
-
-  if(uploadedImages[3]){
-    productData.image_url_4 =
-      uploadedImages[3];
-  }
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .from("products")
-      .insert(
-        productData
-      );
-
-
-  if(error){
-
-    alert(
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  alert(
-    "Article publié avec succès."
-  );
-
-
-  await loadProducts();
-
-  await renderSellerPage();
-
+if(currentProfile?.role==="seller"&&currentProfile.seller_expires_at&&new Date(currentProfile.seller_expires_at)<=new Date()){
+alert("Ton accès vendeur a expiré.");await checkSellerExpiration();return;
 }
 
+const name=document.getElementById("productName")?.value.trim();
+const price=Number(document.getElementById("productPrice")?.value);
+const category=document.getElementById("productCategory")?.value;
+const description=document.getElementById("productDescription")?.value.trim();
+const files=Array.from(document.getElementById("productImages")?.files||[]);
 
-/* =========================================================
+if(!name||!price||!category)return alert("Remplis les informations principales.");
+if(files.length>4)return alert("Maximum 4 photos.");
+
+const images=[];
+
+for(let i=0;i<files.length;i++){
+const file=files[i];
+const ext=file.name.split(".").pop().toLowerCase();
+const path=`${currentUser.id}/${Date.now()}-${i}.${ext}`;
+
+const {error}=await supabaseClient.storage.from("product-images").upload(path,file,{
+upsert:false,contentType:file.type
+});
+if(error)return alert(error.message);
+
+const {data}=supabaseClient.storage.from("product-images").getPublicUrl(path);
+images.push(data.publicUrl);
+}
+
+const product={
+seller_id:currentUser.id,
+seller_name:currentProfile?.username||"Vendeur",
+name,price,category,description
+};
+
+if(images[0])product.image_url=images[0];
+if(images[1])product.image_url_2=images[1];
+if(images[2])product.image_url_3=images[2];
+if(images[3])product.image_url_4=images[3];
+
+const {error}=await supabaseClient.from("products").insert(product);
+if(error)return alert(error.message);
+
+alert("Article publié avec succès.");
+await loadProducts();await renderSellerPage();
+}
+
+/* =========================
    DELETE PRODUCT
-========================================================= */
+========================= */
 
-async function deleteProduct(productId){
+async function deleteProduct(id){
+if(!currentUser)return;
+if(!confirm("Supprimer définitivement cet article ?"))return;
 
-  if(!currentUser){
-    return;
-  }
+const {error}=await supabaseClient.from("products").delete().eq("id",id);
+if(error)return alert(error.message);
 
-
-  const confirmed =
-    confirm(
-      "Supprimer définitivement cet article ?"
-    );
-
-
-  if(!confirmed){
-    return;
-  }
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .from("products")
-      .delete()
-      .eq(
-        "id",
-        productId
-      );
-
-
-  if(error){
-
-    alert(
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  await loadProducts();
-
-  await renderSellerPage();
-
+await loadProducts();await renderSellerPage();
 }
 
-
-/* =========================================================
-   SELLER SALES
-========================================================= */
+/* =========================
+   SALES
+========================= */
 
 async function renderSellerSales(){
+const c=document.getElementById("sellerSales");
+if(!c)return;
 
-  const container =
-    document.getElementById(
-      "sellerSales"
-    );
+const {data,error}=await supabaseClient.from("sales").select("*")
+.eq("seller_id",currentUser.id).order("created_at",{ascending:false});
 
-  if(!container){
-    return;
-  }
+if(error)return c.innerHTML='<div class="empty">Impossible de charger les ventes.</div>';
+if(!data?.length)return c.innerHTML='<div class="empty">Aucune vente pour le moment.</div>';
 
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("sales")
-      .select("*")
-      .eq(
-        "seller_id",
-        currentUser.id
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-
-  if(error){
-
-    container.innerHTML = `
-      <div class="empty">
-        Impossible de charger les ventes.
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  if(!data?.length){
-
-    container.innerHTML = `
-      <div class="empty">
-        Aucune vente pour le moment.
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  container.innerHTML =
-    data.map(
-      sale => `
-
-        <div class="sales-card glass-card">
-
-          <strong>
-            ${escapeHtml(
-              sale.product_name ||
-              "Vente"
-            )}
-          </strong>
-
-          <div
-            style="
-              color:#777;
-              margin-top:5px;
-              font-size:13px;
-            "
-          >
-
-            ${formatPrice(
-              sale.amount ||
-              sale.price ||
-              0
-            )}
-
-          </div>
-
-        </div>
-
-      `
-    ).join("");
-
+c.innerHTML=data.map(s=>`
+<div class="sales-card glass-card">
+<strong>${escapeHtml(s.product_name||"Vente")}</strong>
+<div style="color:#777;margin-top:5px">${formatPrice(s.amount||s.price||0)}</div>
+</div>`).join("");
 }
 
-
-/* =========================================================
-   SELLER EXPIRATION
-========================================================= */
+/* =========================
+   EXPIRATION
+========================= */
 
 async function checkSellerExpiration(){
-
-  if(
-    !currentUser ||
-    !currentProfile ||
-    currentProfile.role !== "seller"
-  ){
-
-    return;
-
-  }
-
-
-  if(
-    !currentProfile.seller_expires_at
-  ){
-
-    return;
-
-  }
-
-
-  const expiration =
-    new Date(
-      currentProfile.seller_expires_at
-    );
-
-
-  if(
-    expiration <= new Date()
-  ){
-
-    await supabaseClient.rpc(
-      "disable_expired_sellers"
-    );
-
-
-    await checkUser();
-
-  }
-
+if(!currentUser||!currentProfile||currentProfile.role!=="seller"||!currentProfile.seller_expires_at)return;
+if(new Date(currentProfile.seller_expires_at)<=new Date()){
+await supabaseClient.rpc("disable_expired_sellers");
+await checkUser();
 }
-
+}
 
 async function disableExpiredSellers(){
-
-  try{
-
-    await supabaseClient.rpc(
-      "disable_expired_sellers"
-    );
-
-  }catch(error){
-
-    console.log(
-      "Expiration check:",
-      error
-    );
-
-  }
-
+try{await supabaseClient.rpc("disable_expired_sellers")}catch(e){console.log(e)}
 }
 
-
-/* =========================================================
+/* =========================
    ADMIN
-========================================================= */
+========================= */
 
 function showAdminPage(){
-
-  if(
-    currentProfile?.role !==
-    "creator_admin"
-  ){
-
-    alert(
-      "Accès administrateur uniquement."
-    );
-
-    return;
-
-  }
-
-
-  renderAdminPanel();
-
-  showPage("adminPage");
-
+if(currentProfile?.role!=="creator_admin"){
+alert("Accès administrateur uniquement.");return;
 }
-
+renderAdminPanel();showPage("adminPage");
+}
 
 async function renderAdminPanel(){
+const c=document.getElementById("adminContent");
+if(!c||currentProfile?.role!=="creator_admin")return;
 
-  if(
-    currentProfile?.role !==
-    "creator_admin"
-  ){
+c.innerHTML=`
+<div class="admin-card glass-card">
+<h3>Gestion des vendeurs</h3>
+<div id="adminSellers">Chargement...</div>
+</div>
+<div class="admin-card glass-card">
+<h3>Ventes globales</h3>
+<div id="globalSales">Chargement...</div>
+</div>
+${supportBox()}`;
 
-    return;
-
-  }
-
-
-  const container =
-    document.getElementById(
-      "adminContent"
-    );
-
-  if(!container){
-    return;
-  }
-
-
-  container.innerHTML = `
-
-    <div class="admin-card glass-card">
-
-      <h3>
-        Gestion des vendeurs
-      </h3>
-
-      <div id="adminSellers">
-        Chargement...
-      </div>
-
-    </div>
-
-
-    <div class="admin-card glass-card">
-
-      <h3>
-        Ventes globales
-      </h3>
-
-      <div id="globalSales">
-        Chargement...
-      </div>
-
-    </div>
-
-  `;
-
-
-  await renderAdminSellers();
-
-  await renderGlobalSales();
-
+await renderAdminSellers();await renderGlobalSales();
 }
-
 
 async function renderAdminSellers(){
+const c=document.getElementById("adminSellers");
+if(!c)return;
 
-  const container =
-    document.getElementById(
-      "adminSellers"
-    );
+const {data,error}=await supabaseClient.from("profiles").select("*").eq("role","seller").order("created_at",{ascending:false});
 
-  if(!container){
-    return;
-  }
+if(error)return c.innerHTML=`<div class="empty">${escapeHtml(error.message)}</div>`;
+if(!data?.length)return c.innerHTML='<div class="empty">Aucun vendeur.</div>';
 
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("profiles")
-      .select("*")
-      .eq(
-        "role",
-        "seller"
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-
-  if(error){
-
-    container.innerHTML = `
-      <div class="empty">
-        ${escapeHtml(error.message)}
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  if(!data?.length){
-
-    container.innerHTML = `
-      <div class="empty">
-        Aucun vendeur.
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  container.innerHTML =
-    data.map(
-      seller => {
-
-        const active =
-          seller.seller_expires_at &&
-          new Date(
-            seller.seller_expires_at
-          ) > new Date();
-
-
-        return `
-
-          <div class="admin-seller">
-
-            <div
-              style="
-                display:flex;
-                align-items:center;
-                gap:10px;
-              "
-            >
-
-              <img
-                class="seller-avatar"
-                src="${escapeHtml(
-                  getAvatarUrl(seller)
-                )}"
-                alt="Vendeur"
-              >
-
-              <div>
-
-                <strong>
-                  ${escapeHtml(
-                    seller.username ||
-                    "Vendeur"
-                  )}
-                </strong>
-
-                <div
-                  style="
-                    font-size:12px;
-                    color:#777;
-                    margin-top:3px;
-                  "
-                >
-
-                  ${
-                    active
-                    ? "Actif"
-                    : "Inactif"
-                  }
-
-                </div>
-
-              </div>
-
-            </div>
-
-
-            <div class="admin-actions">
-
-              <button
-                class="secondary-button"
-                onclick="activateSeller('${escapeHtml(seller.id)}')"
-              >
-
-                +30 jours
-
-              </button>
-
-
-              <button
-                class="danger-button"
-                onclick="disableSeller('${escapeHtml(seller.id)}')"
-              >
-
-                Désactiver
-
-              </button>
-
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    ).join("");
-
+c.innerHTML=data.map(s=>{
+const active=s.seller_expires_at&&new Date(s.seller_expires_at)>new Date();
+return`
+<div class="admin-seller">
+<div style="display:flex;align-items:center;gap:10px">
+<img class="seller-avatar" src="${escapeHtml(getAvatarUrl(s))}">
+<div>
+<strong>${escapeHtml(s.username||"Vendeur")}</strong>
+<div style="font-size:12px;color:#777">${active?"Actif":"Inactif"}</div>
+</div>
+</div>
+<div class="admin-actions">
+<button class="secondary-button" onclick="activateSeller('${escapeHtml(s.id)}')">+30 jours</button>
+<button class="danger-button" onclick="disableSeller('${escapeHtml(s.id)}')">Désactiver</button>
+</div>
+</div>`;
+}).join("");
 }
 
-
-async function activateSeller(userId){
-
-  const {
-    error
-  } =
-    await supabaseClient.rpc(
-      "creator_activate_seller",
-      {
-        seller_id:userId
-      }
-    );
-
-
-  if(error){
-
-    alert(
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  alert(
-    "Vendeur activé pour 30 jours."
-  );
-
-
-  await renderAdminPanel();
-
+async function activateSeller(id){
+const {error}=await supabaseClient.rpc("creator_activate_seller",{seller_id:id});
+if(error)return alert(error.message);
+alert("Vendeur activé pour 30 jours.");renderAdminPanel();
 }
 
-
-async function disableSeller(userId){
-
-  const {
-    error
-  } =
-    await supabaseClient.rpc(
-      "creator_disable_seller",
-      {
-        seller_id:userId
-      }
-    );
-
-
-  if(error){
-
-    alert(
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  alert(
-    "Vendeur désactivé."
-  );
-
-
-  await renderAdminPanel();
-
+async function disableSeller(id){
+const {error}=await supabaseClient.rpc("creator_disable_seller",{seller_id:id});
+if(error)return alert(error.message);
+alert("Vendeur désactivé.");renderAdminPanel();
 }
-
 
 async function renderGlobalSales(){
+const c=document.getElementById("globalSales");
+if(!c)return;
 
-  const container =
-    document.getElementById(
-      "globalSales"
-    );
+const {data,error}=await supabaseClient.from("sales").select("*").order("created_at",{ascending:false});
+if(error)return c.innerHTML='<div class="empty">Impossible de charger les ventes.</div>';
+if(!data?.length)return c.innerHTML='<div class="empty">Aucune vente enregistrée.</div>';
 
-  if(!container){
-    return;
-  }
+let total=0;
+data.forEach(s=>total+=Number(s.amount||s.price||0));
 
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("sales")
-      .select("*")
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-
-  if(error){
-
-    container.innerHTML = `
-      <div class="empty">
-        Impossible de charger les ventes.
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  if(!data?.length){
-
-    container.innerHTML = `
-      <div class="empty">
-        Aucune vente enregistrée.
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  let total = 0;
-
-
-  data.forEach(
-    sale => {
-
-      total += Number(
-        sale.amount ||
-        sale.price ||
-        0
-      );
-
-    }
-  );
-
-
-  container.innerHTML = `
-
-    <div
-      class="sales-card glass-card"
-      style="
-        margin-bottom:12px;
-      "
-    >
-
-      <strong>
-        Chiffre d'affaires total
-      </strong>
-
-      <div
-        style="
-          font-size:22px;
-          font-weight:800;
-          margin-top:5px;
-        "
-      >
-
-        ${formatPrice(total)}
-
-      </div>
-
-    </div>
-
-
-    ${data.map(
-      sale => `
-
-        <div class="sales-card glass-card">
-
-          <strong>
-            ${escapeHtml(
-              sale.product_name ||
-              "Vente"
-            )}
-          </strong>
-
-          <div
-            style="
-              color:#777;
-              font-size:12px;
-              margin-top:4px;
-            "
-          >
-
-            ${formatPrice(
-              sale.amount ||
-              sale.price ||
-              0
-            )}
-
-          </div>
-
-        </div>
-
-      `
-    ).join("")}
-
-  `;
-
+c.innerHTML=`
+<div class="sales-card glass-card">
+<strong>Chiffre d'affaires total</strong>
+<div style="font-size:22px;font-weight:800;margin-top:5px">${formatPrice(total)}</div>
+</div>
+${data.map(s=>`
+<div class="sales-card glass-card">
+<strong>${escapeHtml(s.product_name||"Vente")}</strong>
+<div style="color:#777;font-size:12px">${formatPrice(s.amount||s.price||0)}</div>
+</div>`).join("")}`;
 }
 
-
-/* =========================================================
+/* =========================
    AUTH STATE
-========================================================= */
+========================= */
 
-supabaseClient.auth.onAuthStateChange(
-  async (event, session) => {
+supabaseClient.auth.onAuthStateChange((event,session)=>{
+currentUser=session?.user||null;
+setTimeout(()=>checkUser(),0);
+});
 
-    currentUser =
-      session?.user || null;
-
-
-    setTimeout(
-      async () => {
-
-        await checkUser();
-
-      },
-      0
-    );
-
-  }
-);
-
-
-/* =========================================================
-   INITIALIZATION
-========================================================= */
+/* =========================
+   INIT
+========================= */
 
 async function initialize(){
-
-  renderCategories();
-
-  updateCartBadge();
-
-  await checkUser();
-
-  await loadProducts();
-
-  renderCart();
-
+renderCategories();
+updateCartBadge();
+await checkUser();
+await loadProducts();
+renderCart();
 }
 
-
-/* =========================================================
-   PERIODIC SELLER CHECK
-========================================================= */
-
-setInterval(
-  async () => {
-
-    if(currentUser){
-
-      await checkSellerExpiration();
-
-    }
-
-  },
-  60000
-);
-
-
-/* =========================================================
-   START
-========================================================= */
+setInterval(async()=>{
+if(currentUser)await checkSellerExpiration();
+},60000);
 
 initialize();
-
 </script>
 
 </body>
