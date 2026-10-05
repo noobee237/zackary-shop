@@ -4931,33 +4931,106 @@ async function deleteProduct(id){
 ========================================================= */
 
 async function uploadAvatar(event){
-
   const file =
     event.target
       .files?.[0];
-
   if(
     !file ||
     !currentUser
   ){
-
     return;
-
   }
-
   if(
     !file.type.startsWith(
       "image/"
     )
   ){
-
     toast(
       "Choisis une image."
     );
-
     return;
-
   }
+  /* Chemin fixe : un seul fichier avatar par vendeur.
+     upsert:true écrase la photo précédente. */
+  const extension =
+    file.name
+      .split(".")
+      .pop()
+      .toLowerCase();
+  const path =
+    `${currentUser.id}/avatar.${extension}`;
+  const {
+    error
+  } =
+    await supabaseClient
+      .storage
+      .from("avatars")
+      .upload(
+        path,
+        file,
+        {
+          cacheControl:
+            "3600",
+          upsert:
+            true,
+          contentType:
+            file.type
+        }
+      );
+  if(error){
+    console.error(
+      error
+    );
+    toast(
+      "Erreur upload : " +
+      error.message
+    );
+    return;
+  }
+  /* Cache-buster pour forcer l'affichage
+     de la nouvelle image. */
+  const {
+    data
+  } =
+    supabaseClient
+      .storage
+      .from("avatars")
+      .getPublicUrl(
+        path
+      );
+  const avatarUrl =
+    data.publicUrl +
+    "?t=" +
+    Date.now();
+  const {
+    error:updateError
+  } =
+    await supabaseClient
+      .from("profiles")
+      .update({
+        avatar_url:
+          avatarUrl
+      })
+      .eq(
+        "id",
+        currentUser.id
+      );
+  if(updateError){
+    toast(
+      updateError.message
+    );
+    return;
+  }
+  if(currentProfile){
+    currentProfile.avatar_url =
+      avatarUrl;
+  }
+  renderHeaderAccount();
+  renderAccount();
+  toast(
+    "Photo de profil enregistrée."
+  );
+}
 
   const extension =
     file.name
