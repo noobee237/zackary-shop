@@ -1853,6 +1853,22 @@ header{
       class="hidden"
     >
 
+      <div
+        style="
+          background:#f5f3ff;
+          border:1px solid #ddd6fe;
+          color:#5b21b6;
+          border-radius:14px;
+          padding:12px;
+          margin-bottom:15px;
+          font-size:13px;
+          font-weight:800;
+        "
+      >
+        🛍️ Pour devenir vendeur, l'accès vendeur est de
+        <strong>1 050 XAF</strong>.
+      </div>
+
       <div class="form-group">
 
         <label>Nom / pseudo</label>
@@ -1954,6 +1970,9 @@ const CREATOR_WHATSAPP =
 
 const SELLER_PRICE =
   1050;
+
+const MAX_IMAGE_SIZE =
+  1024 * 1024; // 1 Mo maximum par image
 
 
 /* =========================================================
@@ -4576,6 +4595,38 @@ async function publishProduct(){
 
   }
 
+  for(
+    let i = 0;
+    i < files.length;
+    i++
+  ){
+
+    if(
+      files[i].size > MAX_IMAGE_SIZE
+    ){
+
+      toast(
+        `L'image ${i + 1} dépasse la limite de 1 Mo.`
+      );
+
+      return;
+
+    }
+
+    if(
+      !files[i].type.startsWith("image/")
+    ){
+
+      toast(
+        `Le fichier ${i + 1} n'est pas une image.`
+      );
+
+      return;
+
+    }
+
+  }
+
   /*
     Si le vendeur a renseigné une marque,
     elle devient également sa marque de profil.
@@ -4950,6 +5001,14 @@ async function uploadAvatar(event){
     );
     return;
   }
+  if(
+    file.size > MAX_IMAGE_SIZE
+  ){
+    toast(
+      "La photo de profil ne doit pas dépasser 1 Mo."
+    );
+    return;
+  }
   /* Chemin fixe : un seul fichier avatar par vendeur.
      upsert:true écrase la photo précédente. */
   const extension =
@@ -5283,9 +5342,9 @@ function renderAccount(){
 
         <div class="stat">
           <strong>
-            ${SELLER_PRICE}
+            🛍️
           </strong>
-          <span>Accès vendeur</span>
+          <span>Vendeur</span>
         </div>
 
       </div>
