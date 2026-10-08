@@ -5644,8 +5644,12 @@ function renderAccount(){
       <div class="form-card">
 
         <h3>
-          Paramètres du site
+          ⚙️ Paramètres du site
         </h3>
+
+        <p class="muted" style="margin-top:5px;font-size:13px">
+          Personnalise Zackary sh🛍️p. Ces réglages sont enregistrés sur cet appareil.
+        </p>
 
         <div class="theme-setting">
 
@@ -5675,6 +5679,18 @@ function renderAccount(){
             <span class="theme-slider"></span>
           </label>
 
+        </div>
+
+        <button
+          class="btn light"
+          style="width:100%;margin-top:10px"
+          onclick="resetSiteSettings()"
+        >
+          ↺ Réinitialiser l'apparence
+        </button>
+
+        <div class="muted" style="margin-top:9px;font-size:12px">
+          Cela remet uniquement le thème en mode clair.
         </div>
 
       </div>
@@ -7294,6 +7310,15 @@ function toggleTheme(){
       : "dark"
   );
 }
+
+function resetSiteSettings(){
+
+  applyTheme("light");
+
+  toast("Apparence réinitialisée en mode clair.");
+
+}
+
 
 function initTheme(){
 
