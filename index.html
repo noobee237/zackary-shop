@@ -1081,6 +1081,152 @@ header{
     height:65px;
   }
 }
+
+
+/* =========================================================
+   THEME CLAIR / SOMBRE
+   Ajout indépendant : ne modifie pas la logique Supabase.
+========================================================= */
+
+html[data-theme="dark"]{
+  --bg:#111315;
+  --card:rgba(30,32,35,.88);
+  --text:#f2f3f5;
+  --muted:#a7abb3;
+  --border:rgba(255,255,255,.10);
+  --accent:#fff;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+html[data-theme="dark"] body{
+  background:linear-gradient(180deg,#111315,#0b0c0e);
+  color:var(--text);
+}
+
+html[data-theme="dark"] header{
+  background:rgba(17,19,21,.82);
+}
+
+html[data-theme="dark"] .icon-btn,
+html[data-theme="dark"] .search-box,
+html[data-theme="dark"] .category,
+html[data-theme="dark"] .form-card,
+html[data-theme="dark"] .profile-card,
+html[data-theme="dark"] .detail-card,
+html[data-theme="dark"] .seller-box,
+html[data-theme="dark"] .product-card,
+html[data-theme="dark"] .order-card,
+html[data-theme="dark"] .stat{
+  background:var(--card);
+  color:var(--text);
+  border-color:var(--border);
+}
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select{
+  background:#1b1e21;
+  color:var(--text);
+  border-color:var(--border);
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder{
+  color:#858a93;
+}
+
+html[data-theme="dark"] .btn.light{
+  background:#272a2e;
+  color:#f2f3f5;
+}
+
+html[data-theme="dark"] .category.active,
+html[data-theme="dark"] .btn:not(.light):not(.white):not(.blue):not(.green):not(.red):not(.orange):not(.purple){
+  background:#f2f3f5;
+  color:#111315;
+}
+
+html[data-theme="dark"] .muted{
+  color:var(--muted);
+}
+
+html[data-theme="dark"] .seller-location,
+html[data-theme="dark"] .product-seller{
+  color:var(--muted);
+}
+
+.theme-setting{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:14px 0;
+}
+
+.theme-setting-info{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.theme-setting-icon{
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f0f1f3;
+  font-size:20px;
+}
+
+html[data-theme="dark"] .theme-setting-icon{
+  background:#272a2e;
+}
+
+.theme-switch{
+  position:relative;
+  width:54px;
+  height:31px;
+  flex:0 0 auto;
+}
+
+.theme-switch input{
+  opacity:0;
+  width:0;
+  height:0;
+}
+
+.theme-slider{
+  position:absolute;
+  inset:0;
+  cursor:pointer;
+  border-radius:999px;
+  background:#d5d7dc;
+  transition:.2s ease;
+}
+
+.theme-slider:before{
+  content:"";
+  position:absolute;
+  width:25px;
+  height:25px;
+  left:3px;
+  top:3px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 2px 7px rgba(0,0,0,.22);
+  transition:.2s ease;
+}
+
+.theme-switch input:checked + .theme-slider{
+  background:#16a34a;
+}
+
+.theme-switch input:checked + .theme-slider:before{
+  transform:translateX(23px);
+}
+
 </style>
 </head>
 
@@ -5498,6 +5644,49 @@ function renderAccount(){
       <div class="form-card">
 
         <h3>
+          Paramètres du site
+        </h3>
+
+        <div class="theme-setting">
+
+          <div class="theme-setting-info">
+
+            <div class="theme-setting-icon" id="themeSettingIcon">
+              ☀️
+            </div>
+
+            <div>
+              <strong id="themeSettingTitle">
+                Mode clair
+              </strong>
+              <div class="muted" style="margin-top:3px;font-size:13px">
+                Choisis l'apparence de Zackary sh🛍️p.
+              </div>
+            </div>
+
+          </div>
+
+          <label class="theme-switch" title="Changer le thème">
+            <input
+              type="checkbox"
+              id="themeToggle"
+              onchange="toggleTheme()"
+            >
+            <span class="theme-slider"></span>
+          </label>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="section">
+
+      <div class="form-card">
+
+        <h3>
           Mes commandes
         </h3>
 
@@ -5593,6 +5782,57 @@ function renderAccount(){
     }
 
 
+    ${
+      !isSeller && !isAdmin
+      ?
+      `
+      <div
+        class="form-card"
+        style="margin-top:15px"
+      >
+
+        <h3>
+          🛍️ Devenir vendeur
+        </h3>
+
+        <p
+          class="muted"
+          style="margin-top:6px"
+        >
+          Tu possèdes un code vendeur ?
+          Entre-le ici pour activer ton espace vendeur.
+        </p>
+
+        <div
+          class="form-group"
+          style="margin-top:15px"
+        >
+
+          <input
+            id="sellerCodeInput"
+            placeholder="Ex : ZACK-A7K2-91XM"
+            style="text-transform:uppercase"
+            maxlength="14"
+            autocomplete="off"
+          >
+
+        </div>
+
+        <button
+          class="btn purple"
+          style="width:100%"
+          onclick="activateSellerCode()"
+        >
+          🛍️ Activer mon compte vendeur
+        </button>
+
+      </div>
+      `
+      :
+      ""
+    }
+
+
     <div
       class="form-card"
       style="margin-top:15px"
@@ -5642,6 +5882,210 @@ function renderAccount(){
     </button>
 
   `;
+
+}
+
+
+/* =========================================================
+   CODES VENDEUR
+========================================================= */
+
+async function activateSellerCode(){
+
+  if(!currentUser){
+
+    toast("Connecte-toi d'abord.");
+    return;
+
+  }
+
+  const input =
+    document.getElementById("sellerCodeInput");
+
+  const code =
+    input?.value
+      .trim()
+      .toUpperCase();
+
+  if(!code){
+
+    toast("Entre ton code vendeur.");
+    return;
+
+  }
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.rpc(
+      "activate_seller_code",
+      {
+        p_code: code
+      }
+    );
+
+  if(error){
+
+    console.error(error);
+    toast(error.message);
+    return;
+
+  }
+
+  if(data?.unlimited){
+
+    toast("♾️ Compte vendeur activé définitivement !");
+
+  }else{
+
+    toast("🛍️ Compte vendeur activé pour 30 jours !");
+
+  }
+
+  await loadCurrentUser();
+
+  showPage("sellPage");
+
+}
+
+
+async function createSellerCode30(){
+
+  await createSellerCode(false,30);
+
+}
+
+
+async function createSellerCodeUnlimited(){
+
+  if(!confirm("Créer un code vendeur avec accès permanent ?")){
+    return;
+  }
+
+  await createSellerCode(true,null);
+
+}
+
+
+async function createSellerCode(
+  unlimited,
+  durationDays
+){
+
+  if(
+    !currentProfile ||
+    currentProfile.role !==
+    "creator_admin"
+  ){
+
+    toast("Accès administrateur requis.");
+    return;
+
+  }
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.rpc(
+      "admin_create_seller_code",
+      {
+        p_unlimited: unlimited,
+        p_duration_days: durationDays
+      }
+    );
+
+  if(error){
+
+    console.error(error);
+    toast(error.message);
+    return;
+
+  }
+
+  const code =
+    String(data || "");
+
+  const container =
+    document.getElementById("generatedSellerCode");
+
+  if(container){
+
+    container.innerHTML = `
+      <div
+        style="
+          background:#f5f3ff;
+          border:2px solid #ddd6fe;
+          border-radius:17px;
+          padding:18px;
+        "
+      >
+
+        <div
+          style="
+            font-size:12px;
+            color:#6d28d9;
+            margin-bottom:7px;
+            font-weight:800;
+          "
+        >
+          CODE VENDEUR
+        </div>
+
+        <div
+          style="
+            font-size:24px;
+            font-weight:900;
+            letter-spacing:1px;
+            word-break:break-all;
+          "
+        >
+          ${escapeHtml(code)}
+        </div>
+
+        <div
+          class="muted"
+          style="margin-top:6px;font-size:12px"
+        >
+          ${
+            unlimited
+              ? "Accès vendeur permanent"
+              : "Accès vendeur pendant 30 jours"
+          }
+        </div>
+
+        <button
+          class="btn purple"
+          style="margin-top:12px"
+          onclick="copySellerCode('${escapeHtml(code)}')"
+        >
+          📋 Copier le code
+        </button>
+
+      </div>
+    `;
+
+  }
+
+  toast("🔑 Code vendeur créé.");
+
+}
+
+
+async function copySellerCode(code){
+
+  try{
+
+    await navigator.clipboard.writeText(code);
+    toast("Code copié.");
+
+  }catch(error){
+
+    console.error(error);
+    toast("Impossible de copier automatiquement.");
+
+  }
 
 }
 
@@ -6062,6 +6506,52 @@ async function loadAdminPage(){
           </span>
 
         </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="section">
+
+      <div class="form-card">
+
+        <h2>
+          🔑 Codes vendeur
+        </h2>
+
+        <p
+          class="muted"
+          style="margin-top:6px"
+        >
+          Crée un code que tu peux donner à un client pour transformer son compte en vendeur.
+        </p>
+
+        <div
+          class="form-row"
+          style="margin-top:15px"
+        >
+
+          <button
+            class="btn purple"
+            onclick="createSellerCode30()"
+          >
+            🗓️ Code 30 jours
+          </button>
+
+          <button
+            class="btn blue"
+            onclick="createSellerCodeUnlimited()"
+          >
+            ♾️ Code illimité
+          </button>
+
+        </div>
+
+        <div
+          id="generatedSellerCode"
+          style="margin-top:15px"
+        ></div>
 
       </div>
 
@@ -6724,6 +7214,106 @@ function closeModal(id){
 }
 
 
+
+
+/* =========================================================
+   THEME — CLAIR / SOMBRE
+========================================================= */
+
+function applyTheme(theme){
+
+  const safeTheme =
+    theme === "dark"
+      ? "dark"
+      : "light";
+
+  document.documentElement.setAttribute(
+    "data-theme",
+    safeTheme
+  );
+
+  try{
+    localStorage.setItem(
+      "zackary_theme",
+      safeTheme
+    );
+  }catch(e){}
+
+  updateThemeControls(
+    safeTheme
+  );
+}
+
+function updateThemeControls(theme){
+
+  const toggle =
+    document.getElementById(
+      "themeToggle"
+    );
+
+  const title =
+    document.getElementById(
+      "themeSettingTitle"
+    );
+
+  const icon =
+    document.getElementById(
+      "themeSettingIcon"
+    );
+
+  if(toggle){
+    toggle.checked =
+      theme === "dark";
+  }
+
+  if(title){
+    title.textContent =
+      theme === "dark"
+        ? "Mode sombre"
+        : "Mode clair";
+  }
+
+  if(icon){
+    icon.textContent =
+      theme === "dark"
+        ? "🌙"
+        : "☀️";
+  }
+}
+
+function toggleTheme(){
+
+  const current =
+    document.documentElement.getAttribute(
+      "data-theme"
+    ) || "light";
+
+  applyTheme(
+    current === "dark"
+      ? "light"
+      : "dark"
+  );
+}
+
+function initTheme(){
+
+  let saved = "light";
+
+  try{
+    saved =
+      localStorage.getItem(
+        "zackary_theme"
+      ) || "light";
+  }catch(e){}
+
+  applyTheme(
+    saved === "dark"
+      ? "dark"
+      : "light"
+  );
+}
+
+
 /* =========================================================
    INITIALISATION
 ========================================================= */
@@ -6731,6 +7321,8 @@ function closeModal(id){
 document.addEventListener(
   "DOMContentLoaded",
   async ()=>{
+
+    initTheme();
 
     updateCartCount();
 
