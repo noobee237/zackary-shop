@@ -1976,15 +1976,17 @@ html[data-theme="dark"] .theme-setting-icon{
     </div>
 
     <div class="form-group">
+      <label for="authMethod">Méthode d'inscription / connexion</label>
+      <select id="authMethod" onchange="updateAuthMethod()" style="width:100%;border:1px solid #ddd;outline:none;padding:13px;border-radius:13px;background:#fafafa">
+        <option value="email">Avec une adresse e-mail</option>
+        <option value="phone">Avec un numéro de téléphone</option>
+      </select>
+    </div>
 
-      <label>Email</label>
-
-      <input
-        id="authEmail"
-        type="email"
-        placeholder="ton@email.com"
-      >
-
+    <div class="form-group">
+      <label id="authIdentifierLabel" for="authEmail">Adresse e-mail</label>
+      <input id="authEmail" type="email" autocomplete="username" placeholder="ton@email.com">
+      <small id="authIdentifierHelp" class="muted">Le numéro de téléphone sera obligatoire à l'inscription.</small>
     </div>
 
     <div class="form-group">
@@ -2432,310 +2434,137 @@ function openAuth(mode="login"){
 }
 
 
-function switchAuth(mode){
-
-  authMode = mode;
-
-  const loginTab =
-    document.getElementById(
-      "loginTab"
-    );
-
-  const signupTab =
-    document.getElementById(
-      "signupTab"
-    );
-
-  const signupFields =
-    document.getElementById(
-      "signupFields"
-    );
-
-  const title =
-    document.getElementById(
-      "authTitle"
-    );
-
-  const submit =
-    document.getElementById(
-      "authSubmit"
-    );
-
-  if(mode === "login"){
-
-    loginTab.classList.add(
-      "active"
-    );
-
-    signupTab.classList.remove(
-      "active"
-    );
-
-    signupFields.classList.add(
-      "hidden"
-    );
-
-    title.textContent =
-      "Connexion";
-
-    submit.textContent =
-      "Se connecter";
-
-  }else{
-
-    loginTab.classList.remove(
-      "active"
-    );
-
-    signupTab.classList.add(
-      "active"
-    );
-
-    signupFields.classList.remove(
-      "hidden"
-    );
-
-    title.textContent =
-      "Créer un compte";
-
-    submit.textContent =
-      "Créer mon compte";
-
+function updateAuthMethod(){
+  const method = document.getElementById("authMethod")?.value || "email";
+  const input = document.getElementById("authEmail");
+  const label = document.getElementById("authIdentifierLabel");
+  const help = document.getElementById("authIdentifierHelp");
+  if(method === "phone"){
+    label.textContent = "Numéro de téléphone";
+    input.type = "tel";
+    input.placeholder = "+2376XXXXXXXX";
+    input.autocomplete = "tel";
+    help.textContent = "Le numéro est obligatoire. L'e-mail est facultatif.";
+  } else {
+    label.textContent = "Adresse e-mail";
+    input.type = "email";
+    input.placeholder = "ton@email.com";
+    input.autocomplete = "username";
+    help.textContent = "Le numéro de téléphone sera obligatoire à l'inscription.";
   }
-
 }
 
+function switchAuth(mode){
+  authMode = mode;
+  const loginTab = document.getElementById("loginTab");
+  const signupTab = document.getElementById("signupTab");
+  const signupFields = document.getElementById("signupFields");
+  const title = document.getElementById("authTitle");
+  const submit = document.getElementById("authSubmit");
+
+  if(mode === "login"){
+    loginTab.classList.add("active");
+    signupTab.classList.remove("active");
+    signupFields.classList.add("hidden");
+    title.textContent = "Connexion";
+    submit.textContent = "Se connecter";
+  } else {
+    loginTab.classList.remove("active");
+    signupTab.classList.add("active");
+    signupFields.classList.remove("hidden");
+    title.textContent = "Créer un compte";
+    submit.textContent = "Créer mon compte";
+  }
+  updateAuthMethod();
+}
+
+function normalizeCameroonPhone(value){
+  let phone = String(value || "").trim().replace(/[\s().-]/g, "");
+  if(/^6\d{8}$/.test(phone)) phone = "+237" + phone;
+  if(/^2376\d{8}$/.test(phone)) phone = "+" + phone;
+  return phone;
+}
 
 async function submitAuth(){
+  const method = document.getElementById("authMethod")?.value || "email";
+  const identifier = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
 
-  const email =
-    document
-      .getElementById("authEmail")
-      .value.trim();
-
-  const password =
-    document
-      .getElementById("authPassword")
-      .value;
-
-  if(!email || !password){
-
-    toast(
-      "Remplis ton email et ton mot de passe."
-    );
-
+  if(!identifier || !password){
+    toast(method === "phone" ? "Renseigne ton numéro et ton mot de passe." : "Renseigne ton adresse e-mail et ton mot de passe.");
     return;
+  }
+  if(password.length < 6){
+    toast("Le mot de passe doit contenir au moins 6 caractères.");
+    return;
+  }
 
+  let email = null;
+  let phone = null;
+  if(method === "email"){
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier)){
+      toast("Entre une adresse e-mail valide.");
+      return;
+    }
+    email = identifier.toLowerCase();
+  } else {
+    phone = normalizeCameroonPhone(identifier);
+    if(!/^\+2376\d{8}$/.test(phone)){
+      toast("Entre un numéro camerounais valide, par exemple +2376XXXXXXXX.");
+      return;
+    }
   }
 
   if(authMode === "login"){
+    const credentials = { password };
+    if(method === "email") credentials.email = email;
+    else credentials.phone = phone;
 
-    const {
-      error
-    } =
-      await supabaseClient.auth
-        .signInWithPassword({
-          email,
-          password
-        });
-
-    if(error){
-
-      toast(error.message);
-
-      return;
-
-    }
-
-    toast(
-      "Connexion réussie."
-    );
-
-    closeModal(
-      "authModal"
-    );
-
+    const { error } = await supabaseClient.auth.signInWithPassword(credentials);
+    if(error){ toast(error.message); return; }
+    toast("Connexion réussie.");
+    closeModal("authModal");
     await loadCurrentUser();
-
     return;
-
   }
 
-  const username =
-    document
-      .getElementById("authUsername")
-      .value.trim();
+  const username = document.getElementById("authUsername").value.trim();
+  const profilePhone = document.getElementById("authPhone").value.trim();
+  let signupPhone = phone;
 
-  const phone =
-    document
-      .getElementById("authPhone")
-      .value.trim();
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth
-      .signUp({
-
-        email,
-        password,
-
-        options:{
-          data:{
-            username,
-            phone
-          }
-        }
-
-      });
-
-  if(error){
-
-    toast(error.message);
-
-    return;
-
+  if(method === "email"){
+    signupPhone = normalizeCameroonPhone(profilePhone);
+    if(!/^\+2376\d{8}$/.test(signupPhone)){
+      toast("Avec l'inscription par e-mail, le numéro de téléphone est obligatoire. Exemple : +2376XXXXXXXX.");
+      document.getElementById("authPhone").focus();
+      return;
+    }
   }
+
+  const signUpCredentials = { password, options: { data: { username, phone: signupPhone } } };
+  if(method === "email") signUpCredentials.email = email;
+  else signUpCredentials.phone = phone;
+
+  const { data, error } = await supabaseClient.auth.signUp(signUpCredentials);
+  if(error){ toast(error.message); return; }
 
   if(data.user){
-
-    const {
-      error:profileError
-    } =
-      await supabaseClient
-        .from("profiles")
-        .upsert({
-
-          id:data.user.id,
-
-          username:
-            username ||
-            email.split("@")[0],
-
-          phone:
-            phone || null
-
-        });
-
-    if(profileError){
-
-      console.error(
-        profileError
-      );
-
-    }
-
+    const profileData = {
+      id: data.user.id,
+      username: username || (email ? email.split("@")[0] : phone),
+      phone: signupPhone || null
+    };
+    const { error: profileError } = await supabaseClient.from("profiles").upsert(profileData, { onConflict: "id" });
+    if(profileError) console.error("Erreur de création du profil :", profileError);
   }
 
-  toast(
-    "Compte créé. Vérifie ton email si nécessaire."
-  );
-
-  closeModal(
-    "authModal"
-  );
-
+  toast(method === "phone"
+    ? "Compte créé. Si la vérification par SMS est activée, saisis le code reçu."
+    : "Compte créé. Vérifie ton e-mail si nécessaire.");
+  closeModal("authModal");
   await loadCurrentUser();
-
 }
 
-
-async function logout(){
-
-  await supabaseClient
-    .auth
-    .signOut();
-
-  currentUser = null;
-  currentProfile = null;
-
-  updateNavigationByRole();
-
-  renderHeaderAccount();
-  renderAccount();
-
-  showPage(
-    "homePage"
-  );
-
-  toast(
-    "Déconnexion réussie."
-  );
-
-}
-
-
-/* =========================================================
-   UTILISATEUR
-========================================================= */
-
-async function loadCurrentUser(){
-
-  const {
-    data:{
-      user
-    }
-  } =
-    await supabaseClient
-      .auth
-      .getUser();
-
-  currentUser =
-    user || null;
-
-  currentProfile = null;
-
-  if(currentUser){
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq(
-          "id",
-          currentUser.id
-        )
-        .maybeSingle();
-
-    if(!error){
-
-      currentProfile =
-        data;
-
-    }
-
-  }
-
-  updateNavigationByRole();
-
-  renderHeaderAccount();
-
-  renderAccount();
-
-  renderSellPage();
-
-  renderBrands();
-
-  if(
-    currentProfile &&
-    currentProfile.role ===
-    "creator_admin"
-  ){
-
-    loadAdminPage();
-
-  }
-
-}
-
-
-/* =========================================================
-   HEADER
-========================================================= */
 
 function renderHeaderAccount(){
 
@@ -6575,6 +6404,37 @@ async function loadAdminPage(){
   const subscriptionRequests = subscriptionRequestsResult.data || [];
   const certificationRequests = certificationRequestsResult.data || [];
 
+  // Charger les coordonnées des comptes associés aux demandes en attente.
+  const requesterIds = [...new Set([
+    ...profileRequests.map(r => r.user_id),
+    ...subscriptionRequests.map(r => r.user_id),
+    ...certificationRequests.map(r => r.user_id)
+  ].filter(Boolean))];
+
+  let requesterProfiles = {};
+  if (requesterIds.length) {
+    const { data: requesterData, error: requesterError } = await supabaseClient
+      .from("profiles")
+      .select("id,username,phone,whatsapp")
+      .in("id", requesterIds);
+
+    if (requesterError) {
+      console.error("Impossible de charger les coordonnées des demandeurs :", requesterError);
+    } else {
+      requesterProfiles = Object.fromEntries((requesterData || []).map(p => [p.id, p]));
+    }
+  }
+
+  const requesterContact = userId => {
+    const p = requesterProfiles[userId] || {};
+    return `<p class="muted" style="margin:5px 0">
+      Nom / pseudo : <strong>${escapeHtml(p.username || "Non renseigné")}</strong><br>
+      Téléphone : <strong>${escapeHtml(p.phone || "Non renseigné")}</strong>
+      ${p.whatsapp ? `<br>WhatsApp : <strong>${escapeHtml(p.whatsapp)}</strong>` : ""}
+      <br>ID du compte : <small>${escapeHtml(userId || "—")}</small>
+    </p>`;
+  };
+
   container.innerHTML = `
     <div class="section">
       <div class="form-card">
@@ -6582,8 +6442,9 @@ async function loadAdminPage(){
         ${profileRequests.length ? profileRequests.map(r=>{
           const d=r.requested_data||{};
           return `<div class="order-card">
-            <strong>${escapeHtml(d.username||"Utilisateur")}</strong>
-            <p class="muted" style="margin:5px 0">Téléphone : ${escapeHtml(d.phone||"—")} · WhatsApp : ${escapeHtml(d.whatsapp||"—")}</p>
+            <strong>Demande de ${escapeHtml(d.username||"Utilisateur")}</strong>
+            ${requesterContact(r.user_id)}
+            <p class="muted" style="margin:5px 0">Coordonnées demandées — Téléphone : ${escapeHtml(d.phone||"—")} · WhatsApp : ${escapeHtml(d.whatsapp||"—")}</p>
             <p class="muted">Lieu : ${escapeHtml(d.pickup_location||"—")} · Marque : ${escapeHtml(d.brand_name||"—")}</p>
             <div class="form-row" style="margin-top:10px">
               <button class="btn green" onclick="adminReviewProfileChange('${r.id}',true)">Valider</button>
@@ -6594,11 +6455,11 @@ async function loadAdminPage(){
     </div>
     <div class="section"><div class="form-card">
       <h2>💳 Abonnements à traiter (${subscriptionRequests.length})</h2>
-      ${subscriptionRequests.length ? subscriptionRequests.map(r=>`<div class="order-card"><strong>${escapeHtml(r.plan_label||r.plan_key)} — ${formatPrice(r.monthly_price)}/mois</strong><p class="muted" style="margin:5px 0">Utilisateur : ${escapeHtml(r.user_id)}</p><div class="form-row" style="margin-top:10px"><button class="btn green" onclick="adminReviewSubscription('${r.id}',true)">Valider demande</button><button class="btn red" onclick="adminReviewSubscription('${r.id}',false)">Refuser</button></div></div>`).join("") : '<p class="muted" style="margin-top:8px">Aucune demande en attente.</p>'}
+      ${subscriptionRequests.length ? subscriptionRequests.map(r=>`<div class="order-card"><strong>${escapeHtml(r.plan_label||r.plan_key)} — ${formatPrice(r.monthly_price)}/mois</strong>${requesterContact(r.user_id)}<p class="muted">Demande reçue le ${new Date(r.created_at).toLocaleString("fr-FR")}</p><div class="form-row" style="margin-top:10px"><button class="btn green" onclick="adminReviewSubscription('${r.id}',true)">Valider demande</button><button class="btn red" onclick="adminReviewSubscription('${r.id}',false)">Refuser</button></div></div>`).join("") : '<p class="muted" style="margin-top:8px">Aucune demande en attente.</p>'}
     </div></div>
     <div class="section"><div class="form-card">
       <h2>🏬 Codes boutique à certifier (${certificationRequests.length})</h2>
-      ${certificationRequests.length ? certificationRequests.map(r=>`<div class="order-card"><strong>${escapeHtml(r.boutique_name)}</strong><p style="margin:6px 0">Code : <strong>${escapeHtml(r.boutique_code)}</strong></p><p class="muted">Utilisateur : ${escapeHtml(r.user_id)}</p><div class="form-row" style="margin-top:10px"><button class="btn green" onclick="adminReviewBoutiqueCode('${r.id}',true)">Certifier</button><button class="btn red" onclick="adminReviewBoutiqueCode('${r.id}',false)">Refuser</button></div></div>`).join("") : '<p class="muted" style="margin-top:8px">Aucun code en attente.</p>'}
+      ${certificationRequests.length ? certificationRequests.map(r=>`<div class="order-card"><strong>${escapeHtml(r.boutique_name)}</strong><p style="margin:6px 0">Code : <strong>${escapeHtml(r.boutique_code)}</strong></p>${requesterContact(r.user_id)}<div class="form-row" style="margin-top:10px"><button class="btn green" onclick="adminReviewBoutiqueCode('${r.id}',true)">Certifier</button><button class="btn red" onclick="adminReviewBoutiqueCode('${r.id}',false)">Refuser</button></div></div>`).join("") : '<p class="muted" style="margin-top:8px">Aucun code en attente.</p>'}
     </div></div>
 
 
