@@ -1974,11 +1974,10 @@ html[data-theme="dark"] .theme-setting-icon{
       </button>
 
     </div>
-
-    <div class="form-group">
+<div class="form-group">
       <label id="authIdentifierLabel" for="authEmail">Adresse e-mail</label>
       <input id="authEmail" type="email" autocomplete="username" placeholder="ton@email.com">
-      <small id="authIdentifierHelp" class="muted">Connecte-toi avec l'adresse e-mail associée à ton compte.</small>
+      <small id="authIdentifierHelp" class="muted">Le numéro de téléphone sera obligatoire à l'inscription.</small>
     </div>
 
     <div class="form-group">
@@ -2430,17 +2429,14 @@ function updateAuthMethod(){
   const input = document.getElementById("authEmail");
   const label = document.getElementById("authIdentifierLabel");
   const help = document.getElementById("authIdentifierHelp");
-  if(input) {
+  if(input){
     input.type = "email";
     input.placeholder = "ton@email.com";
     input.autocomplete = "username";
   }
   if(label) label.textContent = "Adresse e-mail";
-  if(help) help.textContent = authMode === "signup"
-    ? "Une adresse e-mail valide et un numéro de téléphone sont obligatoires."
-    : "Connecte-toi avec l'adresse e-mail associée à ton compte.";
+  if(help) help.textContent = "Utilise ton adresse e-mail et ton mot de passe.";
 }
-
 function switchAuth(mode){
   authMode = mode;
   const loginTab = document.getElementById("loginTab");
@@ -2473,8 +2469,11 @@ function normalizeCameroonPhone(value){
 }
 
 async function submitAuth(){
-  const email = document.getElementById("authEmail").value.trim().toLowerCase();
-  const password = document.getElementById("authPassword").value;
+  const submitButton = document.getElementById("authSubmit");
+  const emailInput = document.getElementById("authEmail");
+  const passwordInput = document.getElementById("authPassword");
+  const email = (emailInput?.value || "").trim().toLowerCase();
+  const password = passwordInput?.value || "";
 
   if(!email || !password){
     toast("Renseigne ton adresse e-mail et ton mot de passe.");
@@ -2482,66 +2481,79 @@ async function submitAuth(){
   }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
     toast("Entre une adresse e-mail valide.");
+    emailInput?.focus();
     return;
   }
   if(password.length < 6){
     toast("Le mot de passe doit contenir au moins 6 caractères.");
+    passwordInput?.focus();
     return;
   }
 
-  if(authMode === "login"){
-    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-    if(error){
-      toast("Connexion impossible. Vérifie l'e-mail et le mot de passe. Si ton ancien compte utilisait uniquement le téléphone, il faudra lui associer un e-mail dans Supabase.");
-      console.error("Erreur de connexion:", error);
+  if(submitButton){
+    submitButton.disabled = true;
+    submitButton.textContent = authMode === "login" ? "Connexion..." : "Création...";
+  }
+
+  try {
+    if(authMode === "login"){
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if(error){
+        toast(error.message || "Connexion impossible. Vérifie ton e-mail et ton mot de passe.");
+        return;
+      }
+      toast("Connexion réussie.");
+      closeModal("authModal");
+      await loadCurrentUser();
       return;
     }
-    toast("Connexion réussie.");
+
+    const username = (document.getElementById("authUsername")?.value || "").trim();
+    const rawPhone = (document.getElementById("authPhone")?.value || "").trim();
+    const phone = normalizeCameroonPhone(rawPhone);
+    if(!username){
+      toast("Renseigne ton nom ou ton pseudo.");
+      document.getElementById("authUsername")?.focus();
+      return;
+    }
+    if(!/^\+2376\d{8}$/.test(phone)){
+      toast("Renseigne un numéro camerounais valide, par exemple +2376XXXXXXXX.");
+      document.getElementById("authPhone")?.focus();
+      return;
+    }
+
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: { data: { username, phone } }
+    });
+    if(error){
+      toast(error.message || "Impossible de créer le compte.");
+      return;
+    }
+
+    if(data?.user){
+      const { error: profileError } = await supabaseClient
+        .from("profiles")
+        .upsert({ id: data.user.id, username, phone }, { onConflict: "id" });
+      if(profileError) console.error("Erreur de création du profil :", profileError);
+    }
+
+    toast(data?.session
+      ? "Compte créé. Tu peux maintenant utiliser Zackary Shop."
+      : "Compte créé. Vérifie ta boîte e-mail pour confirmer ton adresse avant de te connecter.");
     closeModal("authModal");
     await loadCurrentUser();
-    return;
+  } catch(err) {
+    console.error("Erreur d'authentification Zackary Shop :", err);
+    toast("La connexion a échoué. Vérifie ta connexion Internet puis réessaie.");
+  } finally {
+    if(submitButton){
+      submitButton.disabled = false;
+      submitButton.textContent = authMode === "login" ? "Se connecter" : "Créer mon compte";
+    }
   }
-
-  const username = document.getElementById("authUsername").value.trim();
-  const profilePhone = document.getElementById("authPhone").value.trim();
-  const signupPhone = normalizeCameroonPhone(profilePhone);
-
-  if(!username){
-    toast("Renseigne ton nom ou pseudo.");
-    document.getElementById("authUsername").focus();
-    return;
-  }
-  if(!/^\+2376\d{8}$/.test(signupPhone)){
-    toast("Le numéro de téléphone est obligatoire. Exemple : +2376XXXXXXXX.");
-    document.getElementById("authPhone").focus();
-    return;
-  }
-
-  const { data, error } = await supabaseClient.auth.signUp({
-    email,
-    password,
-    options: { data: { username, phone: signupPhone } }
-  });
-  if(error){
-    toast(error.message);
-    console.error("Erreur d'inscription:", error);
-    return;
-  }
-
-  if(data.user){
-    const { error: profileError } = await supabaseClient
-      .from("profiles")
-      .upsert({ id: data.user.id, username, phone: signupPhone }, { onConflict: "id" });
-    if(profileError) console.error("Erreur de création du profil :", profileError);
-  }
-
-  toast(data.session
-    ? "Compte créé. Tu peux te connecter."
-    : "Compte créé. Vérifie ta boîte e-mail pour confirmer ton adresse avant de te connecter.");
-  closeModal("authModal");
-  await loadCurrentUser();
 }
-
 
 function renderHeaderAccount(){
 
