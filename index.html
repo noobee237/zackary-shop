@@ -388,43 +388,31 @@ header{
   font-weight:800;
 }
 
-/* Fil d’actualité produits façon publications Instagram */
+/* Catalogue produits façon marketplace e-commerce, inspiré de Temu */
 #homeProducts.product-grid,
 #shopProducts.product-grid{
   display:grid;
-  grid-template-columns:minmax(0, 680px);
-  justify-content:center;
-  gap:20px;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  align-items:stretch;
+  gap:14px;
 }
 
 #homeProducts .product-card,
 #shopProducts .product-card{
-  border-radius:22px;
+  min-width:0;
+  border-radius:14px;
   overflow:hidden;
   background:#fff;
-  box-shadow:0 7px 24px rgba(0,0,0,.07);
+  border:1px solid rgba(0,0,0,.06);
+  box-shadow:0 3px 12px rgba(0,0,0,.055);
   cursor:pointer;
+  transition:transform .18s ease,box-shadow .18s ease;
 }
-
-#homeProducts .feed-post-head,
-#shopProducts .feed-post-head{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:13px 15px;
+#homeProducts .product-card:hover,
+#shopProducts .product-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 7px 18px rgba(0,0,0,.09);
 }
-
-.feed-post-avatar{
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#e5e7eb;
-  flex:0 0 auto;
-}
-
-.feed-post-user{font-weight:850;font-size:14px;}
-.feed-post-label{font-size:12px;color:#777;margin-top:2px;}
 
 #homeProducts .product-image,
 #shopProducts .product-image{
@@ -432,29 +420,58 @@ header{
   width:100%;
   aspect-ratio:4/3;
   object-fit:contain;
-  background:#f0f0f0;
+  background:#f7f7f7;
   cursor:zoom-in;
+  padding:4px;
 }
 
 #homeProducts .product-info,
-#shopProducts .product-info{padding:14px 16px 16px;}
-
+#shopProducts .product-info{padding:10px 11px 12px;}
 #homeProducts .product-name,
 #shopProducts .product-name{
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
   white-space:normal;
-  overflow:visible;
   text-overflow:clip;
-  font-size:17px;
+  font-size:14px;
   line-height:1.35;
+  min-height:38px;
+  font-weight:650;
 }
 
-.feed-post-caption{margin-top:7px;color:#555;line-height:1.45;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere;}
-.feed-post-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:13px;}
-.feed-view-btn{padding:10px 14px;border-radius:12px;background:#111;color:white;font-weight:800;white-space:nowrap;}
-
+.market-price-row{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;margin-top:7px;}
+.market-price{font-size:19px;font-weight:900;letter-spacing:-.45px;color:#e53935;}
+.market-price-unit{font-size:11px;color:#777;}
+.market-stock{margin-top:5px;font-size:11px;color:#777;}
+.market-brand{margin-top:5px;font-size:11px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.market-seller{margin-top:6px;font-size:11px;color:#777;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.market-card-actions{display:flex;gap:7px;margin-top:10px;}
+.market-card-actions button{flex:1;min-width:0;padding:9px 7px;border-radius:9px;font-size:12px;font-weight:800;}
+.market-view-btn{background:#f3f3f3;color:#222;}
+.market-buy-btn{background:#ff6a00;color:white;}
 html[data-theme="dark"] #homeProducts .product-card,
 html[data-theme="dark"] #shopProducts .product-card{background:var(--card);color:var(--text);}
-html[data-theme="dark"] .feed-post-caption{color:var(--muted);}
+html[data-theme="dark"] #homeProducts .product-image,
+html[data-theme="dark"] #shopProducts .product-image{background:#f0f0f0;}
+
+@media(max-width:850px){
+  #homeProducts.product-grid,
+  #shopProducts.product-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;}
+}
+@media(max-width:600px){
+  #homeProducts.product-grid,
+  #shopProducts.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;}
+  #homeProducts .product-card,
+  #shopProducts .product-card{border-radius:12px;}
+  #homeProducts .product-info,
+  #shopProducts .product-info{padding:8px;}
+  #homeProducts .product-name,
+  #shopProducts .product-name{font-size:13px;min-height:35px;}
+  .market-price{font-size:17px;}
+  .market-card-actions button{font-size:11px;padding:9px 4px;}
+}
 
 /* Visionneuse intégrée avec bouton retour */
 .product-image-viewer{position:fixed;inset:0;z-index:5000;display:none;background:rgba(0,0,0,.97);color:white;align-items:center;justify-content:center;padding:70px 12px 18px;}
@@ -3127,38 +3144,28 @@ function renderShopProducts(){
 
 
 function productCard(product){
-
   const image = productImage(product);
   const seller = product.seller_username || product.seller_name || "Vendeur";
   const ratioClass = "ratio-4-3";
   const brand = product.brand || "";
-  const description = product.description || "";
   const stock = Number(product.stock_quantity ?? 1);
-  const avatar = product.seller_avatar || product.avatar_url || placeholder();
   const productId = String(product.id).replaceAll("'", "\\'");
 
   return `
     <article class="product-card" onclick="openProduct('${productId}')">
-      <div class="feed-post-head">
-        <img class="feed-post-avatar" src="${escapeHtml(avatar)}" alt="" loading="lazy">
-        <div style="min-width:0;flex:1">
-          <div class="feed-post-user">@${escapeHtml(seller)}</div>
-          <div class="feed-post-label">Publication produit · Zackary sh🛍️p</div>
-        </div>
-        <span aria-hidden="true" style="font-size:22px;font-weight:900">⋯</span>
-      </div>
       <img class="product-image ${ratioClass}" src="${escapeHtml(image)}" alt="${escapeHtml(product.name || "Produit")}" loading="lazy" onclick="event.stopPropagation(); zoomImage(this.currentSrc || this.src)" onerror="this.onerror=null;this.src=placeholder()">
       <div class="product-info">
-        <div style="font-size:18px;line-height:1.2;margin-bottom:5px" aria-label="Actions de publication">♡　↗</div>
         <div class="product-name">${escapeHtml(product.name || "Produit")}</div>
-        ${description ? `<div class="feed-post-caption">${escapeHtml(description)}</div>` : ""}
-        <div class="feed-post-actions">
-          <div>
-            <div class="product-price">${formatPrice(product.price)}</div>
-            <div class="product-seller">${stock > 0 ? `📦 ${stock} disponible(s)` : "❌ Rupture de stock"}</div>
-            ${brand ? `<div class="product-brand">🏷️ ${escapeHtml(brand)}</div>` : ""}
-          </div>
-          <button class="feed-view-btn" onclick="event.stopPropagation();openProduct('${productId}')">Voir le produit</button>
+        <div class="market-price-row">
+          <span class="market-price">${formatPrice(product.price)}</span>
+          <span class="market-price-unit">FCFA</span>
+        </div>
+        <div class="market-stock">${stock > 0 ? `📦 ${stock} disponible(s)` : "❌ Rupture de stock"}</div>
+        ${brand ? `<div class="market-brand">🏷️ ${escapeHtml(brand)}</div>` : ""}
+        <div class="market-seller">Vendu par ${escapeHtml(seller)}</div>
+        <div class="market-card-actions">
+          <button class="market-view-btn" onclick="event.stopPropagation();zoomImage('${escapeHtml(image)}')">Voir photo</button>
+          <button class="market-buy-btn" onclick="event.stopPropagation();openProduct('${productId}')">Détails</button>
         </div>
       </div>
     </article>
