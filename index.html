@@ -1479,8 +1479,7 @@ html[data-theme="dark"] .theme-setting-icon{
       <strong>🛍️ Tu veux devenir vendeur ?</strong>
 
       <p>
-        Pour souscrire à ton accès vendeur ou obtenir de l'aide,
-        contacte directement le créateur de Zackary sh🛍️p.
+        Consulte les packs professionnels dans l’onglet « Vendeur » ou contacte-nous pour choisir l’offre adaptée à ton activité.
       </p>
 
       <button
@@ -1488,7 +1487,7 @@ html[data-theme="dark"] .theme-setting-icon{
         style="margin-top:13px"
         onclick="contactCreator()"
       >
-        💬 WhatsApp — 690 847 035
+        💬 Demander conseil sur WhatsApp
       </button>
 
     </div>
@@ -1728,6 +1727,45 @@ html[data-theme="dark"] .theme-setting-icon{
 </section>
 
 
+<section id="sellerOffersPage" class="page">
+  <div class="section">
+    <div class="section-title">
+      <div>
+        <h2>💼 Devenir vendeur ou marque</h2>
+        <p class="muted">Choisis l’offre adaptée à ton activité sur Zackary sh🛍️p.</p>
+      </div>
+    </div>
+    <div class="form-card" style="margin-bottom:14px">
+      <p><strong>Activation mensuelle</strong></p>
+      <p class="muted" style="margin-top:6px">L’accès vendeur est activé après contact et vérification du paiement par l’administrateur. Sélectionne une offre pour demander l’activation. Si tu n’es pas connecté, le site te proposera de te connecter.</p>
+    </div>
+    <div class="order-card">
+      <strong>🧍 Vendeur indépendant</strong>
+      <p class="muted" style="margin:6px 0">Pour vendre tes articles en ton nom.</p>
+      <div style="font-size:22px;font-weight:900;margin:6px 0">2 000 FCFA <small class="muted">/ mois</small></div>
+      <button class="btn" style="width:100%" onclick="requestProfessionalPlan('independent')">Choisir cette offre</button>
+    </div>
+    <div class="order-card">
+      <strong>🏬 Boutique</strong>
+      <p class="muted" style="margin:6px 0">Pour une boutique qui présente plusieurs articles.</p>
+      <div style="font-size:22px;font-weight:900;margin:6px 0">4 000 FCFA <small class="muted">/ mois</small></div>
+      <button class="btn purple" style="width:100%" onclick="requestProfessionalPlan('boutique')">Choisir cette offre</button>
+    </div>
+    <div class="order-card">
+      <strong>🚀 Startup / marque locale</strong>
+      <p class="muted" style="margin:6px 0">Pour lancer ou développer une marque locale.</p>
+      <div style="font-size:22px;font-weight:900;margin:6px 0">1 500 FCFA <small class="muted">/ mois</small></div>
+      <button class="btn blue" style="width:100%" onclick="requestProfessionalPlan('startup')">Choisir cette offre</button>
+    </div>
+    <div class="form-card" style="margin-top:14px">
+      <h3>Besoin d’aide pour choisir ?</h3>
+      <p class="muted" style="margin:6px 0 12px">Écris-nous sur WhatsApp : indique ton activité et demande quel pack correspond le mieux à tes besoins.</p>
+      <button class="btn green" style="width:100%" onclick="contactCreator()">💬 Demander conseil sur WhatsApp</button>
+    </div>
+  </div>
+</section>
+
+
 <section id="accountPage" class="page">
 
   <div class="section">
@@ -1806,6 +1844,15 @@ html[data-theme="dark"] .theme-setting-icon{
       </span>
     </span>
     Panier
+  </button>
+
+  <button
+    class="nav-btn"
+    data-page="sellerOffersPage"
+    onclick="showPage('sellerOffersPage')"
+  >
+    <span class="nav-icon">💼</span>
+    Vendeur
   </button>
 
   <!-- CLIENT : MARQUES -->
@@ -2239,7 +2286,7 @@ function contactCreator(){
 
   const message =
     encodeURIComponent(
-      "Bonjour Novis, je souhaite souscrire à l'accès vendeur de Zackary sh🛍️p. Je voudrais connaître les modalités d'inscription à 1050 XAF."
+      "Bonjour, je souhaite devenir vendeur ou marque sur Zackary sh🛍️p. Pouvez-vous me conseiller sur le pack professionnel le plus adapté à mon activité et m’indiquer les modalités de paiement ?"
     );
 
   window.open(
@@ -4776,7 +4823,43 @@ async function publishProduct(){
 
   }
 
-  /* La marque du profil est modifiée uniquement via Paramètres avec validation admin. */
+  /*
+    Si le vendeur a renseigné une marque,
+    elle devient également sa marque de profil.
+  */
+
+  if(brand){
+
+    const {
+      error:brandError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .update({
+          brand_name:brand
+        })
+        .eq(
+          "id",
+          currentUser.id
+        );
+
+    if(
+      brandError
+    ){
+
+      console.warn(
+        "Marque profil non enregistrée :",
+        brandError
+      );
+
+    }else if(currentProfile){
+
+      currentProfile.brand_name =
+        brand;
+
+    }
+
+  }
 
   let imageUrls = [];
 
@@ -5098,115 +5181,82 @@ async function deleteProduct(id){
 ========================================================= */
 
 async function uploadAvatar(event){
-  const file =
-    event.target
-      .files?.[0];
-  if(
-    !file ||
-    !currentUser
-  ){
-    return;
-  }
-  if(
-    !file.type.startsWith(
-      "image/"
-    )
-  ){
-    toast(
-      "Choisis une image."
-    );
-    return;
-  }
-  if(
-    file.size > MAX_IMAGE_SIZE
-  ){
-    toast(
-      "La photo de profil ne doit pas dépasser 1 Mo."
-    );
-    return;
-  }
-  /* Chemin fixe : un seul fichier avatar par vendeur.
-     upsert:true écrase la photo précédente. */
-  const extension =
-    file.name
-      .split(".")
-      .pop()
-      .toLowerCase();
-  const path =
-    `${currentUser.id}/avatar.${extension}`;
-  const {
-    error
-  } =
-    await supabaseClient
-      .storage
-      .from("avatars")
-      .upload(
-        path,
-        file,
-        {
-          cacheControl:
-            "3600",
-          upsert:
-            true,
-          contentType:
-            file.type
-        }
-      );
-  if(error){
-    console.error(
-      error
-    );
-    toast(
-      "Erreur upload : " +
-      error.message
-    );
-    return;
-  }
-  /* Cache-buster pour forcer l'affichage
-     de la nouvelle image. */
-  const {
-    data
-  } =
-    supabaseClient
-      .storage
-      .from("avatars")
-      .getPublicUrl(
-        path
-      );
-  const avatarUrl =
-    data.publicUrl +
-    "?t=" +
-    Date.now();
-  const {
-    error:updateError
-  } =
-    await supabaseClient
-      .from("profiles")
-      .update({
-        avatar_url:
-          avatarUrl
-      })
-      .eq(
-        "id",
-        currentUser.id
-      );
-  if(updateError){
-    toast(
-      updateError.message
-    );
-    return;
-  }
-  if(currentProfile){
-    currentProfile.avatar_url =
-      avatarUrl;
-  }
-  renderHeaderAccount();
-  renderAccount();
-  toast(
-    "Photo de profil enregistrée."
-  );
-}
+  const input = event?.target;
+  const file = input?.files?.[0];
+  if(!file || !currentUser) return;
 
+  try{
+    if(!file.type || !file.type.startsWith("image/")){
+      toast("Choisis une image (JPG, PNG ou WebP).");
+      return;
+    }
+    if(file.size > 10 * 1024 * 1024){
+      toast("Image trop lourde. Choisis une image de 10 Mo maximum.");
+      return;
+    }
+
+    toast("Préparation de la photo…");
+    // WhatsApp-like profile format: centered square crop, 512 × 512,
+    // compressed to JPEG to keep uploads light and consistent.
+    const image = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error("Impossible de lire cette image."));
+      img.src = URL.createObjectURL(file);
+    });
+
+    const side = Math.min(image.naturalWidth, image.naturalHeight);
+    const sx = Math.max(0, (image.naturalWidth - side) / 2);
+    const sy = Math.max(0, (image.naturalHeight - side) / 2);
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext("2d");
+    if(!ctx) throw new Error("Le navigateur ne peut pas préparer cette image.");
+    ctx.drawImage(image, sx, sy, side, side, 0, 0, 512, 512);
+    URL.revokeObjectURL(image.src);
+
+    const blob = await new Promise((resolve, reject) => {
+      canvas.toBlob(result => result ? resolve(result) : reject(new Error("Échec de la compression de l’image.")), "image/jpeg", 0.86);
+    });
+
+    const path = `${currentUser.id}/avatar.jpg`;
+    const { error: uploadError } = await supabaseClient
+      .storage.from("avatars")
+      .upload(path, blob, {
+        cacheControl: "3600",
+        upsert: true,
+        contentType: "image/jpeg"
+      });
+    if(uploadError) throw uploadError;
+
+    const { data } = supabaseClient.storage.from("avatars").getPublicUrl(path);
+    const avatarUrl = `${data.publicUrl}?t=${Date.now()}`;
+
+    // Narrow RPC updates only avatar_url; it avoids relying on broad profile-update permissions.
+    const { error: profileError } = await supabaseClient.rpc("set_my_avatar_url", {
+      p_avatar_url: avatarUrl
+    });
+    if(profileError) throw profileError;
+
+    if(currentProfile) currentProfile.avatar_url = avatarUrl;
+    renderHeaderAccount();
+    renderAccount();
+    toast("Photo de profil mise à jour !");
+  }catch(error){
+    console.error("Erreur photo de profil:", error);
+    const message = error?.message || "Erreur inconnue";
+    if(/bucket/i.test(message) || /not found/i.test(message)){
+      toast("Stockage des avatars non configuré. Exécute le SQL de mise à jour dans Supabase.");
+    }else if(/row-level security|permission|policy/i.test(message)){
+      toast("Accès refusé par Supabase. Vérifie les politiques SQL des avatars.");
+    }else{
+      toast("Impossible d’enregistrer la photo : " + message);
+    }
+  }finally{
+    if(input) input.value = "";
+  }
+}
 
 async function saveProfile(){
   if(!currentUser){
