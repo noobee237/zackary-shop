@@ -1634,6 +1634,12 @@ html[data-theme="dark"] .theme-setting-icon{
       </div>
 
       <div class="form-group">
+        <label>Quantité disponible</label>
+        <input id="productStock" type="number" min="0" step="1" value="1" placeholder="Ex. 10">
+        <small class="muted">La quantité sera affichée dans le catalogue et pourra être mise à jour via ton espace vendeur.</small>
+      </div>
+
+      <div class="form-group">
 
         <label>Format des images</label>
 
@@ -2011,8 +2017,7 @@ html[data-theme="dark"] .theme-setting-icon{
           font-weight:800;
         "
       >
-        🛍️ Pour devenir vendeur, l'accès vendeur est de
-        <strong>1 050 XAF</strong>.
+        🛍️ Choisis ton offre professionnelle dans les paramètres après inscription. L'activation se fait après contact et validation par l'administrateur.
       </div>
 
       <div class="form-group">
@@ -3135,6 +3140,9 @@ function productCard(product){
             product.price
           )}
         </div>
+        <div class="product-seller">
+          ${Number(product.stock_quantity ?? 1) > 0 ? `📦 ${Number(product.stock_quantity ?? 1)} disponible(s)` : "❌ Rupture de stock"}
+        </div>
 
         ${
           brand
@@ -3691,19 +3699,12 @@ function renderSellerBrandBox(){
 
   if(!box) return;
 
-  if(!isSellerOrAdmin()){
+  box.classList.add("hidden");
+  return;
 
-    box.classList.add(
-      "hidden"
-    );
-
-    return;
-
-  }
-
-  box.classList.remove(
-    "hidden"
-  );
+  /* La modification de marque se fait désormais via Paramètres
+     et nécessite une validation administrateur. */
+  box.classList.remove("hidden");
 
   box.innerHTML = `
 
@@ -4687,6 +4688,8 @@ async function publishProduct(){
         .value
     );
 
+  const stockQuantity = Math.max(0, parseInt(document.getElementById("productStock")?.value || "1", 10) || 0);
+
   const category =
     document
       .getElementById(
@@ -4773,43 +4776,7 @@ async function publishProduct(){
 
   }
 
-  /*
-    Si le vendeur a renseigné une marque,
-    elle devient également sa marque de profil.
-  */
-
-  if(brand){
-
-    const {
-      error:brandError
-    } =
-      await supabaseClient
-        .from("profiles")
-        .update({
-          brand_name:brand
-        })
-        .eq(
-          "id",
-          currentUser.id
-        );
-
-    if(
-      brandError
-    ){
-
-      console.warn(
-        "Marque profil non enregistrée :",
-        brandError
-      );
-
-    }else if(currentProfile){
-
-      currentProfile.brand_name =
-        brand;
-
-    }
-
-  }
+  /* La marque du profil est modifiée uniquement via Paramètres avec validation admin. */
 
   let imageUrls = [];
 
@@ -4903,7 +4870,10 @@ async function publishProduct(){
       brand || null,
 
     image_format:
-      format
+      format,
+
+    stock_quantity:
+      stockQuantity
 
   };
 
@@ -5239,89 +5209,176 @@ async function uploadAvatar(event){
 
 
 async function saveProfile(){
-
   if(!currentUser){
+    toast("Connecte-toi pour modifier ton profil.");
     return;
   }
-
-  const username =
-    document
-      .getElementById(
-        "profileUsername"
-      )
-      .value.trim();
-
-  const phone =
-    document
-      .getElementById(
-        "profilePhone"
-      )
-      .value.trim();
-
-  const whatsapp =
-    document
-      .getElementById(
-        "profileWhatsapp"
-      )
-      .value.trim();
-
-  const location =
-    document
-      .getElementById(
-        "profileLocation"
-      )
-      .value.trim();
-
-  const brand =
-    document
-      .getElementById(
-        "profileBrand"
-      )
-      ?.value.trim() || "";
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .from("profiles")
-      .update({
-
-        username,
-
-        phone,
-
-        whatsapp,
-
-        pickup_location:
-          location,
-
-        brand_name:
-          brand || null
-
-      })
-      .eq(
-        "id",
-        currentUser.id
-      );
-
+  const payload = {
+    username: document.getElementById("profileUsername")?.value.trim() || "",
+    phone: document.getElementById("profilePhone")?.value.trim() || "",
+    whatsapp: document.getElementById("profileWhatsapp")?.value.trim() || "",
+    pickup_location: document.getElementById("profileLocation")?.value.trim() || "",
+    brand_name: document.getElementById("profileBrand")?.value.trim() || ""
+  };
+  if(!payload.username){
+    toast("Le nom ou pseudo est obligatoire.");
+    return;
+  }
+  const {error} = await supabaseClient.from("profile_change_requests").insert({
+    user_id: currentUser.id,
+    requested_data: payload,
+    status: "pending"
+  });
   if(error){
-
-    toast(
-      error.message
-    );
-
+    console.error(error);
+    toast("Impossible d'envoyer la demande. Vérifie la migration SQL : " + error.message);
     return;
-
   }
-
-  await loadCurrentUser();
-
-  toast(
-    "Profil sauvegardé."
-  );
-
+  toast("Demande envoyée à l'administrateur. Tes informations actuelles restent visibles jusqu'à validation.");
+  await renderProfileChangeStatus();
 }
 
+
+/* =========================================================
+   ABONNEMENTS, BOUTIQUES ET VALIDATION DES INFORMATIONS
+========================================================= */
+const ZS_PLANS = {
+  independent: {label:"Vendeur indépendant", price:2000},
+  boutique: {label:"Boutique", price:4000},
+  startup: {label:"Startup / marque locale", price:1500}
+};
+
+async function requestProfessionalPlan(planKey){
+  if(!currentUser){ openAuth("login"); return; }
+  const plan = ZS_PLANS[planKey];
+  if(!plan){ toast("Offre inconnue."); return; }
+  const {error} = await supabaseClient.from("subscription_requests").insert({
+    user_id: currentUser.id,
+    plan_key: planKey,
+    plan_label: plan.label,
+    monthly_price: plan.price,
+    status: "pending"
+  });
+  if(error){
+    toast("Impossible d'enregistrer la demande : " + error.message);
+    return;
+  }
+  const msg = encodeURIComponent(`Bonjour Novis, je demande l'activation de l'offre ${plan.label} à ${plan.price} FCFA/mois sur Zackary Shop. Mon email : ${currentUser.email || ""}. Merci de m'indiquer les modalités de paiement.`);
+  window.open("https://wa.me/237"+CREATOR_WHATSAPP+"?text="+msg, "_blank");
+  toast("Demande enregistrée. Contacte l'administrateur pour faire vérifier le paiement.");
+  renderAccount();
+}
+
+async function requestBoutiqueCodeCertification(){
+  if(!currentUser){ openAuth("login"); return; }
+  const code = document.getElementById("boutiqueCodeInput")?.value.trim();
+  const shop = document.getElementById("boutiqueNameInput")?.value.trim();
+  if(!code || !shop){ toast("Renseigne le nom de la boutique et son code."); return; }
+  const {error} = await supabaseClient.from("boutique_certification_requests").insert({
+    user_id: currentUser.id,
+    boutique_name: shop,
+    boutique_code: code,
+    status: "pending"
+  });
+  if(error){ toast("Erreur : " + error.message); return; }
+  const msg = encodeURIComponent(`Bonjour Novis, je demande la certification du code de ma boutique ${shop}. Code : ${code}. Compte : ${currentUser.email || ""}.`);
+  window.open("https://wa.me/237"+CREATOR_WHATSAPP+"?text="+msg, "_blank");
+  toast("Demande de certification envoyée pour vérification.");
+  renderAccount();
+}
+
+async function renderProfileChangeStatus(){
+  const el = document.getElementById("profileChangeStatus");
+  if(!el || !currentUser) return;
+  const {data,error} = await supabaseClient.from("profile_change_requests")
+    .select("id,status,admin_note,created_at")
+    .eq("user_id", currentUser.id)
+    .order("created_at",{ascending:false}).limit(5);
+  if(error){ el.innerHTML='<p class="muted">Statut indisponible. Vérifie la migration SQL.</p>'; return; }
+  el.innerHTML = data?.length ? data.map(r=>`
+    <div class="order-card" style="margin-top:8px">
+      <strong>${r.status==="approved"?"✅ Validée":r.status==="rejected"?"❌ Refusée":"⏳ En attente"}</strong>
+      <div class="muted" style="margin-top:4px;font-size:12px">${new Date(r.created_at).toLocaleString("fr-FR")}</div>
+      ${r.admin_note?`<p style="margin-top:5px">${escapeHtml(r.admin_note)}</p>`:""}
+    </div>`).join("") : '<p class="muted" style="margin-top:8px">Aucune demande récente.</p>';
+}
+
+async function adminReviewProfileChange(id, approve){
+  if(currentProfile?.role!=="creator_admin"){ toast("Accès administrateur refusé."); return; }
+  let note = "";
+  if(!approve) note = prompt("Motif du refus (facultatif) :") || "";
+  const {data:req,error:readError} = await supabaseClient.from("profile_change_requests")
+    .select("*").eq("id",id).eq("status","pending").maybeSingle();
+  if(readError || !req){ toast("Demande introuvable ou déjà traitée."); return; }
+  if(approve){
+    const d = req.requested_data || {};
+    const {error:updateError} = await supabaseClient.from("profiles").update({
+      username:d.username, phone:d.phone, whatsapp:d.whatsapp,
+      pickup_location:d.pickup_location, brand_name:d.brand_name || null
+    }).eq("id",req.user_id);
+    if(updateError){ toast("Profil non modifié : "+updateError.message); return; }
+  }
+  const {error} = await supabaseClient.from("profile_change_requests").update({
+    status: approve ? "approved" : "rejected",
+    admin_note: note,
+    reviewed_by: currentUser.id,
+    reviewed_at: new Date().toISOString()
+  }).eq("id",id).eq("status","pending");
+  if(error){ toast("Erreur de validation : "+error.message); return; }
+  toast(approve ? "Informations validées." : "Demande refusée.");
+  await loadAdminPage();
+  if(approve && currentUser.id===req.user_id) await loadCurrentUser();
+}
+
+async function adminReviewSubscription(id, approve){
+  if(currentProfile?.role!=="creator_admin"){ toast("Accès administrateur refusé."); return; }
+  const note = approve ? "" : (prompt("Motif du refus (facultatif) :") || "");
+  const {data:req,error:readError} = await supabaseClient.from("subscription_requests").select("*").eq("id",id).eq("status","pending").maybeSingle();
+  if(readError || !req){ toast("Demande introuvable ou déjà traitée."); return; }
+  if(approve){
+    const expires = new Date(); expires.setMonth(expires.getMonth()+1);
+    const {error:profileError} = await supabaseClient.from("profiles").update({
+      role:"seller",
+      professional_plan:req.plan_key,
+      seller_expires_at:expires.toISOString(),
+      seller_access_unlimited:false
+    }).eq("id",req.user_id);
+    if(profileError){ toast("Paiement à vérifier et accès non activé : "+profileError.message); return; }
+  }
+  const {error} = await supabaseClient.from("subscription_requests").update({
+    status: approve ? "approved" : "rejected",
+    admin_note: note,
+    reviewed_by: currentUser.id,
+    reviewed_at: new Date().toISOString()
+  }).eq("id",id).eq("status","pending");
+  if(error){ toast("Erreur : "+error.message); return; }
+  toast(approve ? "Abonnement validé. Pense à activer l'accès professionnel après vérification du paiement." : "Demande refusée.");
+  await loadAdminPage();
+}
+
+async function adminReviewBoutiqueCode(id, approve){
+  if(currentProfile?.role!=="creator_admin"){ toast("Accès administrateur refusé."); return; }
+  const note = approve ? "" : (prompt("Motif du refus (facultatif) :") || "");
+  const {data:req,error:readError} = await supabaseClient.from("boutique_certification_requests").select("*").eq("id",id).eq("status","pending").maybeSingle();
+  if(readError || !req){ toast("Demande introuvable ou déjà traitée."); return; }
+  if(approve){
+    const {error:profileError} = await supabaseClient.from("profiles").update({
+      boutique_verified:true,
+      boutique_code:req.boutique_code,
+      brand_name:req.boutique_name
+    }).eq("id",req.user_id);
+    if(profileError){ toast("Impossible de certifier le profil : "+profileError.message); return; }
+  }
+  const {error} = await supabaseClient.from("boutique_certification_requests").update({
+    status: approve ? "approved" : "rejected",
+    admin_note: note,
+    reviewed_by: currentUser.id,
+    reviewed_at: new Date().toISOString()
+  }).eq("id",id).eq("status","pending");
+  if(error){ toast("Erreur : "+error.message); return; }
+  toast(approve ? "Code boutique certifié." : "Certification refusée.");
+  await loadAdminPage();
+}
 
 /* =========================================================
    ACCOUNT
@@ -5633,11 +5690,48 @@ function renderAccount(){
         style="width:100%"
         onclick="saveProfile()"
       >
-        Sauvegarder
+        Envoyer pour validation
       </button>
 
     </div>
 
+
+    <div class="section">
+      <div class="form-card">
+        <h3>📝 Validation de mes informations</h3>
+        <p class="muted" style="margin-top:6px">Toute modification de profil ou de boutique est envoyée à l'administrateur. Les informations publiques ne changent qu'après validation.</p>
+        <div id="profileChangeStatus"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="form-card">
+        <h3>💼 Offres professionnelles — abonnement mensuel</h3>
+        <p class="muted" style="margin:6px 0 14px">L'activation se fait après contact et vérification du paiement par l'administrateur.</p>
+        <div class="order-card">
+          <strong>🧍 Vendeur indépendant</strong><div style="font-size:22px;font-weight:900;margin:6px 0">2 000 FCFA <small class="muted">/ mois</small></div>
+          <button class="btn" style="width:100%" onclick="requestProfessionalPlan('independent')">Demander l'activation</button>
+        </div>
+        <div class="order-card">
+          <strong>🏬 Boutique</strong><div style="font-size:22px;font-weight:900;margin:6px 0">4 000 FCFA <small class="muted">/ mois</small></div>
+          <button class="btn purple" style="width:100%" onclick="requestProfessionalPlan('boutique')">Demander l'activation</button>
+        </div>
+        <div class="order-card">
+          <strong>🚀 Startup / marque locale</strong><div style="font-size:22px;font-weight:900;margin:6px 0">1 500 FCFA <small class="muted">/ mois</small></div>
+          <button class="btn blue" style="width:100%" onclick="requestProfessionalPlan('startup')">Demander l'activation</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="form-card">
+        <h3>🏬 Ma boutique et certification</h3>
+        <p class="muted" style="margin:6px 0 14px">Demande la certification de ton code. Le badge n'est accordé qu'après contrôle par l'administrateur.</p>
+        <div class="form-group"><label>Nom de la boutique / marque</label><input id="boutiqueNameInput" value="${escapeHtml(currentProfile?.brand_name || "")}" placeholder="Nom public de la boutique"></div>
+        <div class="form-group"><label>Code boutique à vérifier</label><input id="boutiqueCodeInput" placeholder="Saisis le code fourni par l'administrateur"></div>
+        <button class="btn purple" style="width:100%" onclick="requestBoutiqueCodeCertification()">Soumettre le code à certification</button>
+      </div>
+    </div>
 
     <div class="section">
 
@@ -5898,6 +5992,8 @@ function renderAccount(){
     </button>
 
   `;
+
+  setTimeout(renderProfileChangeStatus, 0);
 
 }
 
@@ -6413,7 +6509,10 @@ async function loadAdminPage(){
 
   const [
     sellersResult,
-    ordersResult
+    ordersResult,
+    profileRequestsResult,
+    subscriptionRequestsResult,
+    certificationRequestsResult
   ] =
     await Promise.all([
 
@@ -6435,7 +6534,11 @@ async function loadAdminPage(){
         .order(
           "created_at",
           {ascending:false}
-        )
+        ),
+
+      supabaseClient.from("profile_change_requests").select("*").eq("status","pending").order("created_at",{ascending:false}),
+      supabaseClient.from("subscription_requests").select("*").eq("status","pending").order("created_at",{ascending:false}),
+      supabaseClient.from("boutique_certification_requests").select("*").eq("status","pending").order("created_at",{ascending:false})
 
     ]);
 
@@ -6466,8 +6569,36 @@ async function loadAdminPage(){
   const orders =
     ordersResult.data ||
     [];
+  const profileRequests = profileRequestsResult.data || [];
+  const subscriptionRequests = subscriptionRequestsResult.data || [];
+  const certificationRequests = certificationRequestsResult.data || [];
 
   container.innerHTML = `
+    <div class="section">
+      <div class="form-card">
+        <h2>📝 Modifications de profil à valider (${profileRequests.length})</h2>
+        ${profileRequests.length ? profileRequests.map(r=>{
+          const d=r.requested_data||{};
+          return `<div class="order-card">
+            <strong>${escapeHtml(d.username||"Utilisateur")}</strong>
+            <p class="muted" style="margin:5px 0">Téléphone : ${escapeHtml(d.phone||"—")} · WhatsApp : ${escapeHtml(d.whatsapp||"—")}</p>
+            <p class="muted">Lieu : ${escapeHtml(d.pickup_location||"—")} · Marque : ${escapeHtml(d.brand_name||"—")}</p>
+            <div class="form-row" style="margin-top:10px">
+              <button class="btn green" onclick="adminReviewProfileChange('${r.id}',true)">Valider</button>
+              <button class="btn red" onclick="adminReviewProfileChange('${r.id}',false)">Refuser</button>
+            </div></div>`;
+        }).join("") : '<p class="muted" style="margin-top:8px">Aucune modification en attente.</p>'}
+      </div>
+    </div>
+    <div class="section"><div class="form-card">
+      <h2>💳 Abonnements à traiter (${subscriptionRequests.length})</h2>
+      ${subscriptionRequests.length ? subscriptionRequests.map(r=>`<div class="order-card"><strong>${escapeHtml(r.plan_label||r.plan_key)} — ${formatPrice(r.monthly_price)}/mois</strong><p class="muted" style="margin:5px 0">Utilisateur : ${escapeHtml(r.user_id)}</p><div class="form-row" style="margin-top:10px"><button class="btn green" onclick="adminReviewSubscription('${r.id}',true)">Valider demande</button><button class="btn red" onclick="adminReviewSubscription('${r.id}',false)">Refuser</button></div></div>`).join("") : '<p class="muted" style="margin-top:8px">Aucune demande en attente.</p>'}
+    </div></div>
+    <div class="section"><div class="form-card">
+      <h2>🏬 Codes boutique à certifier (${certificationRequests.length})</h2>
+      ${certificationRequests.length ? certificationRequests.map(r=>`<div class="order-card"><strong>${escapeHtml(r.boutique_name)}</strong><p style="margin:6px 0">Code : <strong>${escapeHtml(r.boutique_code)}</strong></p><p class="muted">Utilisateur : ${escapeHtml(r.user_id)}</p><div class="form-row" style="margin-top:10px"><button class="btn green" onclick="adminReviewBoutiqueCode('${r.id}',true)">Certifier</button><button class="btn red" onclick="adminReviewBoutiqueCode('${r.id}',false)">Refuser</button></div></div>`).join("") : '<p class="muted" style="margin-top:8px">Aucun code en attente.</p>'}
+    </div></div>
+
 
     <div class="admin-panel">
 
