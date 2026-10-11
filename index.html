@@ -388,7 +388,7 @@ header{
   font-weight:800;
 }
 
-/* Catalogue produits façon marketplace e-commerce, inspiré de Temu */
+/* Catalogue Zackary Shop : style épuré inspiré de Vinted, avec grille pratique façon Temu */
 #homeProducts.product-grid,
 #shopProducts.product-grid{
   display:grid;
@@ -400,18 +400,18 @@ header{
 #homeProducts .product-card,
 #shopProducts .product-card{
   min-width:0;
-  border-radius:14px;
+  border-radius:9px;
   overflow:hidden;
   background:#fff;
-  border:1px solid rgba(0,0,0,.06);
-  box-shadow:0 3px 12px rgba(0,0,0,.055);
+  border:1px solid #eeeeee;
+  box-shadow:0 1px 4px rgba(0,0,0,.035);
   cursor:pointer;
   transition:transform .18s ease,box-shadow .18s ease;
 }
 #homeProducts .product-card:hover,
 #shopProducts .product-card:hover{
   transform:translateY(-2px);
-  box-shadow:0 7px 18px rgba(0,0,0,.09);
+  box-shadow:0 5px 14px rgba(0,0,0,.08);
 }
 
 #homeProducts .product-image,
@@ -419,14 +419,14 @@ header{
   display:block;
   width:100%;
   aspect-ratio:4/3;
-  object-fit:contain;
-  background:#f7f7f7;
+  object-fit:cover;
+  background:#f5f5f5;
   cursor:zoom-in;
-  padding:4px;
+  padding:0;
 }
 
 #homeProducts .product-info,
-#shopProducts .product-info{padding:10px 11px 12px;}
+#shopProducts .product-info{padding:9px 10px 11px;}
 #homeProducts .product-name,
 #shopProducts .product-name{
   display:-webkit-box;
@@ -442,15 +442,15 @@ header{
 }
 
 .market-price-row{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;margin-top:7px;}
-.market-price{font-size:19px;font-weight:900;letter-spacing:-.45px;color:#e53935;}
+.market-price{font-size:18px;font-weight:800;letter-spacing:-.3px;color:#222;}
 .market-price-unit{font-size:11px;color:#777;}
-.market-stock{margin-top:5px;font-size:11px;color:#777;}
-.market-brand{margin-top:5px;font-size:11px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.market-stock{margin-top:5px;font-size:11px;color:#666;}
+.market-brand{margin-top:5px;font-size:11px;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .market-seller{margin-top:6px;font-size:11px;color:#777;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.market-card-actions{display:flex;gap:7px;margin-top:10px;}
-.market-card-actions button{flex:1;min-width:0;padding:9px 7px;border-radius:9px;font-size:12px;font-weight:800;}
-.market-view-btn{background:#f3f3f3;color:#222;}
-.market-buy-btn{background:#ff6a00;color:white;}
+.market-card-actions{display:flex;gap:6px;margin-top:9px;}
+.market-card-actions button{flex:1;min-width:0;padding:8px 6px;border-radius:7px;font-size:12px;font-weight:750;border:1px solid #e4e4e4;}
+.market-view-btn{background:#fff;color:#222;}
+.market-buy-btn{background:#087e6e;color:white;border-color:#087e6e;}
 html[data-theme="dark"] #homeProducts .product-card,
 html[data-theme="dark"] #shopProducts .product-card{background:var(--card);color:var(--text);}
 html[data-theme="dark"] #homeProducts .product-image,
@@ -464,12 +464,12 @@ html[data-theme="dark"] #shopProducts .product-image{background:#f0f0f0;}
   #homeProducts.product-grid,
   #shopProducts.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;}
   #homeProducts .product-card,
-  #shopProducts .product-card{border-radius:12px;}
+  #shopProducts .product-card{border-radius:8px;}
   #homeProducts .product-info,
   #shopProducts .product-info{padding:8px;}
   #homeProducts .product-name,
   #shopProducts .product-name{font-size:13px;min-height:35px;}
-  .market-price{font-size:17px;}
+  .market-price{font-size:16px;}
   .market-card-actions button{font-size:11px;padding:9px 4px;}
 }
 
